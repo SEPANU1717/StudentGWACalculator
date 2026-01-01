@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/StudentGWACalculator/', // GitHub repo name for Pages
+  build: {
+    outDir: 'dist', // Output folder for GitHub Actions deployment
+  },
 })
