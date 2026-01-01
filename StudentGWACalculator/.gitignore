@@ -1,65 +1,10 @@
 # Node / package artifacts
 node_modules/
 .vite/
-dist/
 build/
 public/build/
 
-# Vite / tooling cache
-.cache/
-.cache-*
-.parcel-cache/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-*.log
-
-# Environment files
-.env
-.env.*
-!.env.example
-
-# OS files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Editor / IDE
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# TypeScript build
-*.tsbuildinfo
-
-# Test / coverage
-coverage/
-coverage-*/
-.nyc_output/
-.vitest/
-
-# Misc
-*.tgz
-*.gz
-*.zip
-
-# Cache / lockfiles that shouldn't be committed (optional)
-.eslintcache
-.cache-loader
-```// filepath: c:\SystemApplicationPractice2025\StudentGWACalculator\StudentGWACalculator\.gitignore
-# Node / package artifacts
-node_modules/
-.vite/
-dist/
-build/
-public/build/
+# NOTE: dist/ is NOT ignored - needed for GitHub Pages
 
 # Vite / tooling cache
 .cache/
