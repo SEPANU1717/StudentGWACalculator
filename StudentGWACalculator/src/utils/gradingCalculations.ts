@@ -65,7 +65,22 @@ export const predictNeededGrade = (subject: Subject, targetPercentage: number): 
   const { filled, remainingWeight, currentScore } = getGradeProgress(subject);
   if (filled === 0 || filled === 4 || remainingWeight === 0) return null;
   const needed = (targetPercentage - currentScore) / remainingWeight;
-  return Math.max(0, Math.ceil(needed * 100) / 100);
+
+  // Round up to 2 decimals initially
+  let neededRounded = Math.max(0, Math.ceil(needed * 100) / 100);
+
+  // Ensure that using the rounded value actually reaches the target after rounding to 2 decimals.
+  // This guards against floating-point errors where a seemingly exact value (e.g. 12.90)
+  // still produces a final percentage slightly below the target.
+  const finalFor = (val: number) => Math.round((currentScore + val * remainingWeight) * 100) / 100;
+
+  // If the rounded value doesn't reach the target, increment by 0.01 until it does (or exceeds 100).
+  while (neededRounded <= 100) {
+    if (finalFor(neededRounded) >= targetPercentage) return neededRounded;
+    neededRounded = Math.round((neededRounded + 0.01) * 100) / 100;
+  }
+
+  return null;
 };
 
 export const predictToPass = (subject: Subject): number | null => predictNeededGrade(subject, PASSING_PERCENTAGE);

@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
-import { LandingPage } from './components/LandingPage';
-import { CalculatorTab } from './components/CalculatorTab';
-import { CumulativeTab } from './components/CumulativeTab';
-import { PredictionsTab } from './components/PredictionsTab';
-import { HonorsTab } from './components/HonorsTab';
+import { TabNavigation, Tab } from './components/TabNavigation';
+import { LandingPage } from './components/landing/LandingPage';
+import { CalculatorTab } from './components/calculator/CalculatorTab';
+import { CumulativeTab } from './components/cumulative/CumulativeTab';
+import { PredictionsTab } from './components/predictions/PredictionsTab';
+import { HonorsTab } from './components/honors/HonorsTab';
 import { Subject, SemesterRecord } from './types';
-
-type Tab = 'calculator' | 'predictions' | 'cumulative' | 'honors';
 
 export default function STIGradeCalculator() {
   const [showLanding, setShowLanding] = useState(true);
@@ -27,6 +26,7 @@ export default function STIGradeCalculator() {
   ]);
 
   const [gradeHistory, setGradeHistory] = useState<SemesterRecord[]>([]);
+  const [selectedHistoryGWA, setSelectedHistoryGWA] = useState<number | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('gradeHistory');
@@ -46,9 +46,6 @@ export default function STIGradeCalculator() {
   };
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
-
-  const canPredict = singleSubject.prelim !== '' && singleSubject.midterm !== '' && 
-                     singleSubject.preFinal !== '' && singleSubject.finals === '';
 
   const updateSingleSubject = (field: keyof Subject, value: string) => {
     const numValue = value === '' ? '' : Math.min(100, Math.max(0, Number(value)));
@@ -81,15 +78,18 @@ export default function STIGradeCalculator() {
     setGradeHistory(prev => [...prev, record]);
   };
 
-  const removeFromHistory = (id: string) => setGradeHistory(prev => prev.filter(r => r.id !== id));
-  const clearHistory = () => setGradeHistory([]);
+  const removeFromHistory = (id: string) => {
+    const recordToRemove = gradeHistory.find(r => r.id === id);
+    if (recordToRemove && selectedHistoryGWA === recordToRemove.gwa) {
+      setSelectedHistoryGWA(null);
+    }
+    setGradeHistory(prev => prev.filter(r => r.id !== id));
+  };
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: 'calculator', label: 'Calculator' },
-    { id: 'predictions', label: 'Predictions' },
-    { id: 'cumulative', label: 'Cumulative' },
-    { id: 'honors', label: 'Honors' }
-  ];
+  const clearHistory = () => {
+    setGradeHistory([]);
+    setSelectedHistoryGWA(null);
+  };
 
   const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
@@ -99,47 +99,32 @@ export default function STIGradeCalculator() {
   }
 
   return (
-    <div className={`min-h-screen ${bgColor} ${textColor} transition-colors`}>
+    <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} onShowLanding={() => setShowLanding(true)} />
       
-      <main className="max-w-xl mx-auto px-4 sm:px-6 py-6">
-        {/* Title */}
-        <div className="text-center mb-6">
-          <h1 className={`text-xl font-bold tracking-tight ${textColor}`}>STI Grade Calculator</h1>
-          <p className={`text-xs mt-1 ${darkMode ? 'text-[#555]' : 'text-gray-500'}`}>Calculate GWA and check honors</p>
-        </div>
+      <main className="max-w-lg mx-auto px-4 py-6">
+        {/* Tab Navigation */}
+        <TabNavigation 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+          darkMode={darkMode} 
+        />
 
-        {/* Tabs */}
-        <nav className="mb-6">
-          <div className={`flex gap-1 p-1 rounded-xl ${darkMode ? 'bg-[#0a0a0a] border-[#1a1a1a]' : 'bg-white border-gray-200'} border`}>
-            {tabs.map(({ id, label }) => (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id)}
-                className={`flex-1 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === id
-                    ? darkMode ? 'bg-[#1a1a1a] text-white' : 'bg-gray-900 text-white'
-                    : darkMode ? 'text-[#555] hover:text-white' : 'text-gray-500 hover:text-gray-900'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        {activeTab === 'calculator' && (
+        {/* Tab Content */}
+        <div className="animate-fade-in">
+          {activeTab === 'calculator' && (
           <CalculatorTab
             darkMode={darkMode}
             singleSubject={singleSubject}
             targetGrade={targetGrade}
             showSettings={showSettings}
             showGradeTable={showGradeTable}
-            canPredict={canPredict}
+            selectedHistoryGWA={selectedHistoryGWA}
             onUpdateSingleSubject={updateSingleSubject}
             onSetTargetGrade={setTargetGrade}
             onToggleSettings={() => setShowSettings(!showSettings)}
             onToggleGradeTable={() => setShowGradeTable(!showGradeTable)}
+            onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
           />
         )}
 
@@ -148,7 +133,7 @@ export default function STIGradeCalculator() {
             darkMode={darkMode}
             singleSubject={singleSubject}
             targetGrade={targetGrade}
-            canPredict={canPredict}
+            canPredict={false}
           />
         )}
 
@@ -165,6 +150,9 @@ export default function STIGradeCalculator() {
             onAddToHistory={addToHistory}
             onRemoveFromHistory={removeFromHistory}
             onClearHistory={clearHistory}
+            onSelectHistoryRecord={(gwa) => setSelectedHistoryGWA(gwa)}
+            selectedHistoryGWA={selectedHistoryGWA}
+            onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
           />
         )}
 
@@ -175,8 +163,10 @@ export default function STIGradeCalculator() {
             gradeHistory={gradeHistory}
             isBaccalaureate={isBaccalaureate}
             onSetIsBaccalaureate={setIsBaccalaureate}
+            selectedHistoryGWA={selectedHistoryGWA}
           />
         )}
+        </div>
       </main>
     </div>
   );

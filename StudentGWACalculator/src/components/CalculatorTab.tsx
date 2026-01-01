@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Settings, ChevronDown, ChevronUp, Award } from 'lucide-react';
+import { Settings, ChevronDown, ChevronUp, Award, Star, Percent } from 'lucide-react';
 import { Subject } from '../types';
 import { GRADE_TABLE } from '../utils/constants';
 import {
@@ -9,6 +9,7 @@ import {
   predictForTarget,
   calculateWhatIfGWA,
   isDeansListEligible,
+  getTuitionDiscount,
   getGradeProgress
 } from '../utils/gradingCalculations';
 
@@ -44,6 +45,10 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
   const toTarget = useMemo(() => predictForTarget(singleSubject, targetGrade), [singleSubject, targetGrade]);
   const whatIfResult = useMemo(() => calculateWhatIfGWA(singleSubject, simulatedFinals), [singleSubject, simulatedFinals]);
   const progress = useMemo(() => getGradeProgress(singleSubject), [singleSubject]);
+
+  const tuitionDiscount = useMemo(() => {
+    return singleResult ? getTuitionDiscount(singleResult.grade) : 0;
+  }, [singleResult]);
 
   const hasAllGrades = progress.filled === 4;
   const canPredict = progress.filled >= 1 && progress.filled < 4;
@@ -129,57 +134,82 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         ))}
       </div>
 
-      {/* GWA Result */}
-      <div className={`${cardBg} rounded-xl p-5 border ${border}`}>
-        <div className="flex items-center justify-between mb-3">
-          <span className={`text-xs font-medium ${textMuted}`}>Your GWA</span>
-          {singleResult && isDeansListEligible(singleResult.grade) && (
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-500/15 text-yellow-400 text-xs font-medium">
-              <Award className="w-3 h-3" />
-              Dean's List
+      {/* GWA Result - Only show when there's input */}
+      {progress.filled > 0 && (
+        <div className={`${cardBg} rounded-xl p-5 border ${border}`}>
+          <div className="flex items-start justify-between gap-4">
+            {/* Left: GWA Info */}
+            <div className="flex-1 min-w-0">
+              <span className={`text-xs font-medium ${textMuted} block mb-2`}>Your GWA</span>
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <div className={`text-3xl font-bold tracking-tight ${textColor}`}>
+                  {displayPercentage ? `${displayPercentage}%` : 'N/A'}
+                </div>
+                {singleResult && (
+                  <span className={`text-sm font-medium px-2.5 py-1 rounded-full ${
+                    singleResult.status === 'passed' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
+                  }`}>
+                    {singleResult.description}
+                  </span>
+                )}
+                {!singleResult && partialPercentage && (
+                  <span className="text-sm font-medium px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400">
+                    In Progress
+                  </span>
+                )}
+              </div>
+              
+              {/* Dean's & President's List Badges */}
+              {singleResult && isDeansListEligible(singleResult.grade) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <div className={`flex items-center gap-1 px-2 py-1 rounded-md ${darkMode ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-100 text-yellow-700'}`}>
+                    <Award className="w-3 h-3" />
+                    <span className="text-[10px] font-semibold">Dean's List</span>
+                  </div>
+                  <div className={`flex items-center gap-1 px-2 py-1 rounded-md ${darkMode ? 'bg-purple-500/10 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
+                    <Star className="w-3 h-3" />
+                    <span className="text-[10px] font-semibold">President's List</span>
+                  </div>
+                </div>
+              )}
+              
+              {(singleResult || partialPercentage) && (
+                <div className="mt-4">
+                  <div className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200'}`}>
+                    <div 
+                      className={`h-full transition-all duration-500 rounded-full ${
+                        singleResult ? (singleResult.status === 'passed' ? 'bg-emerald-500' : 'bg-red-500') : 'bg-amber-500'
+                      }`}
+                      style={{ width: `${Math.min(displayPercentage ? parseFloat(displayPercentage) : 0, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              
+              <div className={`text-xs mt-3 ${textMuted}`}>
+                {singleResult 
+                  ? `Grade: ${singleResult.grade.toFixed(2)} - ${singleResult.status === 'passed' ? 'Passed' : 'Failed'}`
+                  : `${progress.filled}/4 grades entered - ${progress.remaining.join(', ')} remaining`
+                }
+              </div>
             </div>
-          )}
-        </div>
-        <div className="flex items-baseline gap-3 flex-wrap">
-          <div className={`text-4xl font-bold tracking-tight ${textColor}`}>
-            {displayPercentage ? `${displayPercentage}%` : 'N/A'}
+            
+            {/* Right: Tuition Discount (real-time) */}
+            {singleResult && tuitionDiscount > 0 && (
+              <div className={`flex-shrink-0 text-center px-4 py-3 rounded-xl ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'} border ${darkMode ? 'border-emerald-500/20' : 'border-emerald-200'}`}>
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Percent className={`w-3 h-3 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`} />
+                  <span className={`text-[9px] font-semibold uppercase tracking-wide ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>Discount</span>
+                </div>
+                <div className={`text-2xl font-bold ${darkMode ? 'text-emerald-400' : 'text-emerald-600'} tabular-nums`}>
+                  {tuitionDiscount}%
+                </div>
+                <p className={`text-[9px] ${darkMode ? 'text-emerald-400/60' : 'text-emerald-600/60'} mt-0.5`}>next term</p>
+              </div>
+            )}
           </div>
-          {singleResult && (
-            <span className={`text-sm font-medium px-2.5 py-1 rounded-full ${
-              singleResult.status === 'passed' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'
-            }`}>
-              {singleResult.description}
-            </span>
-          )}
-          {!singleResult && partialPercentage && (
-            <span className="text-sm font-medium px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400">
-              In Progress
-            </span>
-          )}
         </div>
-        
-        {(singleResult || partialPercentage) && (
-          <div className="mt-4">
-            <div className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200'}`}>
-              <div 
-                className={`h-full transition-all duration-500 rounded-full ${
-                  singleResult ? (singleResult.status === 'passed' ? 'bg-emerald-500' : 'bg-red-500') : 'bg-amber-500'
-                }`}
-                style={{ width: `${Math.min(displayPercentage ? parseFloat(displayPercentage) : 0, 100)}%` }}
-              />
-            </div>
-          </div>
-        )}
-        
-        <div className={`text-sm mt-3 ${textMuted}`}>
-          {singleResult 
-            ? `Grade: ${singleResult.grade.toFixed(2)} - ${singleResult.status === 'passed' ? 'Passed' : 'Failed'}`
-            : progress.filled > 0
-              ? `${progress.filled}/4 grades entered - ${progress.remaining.join(', ')} remaining`
-              : 'Enter grades to start'
-          }
-        </div>
-      </div>
+      )}
 
       {/* What-If Simulator - Show when 3 grades filled */}
       {progress.filled === 3 && !hasAllGrades && (
@@ -220,14 +250,15 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         </div>
       )}
 
-      {/* Predictions - Works with any grades */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Predictions - hidden when all grades are entered to avoid redundant info */}
+      {!hasAllGrades && (
+        <div className="grid grid-cols-2 gap-3">
         <div className={`${cardBg} rounded-xl p-4 border ${border}`}>
           <div className={`text-xs font-medium ${textMuted} mb-2`}>Need for Target</div>
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className={`text-2xl font-bold ${canPredict && toTarget !== null && toTarget > 100 ? 'text-red-400' : textColor}`}>
               {hasAllGrades ? 'Complete' : canPredict && toTarget !== null 
-                ? toTarget <= 100 ? `${toTarget.toFixed(1)}%` : 'Impossible' : 'N/A'}
+                ? toTarget <= 100 ? `${toTarget.toFixed(2)}` : 'Impossible' : 'N/A'}
             </span>
             {hasAllGrades ? (
               <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-medium">Done</span>
@@ -239,7 +270,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
           </div>
           <div className={`text-xs ${textMuted}`}>
             {hasAllGrades ? 'All grades entered' 
-              : canPredict && toTarget !== null && toTarget > 100 ? `Would need ${toTarget.toFixed(1)}% avg`
+              : canPredict && toTarget !== null && toTarget > 100 ? `Would need ${toTarget.toFixed(2)}% avg`
               : canPredict ? `Avg in ${progress.remaining.join(', ')}` 
               : 'Enter grades first'}
           </div>
@@ -250,7 +281,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className={`text-2xl font-bold ${canPredict && toPass !== null && toPass > 100 ? 'text-red-400' : textColor}`}>
               {hasAllGrades ? 'Complete' : canPredict && toPass !== null 
-                ? toPass <= 100 ? `${toPass.toFixed(1)}%` : 'Impossible' : 'N/A'}
+                ? toPass <= 100 ? `${toPass.toFixed(2)}` : 'Impossible' : 'N/A'}
             </span>
             {hasAllGrades ? (
               <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-medium">Done</span>
@@ -262,13 +293,13 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
           </div>
           <div className={`text-xs ${textMuted}`}>
             {hasAllGrades ? 'All grades entered' 
-              : canPredict && toPass !== null && toPass > 100 ? `Would need ${toPass.toFixed(1)}% avg`
+              : canPredict && toPass !== null && toPass > 100 ? `Would need ${toPass.toFixed(2)}% avg`
               : canPredict ? 'Avg for 59.5%' 
               : 'Enter grades first'}
           </div>
         </div>
       </div>
-
+      )}
       {/* Settings */}
       <button onClick={onToggleSettings} className={`w-full ${cardBg} rounded-xl p-4 border ${border} flex items-center justify-between`}>
         <div className="flex items-center gap-3">
