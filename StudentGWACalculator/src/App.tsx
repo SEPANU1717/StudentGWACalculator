@@ -42,8 +42,7 @@ export default function STIGradeCalculator() {
       }
       const savedDarkMode = localStorage.getItem('darkMode');
       if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
-      const savedLanding = localStorage.getItem('hasVisited');
-      if (savedLanding) setShowLanding(false);
+      // Always show the landing page on startup; do not auto-hide based on stored visits
     } catch (e) {
       console.error('Error loading from localStorage:', e);
     }
