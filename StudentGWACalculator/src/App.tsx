@@ -25,19 +25,38 @@ export default function STIGradeCalculator() {
     { id: '1', name: '', prelim: '', midterm: '', preFinal: '', finals: '' }
   ]);
 
+  // Initialize state first, then load from localStorage
   const [gradeHistory, setGradeHistory] = useState<SemesterRecord[]>([]);
   const [selectedHistoryGWA, setSelectedHistoryGWA] = useState<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('gradeHistory');
-    if (saved) setGradeHistory(JSON.parse(saved));
-    const savedDarkMode = localStorage.getItem('darkMode');
-    if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
-    const savedLanding = localStorage.getItem('hasVisited');
-    if (savedLanding) setShowLanding(false);
+    try {
+      const saved = localStorage.getItem('gradeHistory');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setGradeHistory(parsed);
+        }
+      }
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
+      const savedLanding = localStorage.getItem('hasVisited');
+      if (savedLanding) setShowLanding(false);
+    } catch (e) {
+      console.error('Error loading from localStorage:', e);
+    }
+    setIsLoaded(true);
   }, []);
 
-  useEffect(() => { localStorage.setItem('gradeHistory', JSON.stringify(gradeHistory)); }, [gradeHistory]);
+  // Save gradeHistory to localStorage only after initial load
+  useEffect(() => { 
+    if (isLoaded) {
+      localStorage.setItem('gradeHistory', JSON.stringify(gradeHistory)); 
+    }
+  }, [gradeHistory, isLoaded]);
+  
   useEffect(() => { localStorage.setItem('darkMode', JSON.stringify(darkMode)); }, [darkMode]);
 
   const handleGetStarted = () => {

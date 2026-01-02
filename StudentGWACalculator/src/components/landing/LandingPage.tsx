@@ -35,7 +35,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             }`}>
               <GraduationCap className="w-4 h-4 text-emerald-500" />
             </div>
-            <span className={`text-sm font-bold ${textColor}`}>STI GWA</span>
+            <span className={`text-sm font-bold ${textColor}`}>Sepanode Calculator</span>
           </div>
           <button 
             onClick={toggleDarkMode} 

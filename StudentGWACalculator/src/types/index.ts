@@ -7,6 +7,13 @@ export interface Subject {
   finals: number | '';
 }
 
+// For quick entry of past semester final grades
+export interface QuickEntrySubject {
+  id: string;
+  name: string;
+  finalGrade: number | '';
+}
+
 export interface GradeResult {
   percentage: number;
   grade: number;
