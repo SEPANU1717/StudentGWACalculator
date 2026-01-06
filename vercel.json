@@ -1,3 +1,6 @@
 {
-  "outputDirectory": "StudentGWACalculator/dist"
+  "outputDirectory": "StudentGWACalculator/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
