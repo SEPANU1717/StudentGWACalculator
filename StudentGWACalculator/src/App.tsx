@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Header } from './components/Header';
 import { TabNavigation, Tab } from './components/TabNavigation';
 import { LandingPage } from './components/landing/LandingPage';
@@ -125,7 +126,12 @@ export default function STIGradeCalculator() {
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
 
   if (showLanding) {
-    return <LandingPage darkMode={darkMode} onGetStarted={handleGetStarted} toggleDarkMode={toggleDarkMode} />;
+    return (
+      <>
+        <LandingPage darkMode={darkMode} onGetStarted={handleGetStarted} toggleDarkMode={toggleDarkMode} />
+        <Analytics />
+      </>
+    );
   }
 
   return (
@@ -204,6 +210,7 @@ export default function STIGradeCalculator() {
         )}
         </div>
       </main>
+      <Analytics />
     </div>
   );
 }
