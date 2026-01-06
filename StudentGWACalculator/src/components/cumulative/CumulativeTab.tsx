@@ -86,19 +86,22 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   
   // Calculate GWA for Final Grades Mode (weighted by units)
   const finalGradeGWA = useMemo(() => {
-    const validGrades = finalGradeSubjects.filter(s => 
-      s.finalGrade !== '' && 
-      s.finalGrade >= 1.00 && 
-      s.finalGrade <= 5.00 &&
-      s.units !== '' &&
-      s.units > 0
-    );
+    const validGrades = finalGradeSubjects.filter(s => {
+      const grade = typeof s.finalGrade === 'number' ? s.finalGrade : parseFloat(s.finalGrade as string);
+      const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
+      return !isNaN(grade) && !isNaN(units) && grade >= 1.00 && grade <= 5.00 && units > 0;
+    });
     if (validGrades.length === 0) return null;
     
-    const totalWeighted = validGrades.reduce((acc, s) => 
-      acc + ((s.finalGrade as number) * (s.units as number)), 0
-    );
-    const totalUnits = validGrades.reduce((acc, s) => acc + (s.units as number), 0);
+    const totalWeighted = validGrades.reduce((acc, s) => {
+      const grade = typeof s.finalGrade === 'number' ? s.finalGrade : parseFloat(s.finalGrade as string);
+      const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
+      return acc + (grade * units);
+    }, 0);
+    const totalUnits = validGrades.reduce((acc, s) => {
+      const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
+      return acc + units;
+    }, 0);
     
     if (totalUnits === 0) return null;
     return Math.round((totalWeighted / totalUnits) * 100) / 100;
@@ -205,11 +208,14 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     
     if (gwa >= 1.00 && gwa <= 5.00 && subjectCount > 0) {
       const name = pastSemName.trim() || `Past Semester ${gradeHistory.length + 1}`;
-      onAddToHistory(name, Math.round(gwa * 100) / 100, subjectCount);
+      onAddToHistory(name, Math.round(gwa * 100) / 100, subjectCount, undefined, undefined, 'detailed');
       setPastSemName('');
       setPastSemGWA('');
       setPastSemSubjects('');
       setShowAddPastSemester(false);
+      // Clear editing state to prevent 'Update' button from showing
+      setEditingHistoryId(null);
+      setSemesterName('');
     }
   };
 
@@ -261,6 +267,9 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
 
   const handleModeChange = (mode: CalculationMode) => {
     setCalculationMode(mode);
+    // Clear editing state when switching modes to prevent cross-tab issues
+    setEditingHistoryId(null);
+    setSemesterName('');
   };
 
   const canAddPastSemester = pastSemGWA !== '' && pastSemSubjects !== '' && 

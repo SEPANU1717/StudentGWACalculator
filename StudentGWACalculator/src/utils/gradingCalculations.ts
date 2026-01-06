@@ -36,9 +36,30 @@ export const calculateSubjectGWA = (subject: Subject): GradeResult | null => {
 };
 
 export const calculateOverallGWA = (subjects: Subject[]): number | null => {
-  const validGrades = subjects.map(calculateSubjectGWA).filter((r): r is GradeResult => r !== null);
-  if (validGrades.length === 0) return null;
-  return Math.round((validGrades.reduce((acc, r) => acc + r.grade, 0) / validGrades.length) * 100) / 100;
+  // Filter subjects with complete grades and valid units
+  const validSubjects = subjects.filter(s => {
+    const result = calculateSubjectGWA(s);
+    const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
+    return result !== null && !isNaN(units) && units > 0;
+  });
+  
+  if (validSubjects.length === 0) return null;
+  
+  // Calculate weighted GWA by units
+  let totalWeighted = 0;
+  let totalUnits = 0;
+  
+  validSubjects.forEach(s => {
+    const result = calculateSubjectGWA(s);
+    const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
+    if (result) {
+      totalWeighted += result.grade * units;
+      totalUnits += units;
+    }
+  });
+  
+  if (totalUnits === 0) return null;
+  return Math.round((totalWeighted / totalUnits) * 100) / 100;
 };
 
 export const getGradeProgress = (subject: Subject) => {

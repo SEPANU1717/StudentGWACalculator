@@ -32,7 +32,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
       <div className="space-y-2.5">
         {subjects.map((subject, index) => (
           <Card key={subject.id} darkMode={darkMode} padding="md">
-            {/* Subject Header - Number, Name, Remove */}
+            {/* Subject Header - Number, Name, Status, Remove */}
             <div className="flex items-center gap-2 sm:gap-3 mb-3">
               {/* Number Badge */}
               <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
@@ -49,6 +49,16 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 aria-label="Subject name"
               />
 
+              {/* Status Badge */}
+              {subject.finalGrade !== '' && typeof subject.finalGrade === 'number' && (
+                <Badge 
+                  variant={subject.finalGrade <= 3.00 ? 'success' : 'error'} 
+                  size="sm"
+                >
+                  {subject.finalGrade <= 3.00 ? 'Passed' : 'Failed'}
+                </Badge>
+              )}
+
               {/* Remove Button */}
               <button
                 onClick={() => onRemoveSubject(subject.id)}
@@ -60,7 +70,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
             </div>
 
             {/* Final Grade and Units - Side by Side */}
-            <div className="grid grid-cols-[1fr_auto] gap-3 mb-3">
+            <div className="grid grid-cols-[1fr_auto] gap-3">
               <div>
                 <label className={`block text-[9px] font-semibold ${textMuted} mb-1 uppercase tracking-wider`}>
                   Final Grade
@@ -101,21 +111,6 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 />
               </div>
             </div>
-
-            {/* Grade Status */}
-            {subject.finalGrade !== '' && typeof subject.finalGrade === 'number' && (
-              <div className={`pt-3 border-t ${border}`}>
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted}`}>Status:</span>
-                  <Badge 
-                    variant={subject.finalGrade <= 3.00 ? 'success' : 'error'} 
-                    size="sm"
-                  >
-                    {subject.finalGrade <= 3.00 ? 'Passed' : 'Failed'}
-                  </Badge>
-                </div>
-              </div>
-            )}
           </Card>
         ))}
 

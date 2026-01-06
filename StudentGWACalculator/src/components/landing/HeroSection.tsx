@@ -30,7 +30,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Badge */}
         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${cardBg} border ${border} mb-3`}>
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className={`text-xs font-medium ${textLight}`}>STI Grading System 2025</span>
+          <span className={`text-xs font-medium ${textLight}`}>STI Grading System 2025-2026</span>
         </div>
 
         {/* Affiliation disclaimer */}
