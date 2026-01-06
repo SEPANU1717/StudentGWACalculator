@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calculator, TrendingUp, BarChart3, Award, Zap, Shield, LucideIcon } from 'lucide-react';
+import { Calculator, Split, History, Award, TrendingUp, Zap, LucideIcon } from 'lucide-react';
 
 interface Feature {
   icon: LucideIcon;
@@ -13,34 +13,34 @@ interface FeaturesGridProps {
 
 const features: Feature[] = [
   { 
+    icon: Split, 
+    title: 'Dual Calculation Modes', 
+    description: 'Switch between Detailed grades and Final grades input for maximum flexibility.' 
+  },
+  { 
     icon: Calculator, 
-    title: 'GWA Calculator', 
-    description: 'Calculate your weighted GWA in real-time with the STI grading system.' 
+    title: 'Weighted GWA', 
+    description: 'Accurate calculations using credit units and STI\'s 20-20-20-40 system.' 
   },
   { 
-    icon: TrendingUp, 
-    title: 'Smart Predictions', 
-    description: 'See what grades you need in remaining subjects to pass or hit your target.' 
-  },
-  { 
-    icon: BarChart3, 
-    title: 'Multi-Subject', 
-    description: 'Track multiple subjects at once and calculate cumulative GWA.' 
+    icon: History, 
+    title: 'Smart History', 
+    description: 'Independent history tracking for each mode with edit and restore capabilities.' 
   },
   { 
     icon: Award, 
-    title: 'Honors Check', 
-    description: "Instantly see if you qualify for Dean's List or graduation honors." 
+    title: 'Latin Honors', 
+    description: "Check eligibility for Dean's List, President's List, and graduation honors." 
+  },
+  { 
+    icon: TrendingUp, 
+    title: 'Cumulative GWA', 
+    description: 'Track your overall GWA across multiple semesters for the complete picture.' 
   },
   { 
     icon: Zap, 
-    title: 'What-If Analysis', 
-    description: 'Simulate different grade scenarios and see the impact instantly.' 
-  },
-  { 
-    icon: Shield, 
-    title: 'STI Grading', 
-    description: "Built specifically for STI's 20-20-20-40 weighted grading system." 
+    title: 'Real-time Results', 
+    description: 'Instant calculations with pass/fail status and grade predictions.' 
   }
 ];
 
@@ -55,15 +55,15 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
     <section className={`py-16 sm:py-20 ${sectionBg}`}>
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-10 sm:mb-12">
-          <span className={`text-xs font-semibold uppercase tracking-wider ${textMuted}`}>
-            Features
+        <div className="text-center mb-12">
+          <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
+            Key Features
           </span>
-          <h2 className={`text-xl sm:text-2xl font-bold mt-2 mb-4 ${textColor}`}>
-            Everything You Need
+          <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-4 ${textColor}`}>
+            Built for STI Students
           </h2>
-          <p className={`text-sm sm:text-base max-w-xl mx-auto ${textMuted}`}>
-            Powerful tools designed specifically for STI students to track and improve their academic performance.
+          <p className={`text-base max-w-2xl mx-auto ${textMuted}`}>
+            Powerful tools designed specifically for accurate GWA tracking and academic planning.
           </p>
         </div>
 

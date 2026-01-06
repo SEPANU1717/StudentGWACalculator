@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { TabNavigation, Tab } from './components/TabNavigation';
 import { LandingPage } from './components/landing/LandingPage';
+import { UpdateModal } from './components/UpdateModal';
 import { CalculatorTab } from './components/calculator/CalculatorTab';
 import { CumulativeTab } from './components/cumulative/CumulativeTab';
 import { PredictionsTab } from './components/predictions/PredictionsTab';
 import { HonorsTab } from './components/honors/HonorsTab';
-import { Subject, SemesterRecord } from './types';
+import { Subject, SemesterRecord, QuickEntrySubject } from './types';
 
 export default function STIGradeCalculator() {
   const [showLanding, setShowLanding] = useState(true);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
   const [darkMode, setDarkMode] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
@@ -18,11 +20,11 @@ export default function STIGradeCalculator() {
   const [isBaccalaureate, setIsBaccalaureate] = useState(true);
   
   const [singleSubject, setSingleSubject] = useState<Subject>({
-    id: '1', name: '', prelim: '', midterm: '', preFinal: '', finals: ''
+    id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: ''
   });
   
   const [subjects, setSubjects] = useState<Subject[]>([
-    { id: '1', name: '', prelim: '', midterm: '', preFinal: '', finals: '' }
+    { id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }
   ]);
 
   // Initialize state first, then load from localStorage
@@ -61,6 +63,8 @@ export default function STIGradeCalculator() {
   const handleGetStarted = () => {
     setShowLanding(false);
     localStorage.setItem('hasVisited', 'true');
+    // Show update modal after 500ms
+    setTimeout(() => setShowUpdateModal(true), 500);
   };
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
@@ -71,7 +75,7 @@ export default function STIGradeCalculator() {
   };
 
   const addSubject = () => {
-    setSubjects(prev => [...prev, { id: Date.now().toString(), name: '', prelim: '', midterm: '', preFinal: '', finals: '' }]);
+    setSubjects(prev => [...prev, { id: Date.now().toString(), name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }]);
   };
 
   const removeSubject = (id: string) => {
@@ -79,7 +83,11 @@ export default function STIGradeCalculator() {
   };
 
   const clearAllSubjects = () => {
-    setSubjects([{ id: Date.now().toString(), name: '', prelim: '', midterm: '', preFinal: '', finals: '' }]);
+    setSubjects([{ id: Date.now().toString(), name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }]);
+  };
+
+  const restoreSubjects = (restoredSubjects: Subject[]) => {
+    setSubjects(restoredSubjects.map(s => ({ ...s, id: Date.now().toString() + Math.random() })));
   };
 
   const updateSubject = (id: string, field: keyof Subject, value: string) => {
@@ -91,8 +99,17 @@ export default function STIGradeCalculator() {
     }
   };
 
-  const addToHistory = (name: string, gwa: number, subjectCount: number) => {
-    const record: SemesterRecord = { id: Date.now().toString(), name, gwa, subjects: subjectCount, date: new Date().toLocaleDateString() };
+  const addToHistory = (name: string, gwa: number, subjectCount: number, subjectsData?: Subject[], finalGradesData?: QuickEntrySubject[], mode?: 'detailed' | 'final') => {
+    const record: SemesterRecord = { 
+      id: Date.now().toString(), 
+      name, 
+      gwa, 
+      subjects: subjectCount, 
+      date: new Date().toLocaleDateString(),
+      subjectsData,
+      finalGradesData,
+      mode
+    };
     setGradeHistory(prev => [...prev, record]);
   };
 
@@ -102,11 +119,6 @@ export default function STIGradeCalculator() {
       setSelectedHistoryGWA(null);
     }
     setGradeHistory(prev => prev.filter(r => r.id !== id));
-  };
-
-  const clearHistory = () => {
-    setGradeHistory([]);
-    setSelectedHistoryGWA(null);
   };
 
   const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
@@ -119,6 +131,13 @@ export default function STIGradeCalculator() {
   return (
     <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} onShowLanding={() => setShowLanding(true)} />
+      
+      {/* Update Modal */}
+      <UpdateModal 
+        isOpen={showUpdateModal} 
+        onClose={() => setShowUpdateModal(false)} 
+        darkMode={darkMode} 
+      />
       
       <main className="max-w-lg mx-auto px-4 py-6">
         {/* Tab Navigation */}
@@ -167,10 +186,9 @@ export default function STIGradeCalculator() {
             onClearAllSubjects={clearAllSubjects}
             onAddToHistory={addToHistory}
             onRemoveFromHistory={removeFromHistory}
-            onClearHistory={clearHistory}
-            onSelectHistoryRecord={(gwa) => setSelectedHistoryGWA(gwa)}
             selectedHistoryGWA={selectedHistoryGWA}
             onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
+            onRestoreSubjects={restoreSubjects}
           />
         )}
 
@@ -178,7 +196,7 @@ export default function STIGradeCalculator() {
           <HonorsTab
             darkMode={darkMode}
             subjects={subjects}
-            gradeHistory={gradeHistory}
+            gradeHistory={gradeHistory.filter(record => record.mode === 'detailed')}
             isBaccalaureate={isBaccalaureate}
             onSetIsBaccalaureate={setIsBaccalaureate}
             selectedHistoryGWA={selectedHistoryGWA}

@@ -1,6 +1,7 @@
 export interface Subject {
   id: string;
   name: string;
+  units: number | '';
   prelim: number | '';
   midterm: number | '';
   preFinal: number | '';
@@ -11,6 +12,7 @@ export interface Subject {
 export interface QuickEntrySubject {
   id: string;
   name: string;
+  units: number | '';
   finalGrade: number | '';
 }
 
@@ -35,6 +37,9 @@ export interface SemesterRecord {
   gwa: number;
   subjects: number;
   date: string;
+  subjectsData?: Subject[];
+  finalGradesData?: QuickEntrySubject[];
+  mode?: 'detailed' | 'final';
 }
 
 export interface HonorsEligibility {

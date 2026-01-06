@@ -1,14 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import { Trash2, Plus } from 'lucide-react';
-import { Subject, SemesterRecord } from '../../types';
+import { Subject, SemesterRecord, QuickEntrySubject } from '../../types';
 import { calculateSubjectGWA, calculateOverallGWA, getHonorClass } from '../../utils/gradingCalculations';
 
-import { HeaderSection } from './HeaderSection';
 import { GradeHistoryPanel } from './GradeHistoryPanel';
 import { SubjectList } from './SubjectList';
 import { OverallGWACard } from './OverallGWACard';
 import { SaveToHistoryPanel } from './SaveToHistoryPanel';
+import { FinalGradesInput } from './FinalGradesInput';
+import { ModeSwitcher } from './ModeSwitcher';
 import { Card, Button } from '../shared';
+
+type CalculationMode = 'detailed' | 'final';
 
 interface CumulativeTabProps {
   darkMode: boolean;
@@ -19,12 +22,11 @@ interface CumulativeTabProps {
   onRemoveSubject: (id: string) => void;
   onUpdateSubject: (id: string, field: keyof Subject, value: string) => void;
   onClearAllSubjects: () => void;
-  onAddToHistory: (name: string, gwa: number, subjectCount: number) => void;
+  onAddToHistory: (name: string, gwa: number, subjectCount: number, subjectsData?: Subject[], finalGradesData?: QuickEntrySubject[], mode?: 'detailed' | 'final') => void;
   onRemoveFromHistory: (id: string) => void;
-  onClearHistory: () => void;
-  onSelectHistoryRecord: (gwa: number) => void;
   selectedHistoryGWA: number | null;
   onClearSelectedHistory: () => void;
+  onRestoreSubjects?: (subjects: Subject[]) => void;
 }
 
 export const CumulativeTab: React.FC<CumulativeTabProps> = ({
@@ -38,13 +40,17 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   onClearAllSubjects,
   onAddToHistory,
   onRemoveFromHistory,
-  onClearHistory,
-  onSelectHistoryRecord,
   selectedHistoryGWA,
-  onClearSelectedHistory
+  onClearSelectedHistory,
+  onRestoreSubjects
 }) => {
   const [showHistory, setShowHistory] = useState(false);
   const [semesterName, setSemesterName] = useState('');
+  const [calculationMode, setCalculationMode] = useState<CalculationMode>('detailed');
+  const [editingHistoryId, setEditingHistoryId] = useState<string | null>(null);
+  
+  // State for Final Grades Mode
+  const [finalGradeSubjects, setFinalGradeSubjects] = useState<QuickEntrySubject[]>([]);
   
   // State for adding past semester directly
   const [showAddPastSemester, setShowAddPastSemester] = useState(false);
@@ -57,6 +63,16 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
+  // Filter history based on current mode - independent histories
+  const filteredHistory = useMemo(() => {
+    return gradeHistory.filter(record => record.mode === calculationMode);
+  }, [gradeHistory, calculationMode]);
+
+  // Only use detailed mode history for cumulative calculations and honors
+  const detailedHistory = useMemo(() => {
+    return gradeHistory.filter(record => record.mode === 'detailed');
+  }, [gradeHistory]);
+
   // Calculate results for each subject
   const subjectResults = useMemo(() => {
     const results = new Map<string, ReturnType<typeof calculateSubjectGWA>>();
@@ -68,22 +84,51 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
 
   const overallGWA = useMemo(() => calculateOverallGWA(subjects), [subjects]);
   
+  // Calculate GWA for Final Grades Mode (weighted by units)
+  const finalGradeGWA = useMemo(() => {
+    const validGrades = finalGradeSubjects.filter(s => 
+      s.finalGrade !== '' && 
+      s.finalGrade >= 1.00 && 
+      s.finalGrade <= 5.00 &&
+      s.units !== '' &&
+      s.units > 0
+    );
+    if (validGrades.length === 0) return null;
+    
+    const totalWeighted = validGrades.reduce((acc, s) => 
+      acc + ((s.finalGrade as number) * (s.units as number)), 0
+    );
+    const totalUnits = validGrades.reduce((acc, s) => acc + (s.units as number), 0);
+    
+    if (totalUnits === 0) return null;
+    return Math.round((totalWeighted / totalUnits) * 100) / 100;
+  }, [finalGradeSubjects]);
+  
+  // Use appropriate GWA based on mode
+  const currentGWA = calculationMode === 'detailed' ? overallGWA : finalGradeGWA;
+  
   const honorClass = useMemo(() => 
-    overallGWA ? getHonorClass(overallGWA, isBaccalaureate) : null, 
-    [overallGWA, isBaccalaureate]
+    currentGWA ? getHonorClass(currentGWA, isBaccalaureate) : null, 
+    [currentGWA, isBaccalaureate]
   );
   
-  const completedSubjects = useMemo(() => 
-    subjects.filter(s => calculateSubjectGWA(s)).length,
-    [subjects]
-  );
+  const completedSubjects = useMemo(() => {
+    if (calculationMode === 'detailed') {
+      return subjects.filter(s => calculateSubjectGWA(s)).length;
+    } else {
+      return finalGradeSubjects.filter(s => s.finalGrade !== '').length;
+    }
+  }, [subjects, finalGradeSubjects, calculationMode]);
 
-  // Calculate Cumulative GWA: weighted average of all history + current term
+  // Calculate Cumulative GWA: weighted average of detailed mode history + current term (only in detailed mode)
   const cumulativeGWA = useMemo(() => {
-    const historyWeightedGWA = gradeHistory.reduce((sum, r) => sum + (r.gwa * r.subjects), 0);
-    const historySubjects = gradeHistory.reduce((sum, r) => sum + r.subjects, 0);
+    // Only calculate cumulative GWA in detailed mode
+    if (calculationMode !== 'detailed') return null;
     
-    const currentTermGWA = overallGWA;
+    const historyWeightedGWA = detailedHistory.reduce((sum, r) => sum + (r.gwa * r.subjects), 0);
+    const historySubjects = detailedHistory.reduce((sum, r) => sum + r.subjects, 0);
+    
+    const currentTermGWA = currentGWA;
     const currentTermSubjects = completedSubjects;
     
     if (historySubjects === 0 && currentTermSubjects === 0) return null;
@@ -94,26 +139,62 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     if (totalSubjects === 0) return null;
     
     return Math.round((totalWeightedGWA / totalSubjects) * 100) / 100;
-  }, [gradeHistory, overallGWA, completedSubjects]);
+  }, [detailedHistory, currentGWA, completedSubjects, calculationMode]);
 
   // Check if any completed subject has a grade > 2.00
   const hasGradeBelowThreshold = useMemo(() => {
-    for (const [, result] of subjectResults) {
-      if (result && result.grade > 2.00) return true;
+    if (calculationMode === 'detailed') {
+      for (const [, result] of subjectResults) {
+        if (result && result.grade > 2.00) return true;
+      }
+      return false;
+    } else {
+      // For final grades mode
+      return finalGradeSubjects.some(s => 
+        s.finalGrade !== '' && (s.finalGrade as number) > 3.00
+      );
     }
-    return false;
-  }, [subjectResults]);
+  }, [subjectResults, finalGradeSubjects, calculationMode]);
 
-  const hasAnyGrades = subjects.some(s => 
-    s.prelim !== '' || s.midterm !== '' || s.preFinal !== '' || s.finals !== ''
-  );
+  const hasAnyGrades = calculationMode === 'detailed' 
+    ? subjects.some(s => s.prelim !== '' || s.midterm !== '' || s.preFinal !== '' || s.finals !== '')
+    : finalGradeSubjects.some(s => s.finalGrade !== '');
 
   const handleSaveToHistory = () => {
-    if (overallGWA && completedSubjects > 0) {
+    if (currentGWA && completedSubjects > 0) {
       const name = semesterName.trim() || `Semester ${gradeHistory.length + 1}`;
-      onAddToHistory(name, overallGWA, completedSubjects);
+      
+      // If editing an existing entry, update it
+      if (editingHistoryId) {
+        const existingRecord = gradeHistory.find(r => r.id === editingHistoryId);
+        if (existingRecord) {
+          // Update the existing record
+          if (calculationMode === 'detailed') {
+            onAddToHistory(name, currentGWA, completedSubjects, [...subjects], undefined, 'detailed');
+          } else {
+            onAddToHistory(name, currentGWA, completedSubjects, undefined, [...finalGradeSubjects], 'final');
+          }
+          // Remove the old entry
+          onRemoveFromHistory(editingHistoryId);
+          setEditingHistoryId(null);
+        }
+      } else {
+        // Save as new entry with subject data for restoration
+        if (calculationMode === 'detailed') {
+          onAddToHistory(name, currentGWA, completedSubjects, [...subjects], undefined, 'detailed');
+        } else {
+          onAddToHistory(name, currentGWA, completedSubjects, undefined, [...finalGradeSubjects], 'final');
+        }
+      }
+      
       setSemesterName('');
-      onClearAllSubjects();
+      
+      // Clear based on mode
+      if (calculationMode === 'detailed') {
+        onClearAllSubjects();
+      } else {
+        setFinalGradeSubjects([]);
+      }
       onClearSelectedHistory();
     }
   };
@@ -133,8 +214,53 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   };
 
   const handleClearAll = () => {
-    onClearAllSubjects();
+    if (calculationMode === 'detailed') {
+      onClearAllSubjects();
+    } else {
+      setFinalGradeSubjects([]);
+    }
     onClearSelectedHistory();
+  };
+
+  // Handle restoring grades from history record
+  const handleRestoreFromHistory = (record: SemesterRecord) => {
+    if (record.mode === 'detailed' && record.subjectsData && onRestoreSubjects) {
+      setCalculationMode('detailed');
+      onRestoreSubjects(record.subjectsData);
+      setEditingHistoryId(record.id);
+      setSemesterName(record.name);
+    } else if (record.mode === 'final' && record.finalGradesData) {
+      setCalculationMode('final');
+      setFinalGradeSubjects(record.finalGradesData);
+      setEditingHistoryId(record.id);
+      setSemesterName(record.name);
+    }
+    setShowHistory(false);
+  };
+  
+  // Handlers for Final Grades Mode
+  const handleAddFinalGradeSubject = () => {
+    const newSubject: QuickEntrySubject = {
+      id: Date.now().toString(),
+      name: '',
+      units: '',
+      finalGrade: ''
+    };
+    setFinalGradeSubjects(prev => [...prev, newSubject]);
+  };
+
+  const handleRemoveFinalGradeSubject = (id: string) => {
+    setFinalGradeSubjects(prev => prev.filter(s => s.id !== id));
+  };
+
+  const handleUpdateFinalGradeSubject = (id: string, field: keyof QuickEntrySubject, value: string | number) => {
+    setFinalGradeSubjects(prev =>
+      prev.map(s => s.id === id ? { ...s, [field]: value } : s)
+    );
+  };
+
+  const handleModeChange = (mode: CalculationMode) => {
+    setCalculationMode(mode);
   };
 
   const canAddPastSemester = pastSemGWA !== '' && pastSemSubjects !== '' && 
@@ -148,57 +274,92 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       id="cumulative-panel"
       aria-labelledby="cumulative-tab"
     >
-      {/* Overall GWA Card */}
+      {/* Mode Switcher */}
+      <ModeSwitcher
+        mode={calculationMode}
+        onModeChange={handleModeChange}
+        darkMode={darkMode}
+      />
+
+      {/* Overall GWA Card with History Toggle */}
       <OverallGWACard
-        gwa={overallGWA}
+        gwa={currentGWA}
         honorClass={honorClass}
         completedSubjects={completedSubjects}
         cumulativeGWA={cumulativeGWA}
         selectedHistoryGWA={selectedHistoryGWA}
         hasGradeBelowThreshold={hasGradeBelowThreshold}
         darkMode={darkMode}
+        historyCount={filteredHistory.length}
+        showHistory={showHistory}
+        onToggleHistory={() => setShowHistory(!showHistory)}
+        mode={calculationMode}
       />
 
-      {/* Subject List - Current Term */}
-      <SubjectList
-        subjects={subjects}
-        subjectResults={subjectResults}
-        onUpdateSubject={onUpdateSubject}
-        onRemoveSubject={onRemoveSubject}
-        onAddSubject={onAddSubject}
+      {/* History Panel - Shown below GWA card when toggled */}
+      <GradeHistoryPanel
+        isOpen={showHistory}
+        gradeHistory={filteredHistory}
+        onRemoveFromHistory={onRemoveFromHistory}
+        onRestoreRecord={handleRestoreFromHistory}
         darkMode={darkMode}
       />
+
+      {/* Conditional Rendering Based on Mode */}
+      {calculationMode === 'detailed' ? (
+        <SubjectList
+          subjects={subjects}
+          subjectResults={subjectResults}
+          onUpdateSubject={onUpdateSubject}
+          onRemoveSubject={onRemoveSubject}
+          onAddSubject={onAddSubject}
+          darkMode={darkMode}
+        />
+      ) : (
+        <FinalGradesInput
+          subjects={finalGradeSubjects}
+          onAddSubject={handleAddFinalGradeSubject}
+          onRemoveSubject={handleRemoveFinalGradeSubject}
+          onUpdateSubject={handleUpdateFinalGradeSubject}
+          darkMode={darkMode}
+        />
+      )}
 
       {/* Save Current Term to History */}
       <SaveToHistoryPanel
         semesterName={semesterName}
         onSemesterNameChange={setSemesterName}
         onSave={handleSaveToHistory}
-        canSave={overallGWA !== null && completedSubjects > 0}
+        canSave={currentGWA !== null && completedSubjects > 0}
         darkMode={darkMode}
+        isEditing={editingHistoryId !== null}
       />
 
-      {/* Add Past Semester Section */}
-      <section className="space-y-3">
+      {/* Add Past Semester Section - Only show in detailed mode */}
+      {calculationMode === 'detailed' && (
+        <section className="space-y-3">
         <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
-          Past Semesters
+          Quick Add Past Semester
         </p>
 
         {!showAddPastSemester ? (
-          <Button
+          <button
             onClick={() => setShowAddPastSemester(true)}
-            variant="ghost"
-            size="md"
-            icon={Plus}
-            fullWidth
-            darkMode={darkMode}
+            className={`
+              w-full py-3 rounded-xl border border-dashed 
+              ${darkMode ? 'border-[#1a1a1a] hover:border-[#333] hover:bg-[#0a0a0a]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
+              ${textMuted} hover:${darkMode ? 'text-white' : 'text-gray-700'}
+              transition-colors flex items-center justify-center gap-2 min-h-[48px]
+              outline-none
+            `}
           >
-            Add Past Semester GWA
-          </Button>
+            <Plus className="w-4 h-4" />
+            <span className="text-sm font-medium">Add Past Semester GWA</span>
+          </button>
         ) : (
           <Card darkMode={darkMode} padding="md">
             <div className="space-y-3">
-              <p className={`text-xs font-medium ${textColor}`}>Add Previous Semester</p>
+              <p className={`text-sm font-semibold ${textColor}`}>Add Previous Semester</p>
               
               <input
                 type="text"
@@ -262,40 +423,22 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
           </Card>
         )}
       </section>
+      )}
 
-      {/* History Section */}
-      <section className="space-y-3">
-        <HeaderSection
-          showHistory={showHistory}
-          onToggleHistory={() => setShowHistory(!showHistory)}
-          darkMode={darkMode}
-        />
-
-        <GradeHistoryPanel
-          isOpen={showHistory}
-          gradeHistory={gradeHistory}
-          cumulativeGWA={cumulativeGWA}
-          onRemoveFromHistory={onRemoveFromHistory}
-          onClearHistory={onClearHistory}
-          onSelectRecord={onSelectHistoryRecord}
-          darkMode={darkMode}
-        />
-
-        {/* Clear All Button */}
-        {hasAnyGrades && (
-          <button
-            onClick={handleClearAll}
-            className={`
-              w-full py-2.5 rounded-xl 
-              ${darkMode ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400' : 'bg-red-100 hover:bg-red-200 text-red-600'}
-              text-sm font-semibold transition-colors flex items-center justify-center gap-2 min-h-[44px]
-            `}
-          >
-            <Trash2 className="w-4 h-4" />
-            Clear All
-          </button>
-        )}
-      </section>
+      {/* Clear All Button */}
+      {hasAnyGrades && (
+        <button
+          onClick={handleClearAll}
+          className={`
+            w-full py-2.5 rounded-xl 
+            ${darkMode ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400' : 'bg-red-100 hover:bg-red-200 text-red-600'}
+            text-sm font-semibold transition-colors flex items-center justify-center gap-2 min-h-[44px]
+          `}
+        >
+          <Trash2 className="w-4 h-4" />
+          Clear All
+        </button>
+      )}
     </div>
   );
 };

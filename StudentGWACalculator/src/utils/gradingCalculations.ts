@@ -30,9 +30,9 @@ export const calculateSubjectGWA = (subject: Subject): GradeResult | null => {
     (midterm as number) * WEIGHTS.midterm +
     (preFinal as number) * WEIGHTS.preFinal +
     (finals as number) * WEIGHTS.finals;
-
-  const { grade, description } = percentageToGrade(percentage);
-  return { percentage: Math.round(percentage * 100) / 100, grade, status: grade < 5.00 ? 'passed' : 'failed', description };
+  const roundedPercentage = Math.round(percentage * 100) / 100;
+  const { grade, description } = percentageToGrade(roundedPercentage);
+  return { percentage: roundedPercentage, grade, status: grade < 5.00 ? 'passed' : 'failed', description };
 };
 
 export const calculateOverallGWA = (subjects: Subject[]): number | null => {
@@ -112,12 +112,13 @@ export const calculateWhatIfGWA = (subject: Subject, simulatedAverage: number): 
   if (finals !== '') percentage += (finals as number) * WEIGHTS.finals;
   else percentage += simulatedAverage * WEIGHTS.finals;
   
-  const { grade, description } = percentageToGrade(percentage);
+  const rounded = Math.round(percentage * 100) / 100;
+  const pg = percentageToGrade(rounded);
   return { 
-    percentage: Math.round(percentage * 100) / 100, 
-    grade, 
-    status: grade < 5.00 ? 'passed' : 'failed', 
-    description,
+    percentage: rounded, 
+    grade: pg.grade, 
+    status: pg.grade < 5.00 ? 'passed' : 'failed', 
+    description: pg.description,
     remaining 
   };
 };

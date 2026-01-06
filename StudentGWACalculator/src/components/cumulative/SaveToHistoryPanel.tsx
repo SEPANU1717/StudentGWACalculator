@@ -8,6 +8,7 @@ interface SaveToHistoryPanelProps {
   onSave: () => void;
   canSave: boolean;
   darkMode: boolean;
+  isEditing?: boolean;
 }
 
 export const SaveToHistoryPanel: React.FC<SaveToHistoryPanelProps> = ({
@@ -15,7 +16,8 @@ export const SaveToHistoryPanel: React.FC<SaveToHistoryPanelProps> = ({
   onSemesterNameChange,
   onSave,
   canSave,
-  darkMode
+  darkMode,
+  isEditing = false
 }) => {
   const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
@@ -26,9 +28,16 @@ export const SaveToHistoryPanel: React.FC<SaveToHistoryPanelProps> = ({
 
   return (
     <Card darkMode={darkMode} padding="md">
-      <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
-        Save to History
-      </p>
+      <div className="flex items-center justify-between mb-3">
+        <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
+          {isEditing ? 'Update History' : 'Save to History'}
+        </p>
+        {isEditing && (
+          <span className={`text-[9px] px-2 py-0.5 rounded ${darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+            Editing
+          </span>
+        )}
+      </div>
       <div className="flex gap-2">
         <input
           type="text"
@@ -49,7 +58,7 @@ export const SaveToHistoryPanel: React.FC<SaveToHistoryPanelProps> = ({
           icon={Save}
           darkMode={darkMode}
         >
-          Save
+          {isEditing ? 'Update' : 'Save'}
         </Button>
       </div>
     </Card>

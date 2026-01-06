@@ -26,13 +26,13 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
           </div>
           
           {/* Title */}
-          <h3 className={`text-xl sm:text-2xl font-bold mb-4 ${textColor}`}>
-            Ready to Calculate?
+          <h3 className={`text-2xl sm:text-3xl font-semibold mb-4 ${textColor}`}>
+            Start Calculating Today
           </h3>
           
           {/* Description */}
-          <p className={`text-sm sm:text-base ${textMuted} mb-8 max-w-md mx-auto`}>
-            Start calculating your GWA now. It's free, fast, and built specifically for STI students.
+          <p className={`text-base ${textMuted} mb-8 max-w-md mx-auto leading-relaxed`}>
+            Join STI students tracking their academic journey with confidence.
           </p>
           
           {/* CTA Button */}

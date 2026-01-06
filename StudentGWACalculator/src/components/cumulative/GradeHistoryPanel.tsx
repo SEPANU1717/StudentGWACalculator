@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
-import { X, Award, Star, Percent, ChevronRight } from 'lucide-react';
+import { X, Award, Star, Percent, ChevronRight, RotateCcw } from 'lucide-react';
 import { SemesterRecord } from '../../types';
 import { isDeansListEligible, getTuitionDiscount } from '../../utils/gradingCalculations';
-import { Card, Badge } from '../shared';
+import { Card } from '../shared';
 
 interface GradeHistoryPanelProps {
   isOpen: boolean;
   gradeHistory: SemesterRecord[];
-  cumulativeGWA: number | null;
   onRemoveFromHistory: (id: string) => void;
-  onClearHistory: () => void;
-  onSelectRecord: (gwa: number) => void;
+  onRestoreRecord?: (record: SemesterRecord) => void;
   darkMode: boolean;
 }
 
 export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
   isOpen,
   gradeHistory,
-  cumulativeGWA,
   onRemoveFromHistory,
-  onSelectRecord,
+  onRestoreRecord,
   darkMode
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -29,7 +26,8 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
-  if (!isOpen) return null;
+  // Hide if not open OR if there are no history records
+  if (!isOpen || gradeHistory.length === 0) return null;
 
   return (
     <Card 
@@ -38,15 +36,9 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
       className="animate-scale-in"
       id="grade-history-panel"
     >
-      {/* Empty State */}
-      {gradeHistory.length === 0 ? (
-        <div className={`text-xs ${textLight} text-center py-6`}>
-          No saved semesters
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {/* Records List */}
-          {gradeHistory.map((record) => {
+      <div className="space-y-2">
+        {/* Records List */}
+        {gradeHistory.map((record) => {
             const isEligible = isDeansListEligible(record.gwa);
             const discount = getTuitionDiscount(record.gwa);
             const isExpanded = expandedId === record.id;
@@ -55,113 +47,99 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
               <div key={record.id} className="space-y-0">
                 <button 
                   onClick={() => setExpandedId(isExpanded ? null : record.id)}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-lg ${inputBg} border ${border} transition-colors hover:${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg ${inputBg} border ${border} transition-all hover:${darkMode ? 'bg-[#111] border-[#222]' : 'bg-gray-100 border-gray-300'} ${isExpanded ? (darkMode ? 'border-b-transparent rounded-b-none bg-[#111]' : 'border-b-transparent rounded-b-none bg-gray-100') : ''}`}
                 >
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <ChevronRight className={`w-3 h-3 ${textLight} transition-transform flex-shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
-                    <div className="min-w-0 text-left">
-                      <div className={`text-xs font-semibold ${textColor} truncate`}>
-                        {record.name}
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <ChevronRight className={`w-4 h-4 ${textLight} transition-transform flex-shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
+                    <div className="min-w-0 text-left flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`text-sm font-bold ${textColor} truncate`}>
+                          {record.name}
+                        </div>
+                        {record.mode && (
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${
+                            record.mode === 'detailed' 
+                              ? (darkMode ? 'bg-blue-500/15 text-blue-400' : 'bg-blue-100 text-blue-600')
+                              : (darkMode ? 'bg-purple-500/15 text-purple-400' : 'bg-purple-100 text-purple-600')
+                          }`}>
+                            {record.mode === 'detailed' ? 'Detailed' : 'Final'}
+                          </span>
+                        )}
                       </div>
-                      <div className={`text-[10px] ${textLight}`}>
-                        {record.subjects} subj
+                      <div className={`text-[11px] ${textLight}`}>
+                        {record.subjects} {record.subjects === 1 ? 'subject' : 'subjects'}
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-sm font-bold tabular-nums ${
-                        isEligible ? 'text-yellow-400' : textColor
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className="text-right">
+                      <div className={`text-lg font-black tabular-nums ${
+                        isEligible ? (darkMode ? 'text-yellow-400' : 'text-yellow-600') : textColor
                       }`}>
                         {record.gwa.toFixed(2)}
-                      </span>
-                      {isEligible && <Award className="w-3 h-3 text-yellow-400" />}
+                      </div>
+                      {isEligible && (
+                        <div className={`text-[9px] font-semibold ${darkMode ? 'text-yellow-400/70' : 'text-yellow-600/70'}`}>
+                          Dean's List
+                        </div>
+                      )}
                     </div>
                     <button
                       onClick={(e) => { e.stopPropagation(); onRemoveFromHistory(record.id); }}
-                      className={`${textLight} hover:text-red-400 transition-colors p-1 rounded`}
+                      className={`${textLight} hover:text-red-400 transition-colors p-1.5 rounded hover:${darkMode ? 'bg-red-500/10' : 'bg-red-100'}`}
                       aria-label={`Remove ${record.name}`}
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 </button>
                 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className={`mx-2 p-3 rounded-b-lg ${darkMode ? 'bg-[#050505]' : 'bg-gray-50'} border-x border-b ${border} animate-scale-in`}>
-                    <div className="flex items-center justify-between gap-4">
-                      {/* Badges */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {isEligible && (
-                          <>
-                            <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${darkMode ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-100 text-yellow-700'}`}>
-                              <Award className="w-2.5 h-2.5" />
-                              <span className="text-[9px] font-semibold">Dean's</span>
+                  <div className={`p-4 rounded-b-lg ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-50 border-gray-300'} border-x border-b animate-scale-in`}>
+                    <div className="space-y-3">
+                      {/* Stats Row */}
+                      <div className={`flex items-center justify-between gap-4 pb-3 border-b ${border}`}>
+                        <div className="flex flex-wrap gap-2">
+                          {isEligible && (
+                            <>
+                              <div className={`flex items-center gap-1.5 px-2 py-1 rounded ${darkMode ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-100 text-yellow-700'}`}>
+                                <Award className="w-3 h-3" />
+                                <span className="text-[10px] font-bold">Dean's List</span>
+                              </div>
+                              <div className={`flex items-center gap-1.5 px-2 py-1 rounded ${darkMode ? 'bg-purple-500/10 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
+                                <Star className="w-3 h-3" />
+                                <span className="text-[10px] font-bold">President's List</span>
+                              </div>
+                            </>
+                          )}
+                          {discount > 0 && (
+                            <div className={`flex items-center gap-1.5 px-2 py-1 rounded ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}>
+                              <Percent className={`w-3 h-3 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`} />
+                              <span className={`text-[10px] font-bold ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{discount}% Discount</span>
                             </div>
-                            <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${darkMode ? 'bg-purple-500/10 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
-                              <Star className="w-2.5 h-2.5" />
-                              <span className="text-[9px] font-semibold">President's</span>
-                            </div>
-                          </>
-                        )}
-                        {!isEligible && (
-                          <span className={`text-[10px] ${textLight}`}>Not eligible for honors</span>
-                        )}
+                          )}
+                        </div>
                       </div>
                       
-                      {/* Discount */}
-                      {discount > 0 ? (
-                        <div className={`flex items-center gap-1 px-2 py-1 rounded ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}>
-                          <Percent className={`w-3 h-3 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`} />
-                          <span className={`text-xs font-bold ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{discount}%</span>
-                          <span className={`text-[9px] ${darkMode ? 'text-emerald-400/60' : 'text-emerald-600/60'}`}>discount</span>
-                        </div>
-                      ) : (
-                        <span className={`text-[10px] ${textLight}`}>No discount</span>
+                      {/* Actions */}
+                      {onRestoreRecord && (record.subjectsData || record.finalGradesData) && (
+                        <button
+                          onClick={() => onRestoreRecord(record)}
+                          className={`w-full py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${darkMode ? 'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25 border border-blue-500/30' : 'bg-blue-100 text-blue-600 hover:bg-blue-200 border border-blue-300'}`}
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          Restore & Edit This Semester
+                        </button>
                       )}
                     </div>
-                    {/* Use button */}
-                    <button
-                      onClick={() => onSelectRecord(record.gwa)}
-                      className={`mt-3 w-full py-2 rounded-lg text-xs font-semibold transition-colors ${darkMode ? 'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`}
-                    >
-                      Use this GWA in Summary
-                    </button>
                   </div>
                 )}
               </div>
             );
           })}
-          
-          {/* Cumulative GWA */}
-          {cumulativeGWA && (
-            <div className={`mt-3 pt-3 border-t ${border}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-xs font-medium ${textLight}`}>Cumulative GWA</span>
-                <Badge variant={isDeansListEligible(cumulativeGWA) ? 'warning' : 'neutral'} size="sm">
-                  {cumulativeGWA.toFixed(2)}
-                </Badge>
-              </div>
-              {isDeansListEligible(cumulativeGWA) && (
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-1.5">
-                    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${darkMode ? 'bg-purple-500/10 text-purple-400' : 'bg-purple-100 text-purple-700'}`}>
-                      <Star className="w-2.5 h-2.5" />
-                      <span className="text-[9px] font-semibold">President's List</span>
-                    </div>
-                  </div>
-                  <div className={`flex items-center gap-1 px-2 py-1 rounded ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}>
-                    <Percent className={`w-3 h-3 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`} />
-                    <span className={`text-xs font-bold ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{getTuitionDiscount(cumulativeGWA)}%</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
-      )}
     </Card>
   );
 };

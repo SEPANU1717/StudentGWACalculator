@@ -36,8 +36,8 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
 
   return (
     <Card darkMode={darkMode} padding="md">
-      {/* Subject Header */}
-      <div className="flex items-center gap-3 mb-4">
+      {/* Subject Header - Number, Name, Units, Remove */}
+      <div className="flex items-center gap-2 sm:gap-3 mb-3">
         {/* Number Badge */}
         <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
           {index + 1}
@@ -48,10 +48,27 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           type="text"
           value={subject.name}
           onChange={(e) => onUpdate('name', e.target.value)}
-          className={`bg-transparent text-sm font-semibold outline-none flex-1 min-w-0 ${textColor} placeholder-[#333]`}
+          className={`flex-1 bg-transparent text-sm font-semibold outline-none ${textColor} placeholder-[#333] min-w-[80px]`}
           placeholder="Subject name"
           aria-label="Subject name"
         />
+        
+        {/* Units Input - Inline */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <span className={`text-[9px] font-semibold ${textMuted} uppercase hidden sm:inline`}>Units:</span>
+          <span className={`text-[9px] font-semibold ${textMuted} uppercase sm:hidden`}>U:</span>
+          <input
+            type="number"
+            min="0"
+            max="10"
+            step="0.5"
+            value={subject.units}
+            onChange={(e) => onUpdate('units', e.target.value)}
+            className={`w-12 sm:w-14 ${inputBg} border ${border} rounded-lg px-1.5 py-1 text-xs sm:text-sm font-bold text-center outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            placeholder="3"
+            aria-label="Units"
+          />
+        </div>
         
         {/* Result Badge */}
         {result && (

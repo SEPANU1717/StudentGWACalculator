@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
 
   return (
     <header className={`sticky top-0 z-50 ${bgColor} backdrop-blur-md border-b ${borderColor}`}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-14 flex items-center justify-between">
         {/* Logo & Brand */}
         <div
           role="button"
@@ -29,20 +29,21 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
             }
           }}
           className={`
-            flex items-center gap-2.5 cursor-pointer outline-none
+            flex items-center gap-2 sm:gap-2.5 cursor-pointer outline-none
             rounded-xl py-1.5 px-2 -ml-2
             transition-all duration-150
             ${darkMode ? 'hover:bg-[#0a0a0a] active:bg-[#111]' : 'hover:bg-gray-100 active:bg-gray-200'}
           `}
           aria-label="Go to landing page"
         >
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+          <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center ${
             darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'
           }`}>
-            <GraduationCap className="w-4 h-4 text-emerald-500" />
+            <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
           </div>
-          <span className={`text-sm font-bold ${textColor}`}>
-            Grade Calculator
+          <span className={`text-sm sm:text-base font-bold ${textColor}`}>
+            <span className="hidden sm:inline">GWA Calculator</span>
+            <span className="sm:hidden">GWA Calc</span>
           </span>
         </div>
         
@@ -50,15 +51,16 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
         <button
           onClick={toggleDarkMode}
           className={`
-            p-2.5 rounded-xl transition-all duration-150 ${buttonBg} outline-none
-            min-h-[40px] min-w-[40px] flex items-center justify-center
+            p-2.5 sm:p-2 rounded-xl transition-all duration-150 ${buttonBg} outline-none
+            min-h-[44px] min-w-[44px] sm:min-h-[40px] sm:min-w-[40px] 
+            flex items-center justify-center
           `}
           aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {darkMode ? (
-            <Sun className={`w-4 h-4 ${textMuted}`} />
+            <Sun className={`w-5 h-5 sm:w-4 sm:h-4 ${textMuted}`} />
           ) : (
-            <Moon className={`w-4 h-4 ${textMuted}`} />
+            <Moon className={`w-5 h-5 sm:w-4 sm:h-4 ${textMuted}`} />
           )}
         </button>
       </div>

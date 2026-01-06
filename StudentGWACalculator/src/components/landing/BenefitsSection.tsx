@@ -6,12 +6,12 @@ interface BenefitsSectionProps {
 }
 
 const benefits = [
-  { icon: CheckCircle, text: 'Real-time calculations as you type' },
-  { icon: CheckCircle, text: 'Works with 1, 2, or 3 grades entered' },
-  { icon: CheckCircle, text: "Automatic Dean's List eligibility check" },
-  { icon: CheckCircle, text: 'Save and track semester history' },
-  { icon: CheckCircle, text: 'Dark and light mode support' },
-  { icon: CheckCircle, text: 'Mobile-friendly responsive design' }
+  { icon: CheckCircle, text: 'Real-time weighted GWA calculations' },
+  { icon: CheckCircle, text: 'Dual mode: Detailed & Final grades' },
+  { icon: CheckCircle, text: 'Independent history per mode' },
+  { icon: CheckCircle, text: 'Latin honors eligibility tracking' },
+  { icon: CheckCircle, text: 'Edit & restore saved semesters' },
+  { icon: CheckCircle, text: 'Mobile-friendly & responsive' }
 ];
 
 export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) => {
@@ -28,15 +28,15 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left - Text Content */}
           <div>
-            <span className={`text-xs font-semibold uppercase tracking-wider ${textMuted}`}>
-              Why Use This
+            <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
+              Why Choose This
             </span>
-            <h2 className={`text-xl sm:text-2xl font-bold mt-2 mb-6 ${textColor}`}>
+            <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-6 ${textColor}`}>
               Smart and Simple
             </h2>
-            <p className={`text-sm sm:text-base mb-8 ${textMuted} leading-relaxed`}>
-              Unlike generic calculators, this tool understands the STI grading system. 
-              It works with partial grades, predicts what you need, and helps you plan for success.
+            <p className={`text-base mb-8 ${textMuted} leading-relaxed`}>
+              Purpose-built for STI College students with features that understand your academic needs. 
+              From detailed term calculations to cumulative GWA tracking, everything you need is here.
             </p>
             
             {/* Benefits List */}

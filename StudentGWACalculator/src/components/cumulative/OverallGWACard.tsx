@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Star, TrendingUp, BookOpen } from 'lucide-react';
+import { Award, Star, TrendingUp, BookOpen, History } from 'lucide-react';
 import { Card } from '../shared';
 import { isDeansListEligible, isPresidentsListEligible, getTuitionDiscount } from '../../utils/gradingCalculations';
 
@@ -11,6 +11,10 @@ interface OverallGWACardProps {
   selectedHistoryGWA?: number | null;
   hasGradeBelowThreshold?: boolean;
   darkMode: boolean;
+  historyCount?: number;
+  showHistory?: boolean;
+  onToggleHistory?: () => void;
+  mode?: 'detailed' | 'final';
 }
 
 export const OverallGWACard: React.FC<OverallGWACardProps> = ({
@@ -20,7 +24,11 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   cumulativeGWA,
   selectedHistoryGWA,
   hasGradeBelowThreshold = false,
-  darkMode
+  darkMode,
+  historyCount = 0,
+  showHistory = false,
+  onToggleHistory,
+  mode = 'detailed'
 }) => {
   const textMuted = darkMode ? 'text-[#666]' : 'text-gray-500';
   const cardBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
@@ -52,8 +60,24 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   if (!termGWA && !cumulativeGWA) {
     return (
       <Card darkMode={darkMode} padding="md">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>GWA Summary</div>
+          {onToggleHistory && historyCount > 0 && (
+            <button
+              onClick={onToggleHistory}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                showHistory
+                  ? (darkMode ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-blue-100 text-blue-700 border border-blue-300')
+                  : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a]' : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 border border-gray-200')
+              }`}
+              aria-label="Toggle history"
+            >
+              <History className="w-4 h-4" />
+              <span>History ({historyCount})</span>
+            </button>
+          )}
+        </div>
         <div className="text-center py-2">
-          <div className={`text-[10px] font-semibold ${textMuted} uppercase tracking-wider mb-2`}>GWA Summary</div>
           <div className={`text-3xl font-extrabold tracking-tight ${textMuted} tabular-nums`}>—</div>
           <p className={`text-[10px] ${textMuted} mt-2`}>
             Enter grades to calculate GWA
@@ -66,7 +90,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   return (
     <Card darkMode={darkMode} padding="md">
       <div className="space-y-3">
-        {/* Header with badges inline */}
+        {/* Header with History Toggle and Badges */}
         <div className="flex items-center justify-between gap-2">
           <div className={`text-[10px] font-semibold ${textMuted} uppercase tracking-wider`}>GWA Summary</div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
@@ -80,11 +104,30 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
                 🏆 {effectiveHonorClass}
               </span>
             )}
+            {onToggleHistory && historyCount > 0 && (
+              <button
+                onClick={onToggleHistory}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+                  showHistory
+                    ? (darkMode ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40' : 'bg-blue-100 text-blue-600 border border-blue-300')
+                    : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a] hover:border-[#333]' : 'bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300')
+                }`}
+                aria-label="Toggle history"
+              >
+                <History className="w-4 h-4" />
+                <span>History</span>
+                <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                  showHistory
+                    ? (darkMode ? 'bg-blue-500/30' : 'bg-blue-200')
+                    : (darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200')
+                }`}>{historyCount}</span>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Compact GWA Display */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className={`grid ${mode === 'detailed' ? 'grid-cols-2' : 'grid-cols-1'} gap-2`}>
           {/* Term GWA */}
           <div className={`${cardBg} border ${border} rounded-lg p-3`}>
             <div className="flex items-center gap-1.5 mb-1">
@@ -97,17 +140,19 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
             <p className={`text-[9px] ${textMuted}`}>{completedSubjects} subj</p>
           </div>
 
-          {/* Cumulative GWA */}
-          <div className={`${cardBg} border ${border} rounded-lg p-3`}>
-            <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className={`w-3 h-3 ${textMuted}`} />
-              <span className={`text-[9px] font-semibold ${textMuted} uppercase`}>Cumulative</span>
+          {/* Cumulative GWA - Only show in detailed mode */}
+          {mode === 'detailed' && (
+            <div className={`${cardBg} border ${border} rounded-lg p-3`}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <TrendingUp className={`w-3 h-3 ${textMuted}`} />
+                <span className={`text-[9px] font-semibold ${textMuted} uppercase`}>Cumulative</span>
+              </div>
+              <div className={`text-2xl font-black tabular-nums ${cumulativeGWA ? getGWAColor(cumulativeGWA) : textMuted}`}>
+                {cumulativeGWA ? cumulativeGWA.toFixed(2) : '—'}
+              </div>
+              <p className={`text-[9px] ${textMuted}`}>Overall</p>
             </div>
-            <div className={`text-2xl font-black tabular-nums ${cumulativeGWA ? getGWAColor(cumulativeGWA) : textMuted}`}>
-              {cumulativeGWA ? cumulativeGWA.toFixed(2) : '—'}
-            </div>
-            <p className={`text-[9px] ${textMuted}`}>Overall</p>
-          </div>
+          )}
         </div>
 
         {/* Warning if grade below threshold */}

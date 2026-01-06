@@ -28,13 +28,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section className="max-w-5xl mx-auto px-6 pt-16 sm:pt-20 pb-16">
       <div className="text-center">
         {/* Badge */}
-        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${cardBg} border ${border} mb-8`}>
+        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${cardBg} border ${border} mb-3`}>
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className={`text-xs font-medium ${textLight}`}>STI Grading System 2025</span>
         </div>
+
+        {/* Affiliation disclaimer */}
+        <div className={`max-w-2xl mx-auto mb-6 text-center ${textMuted} text-xs`}>
+          <em>This project is not affiliated with or endorsed by STI.</em>
+        </div>
         
         {/* Title */}
-        <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 tracking-tight leading-tight ${textColor}`}>
+        <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-semibold mb-6 tracking-tight leading-tight ${textColor}`}>
           Calculate Your
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400">
             Academic Success
@@ -70,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
           {stats.map((stat) => (
             <div key={stat.label} className={`${cardBg} rounded-xl p-4 border ${border}`}>
-              <div className={`text-lg sm:text-xl font-bold ${textColor} mb-1 tabular-nums`}>
+              <div className={`text-lg sm:text-xl font-semibold ${textColor} mb-1 tabular-nums`}>
                 {stat.value}
               </div>
               <div className={`text-xs ${textMuted}`}>{stat.label}</div>
