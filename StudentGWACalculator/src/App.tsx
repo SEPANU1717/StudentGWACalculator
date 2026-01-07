@@ -13,7 +13,7 @@ export default function STIGradeCalculator() {
   const [showLanding, setShowLanding] = useState(true);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('calculator');
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showGradeTable, setShowGradeTable] = useState(false);
   const [targetGrade, setTargetGrade] = useState<number>(1.00);
@@ -58,7 +58,12 @@ export default function STIGradeCalculator() {
     }
   }, [gradeHistory, isLoaded]);
   
-  useEffect(() => { localStorage.setItem('darkMode', JSON.stringify(darkMode)); }, [darkMode]);
+  // Save darkMode preference to localStorage
+  useEffect(() => { 
+    if (isLoaded) {
+      localStorage.setItem('darkMode', JSON.stringify(darkMode)); 
+    }
+  }, [darkMode, isLoaded]);
 
   const handleGetStarted = () => {
     setShowLanding(false);

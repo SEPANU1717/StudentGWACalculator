@@ -21,3 +21,36 @@ export const GRADE_TABLE: GradeTableEntry[] = [
 ] as const;
 
 export const PASSING_PERCENTAGE = 59.50;
+
+// Grade options for dropdown (common Philippine grading system)
+export const GRADE_OPTIONS = [
+  1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 4.00, 5.00
+] as const;
+
+// Grade options with descriptions for professional dropdown display
+export const GRADE_OPTIONS_WITH_DESC = [
+  { value: 1.00, label: '1.00', description: 'Excellent' },
+  { value: 1.25, label: '1.25', description: 'Excellent' },
+  { value: 1.50, label: '1.50', description: 'Very Good' },
+  { value: 1.75, label: '1.75', description: 'Very Good' },
+  { value: 2.00, label: '2.00', description: 'Satisfactory' },
+  { value: 2.25, label: '2.25', description: 'Satisfactory' },
+  { value: 2.50, label: '2.50', description: 'Satisfactory' },
+  { value: 2.75, label: '2.75', description: 'Fair' },
+  { value: 3.00, label: '3.00', description: 'Fair' },
+  { value: 4.00, label: '4.00', description: 'Conditional' },
+  { value: 5.00, label: '5.00', description: 'Failed' }
+] as const;
+
+// Unit options for dropdown (integer units only)
+export const UNIT_OPTIONS = [1, 2, 3, 4, 5, 6] as const;
+
+// Unit options with common course types
+export const UNIT_OPTIONS_WITH_DESC = [
+  { value: 1, label: '1', description: 'PE/NSTP' },
+  { value: 2, label: '2', description: 'Lab' },
+  { value: 3, label: '3', description: 'Lecture' },
+  { value: 4, label: '4', description: 'Major' },
+  { value: 5, label: '5', description: 'Major' },
+  { value: 6, label: '6', description: 'Thesis' }
+] as const;

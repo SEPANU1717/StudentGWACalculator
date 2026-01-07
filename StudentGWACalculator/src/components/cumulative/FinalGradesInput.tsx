@@ -1,7 +1,8 @@
 import React from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, ChevronDown } from 'lucide-react';
 import { QuickEntrySubject } from '../../types';
 import { Card, Badge } from '../shared';
+import { GRADE_OPTIONS_WITH_DESC, UNIT_OPTIONS_WITH_DESC } from '../../utils/constants';
 
 interface FinalGradesInputProps {
   subjects: QuickEntrySubject[];
@@ -18,9 +19,9 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
   onUpdateSubject,
   darkMode
 }) => {
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
-  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
+  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-300';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
   return (
@@ -68,50 +69,81 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 <X className="w-4 h-4" />
               </button>
             </div>
+            
 
             {/* Final Grade and Units - Side by Side */}
             <div className="grid grid-cols-[1fr_auto] gap-3">
               <div>
-                <label className={`block text-[9px] font-semibold ${textMuted} mb-1 uppercase tracking-wider`}>
+                <label className={`block text-[9px] font-semibold ${textMuted} mb-1.5 uppercase tracking-wider`}>
                   Final Grade
                 </label>
-                <input
-                  type="number"
-                  min="1.00"
-                  max="5.00"
-                  step="0.01"
-                  value={subject.finalGrade}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    onUpdateSubject(subject.id, 'finalGrade', val === '' ? '' : parseFloat(val));
-                  }}
-                  placeholder="1.00"
-                  className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold text-center outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none min-h-[40px]`}
-                  aria-label="Final grade"
-                />
+                <div className="relative">
+                  <select
+                    value={subject.finalGrade}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      onUpdateSubject(subject.id, 'finalGrade', val === '' ? '' : parseFloat(val));
+                    }}
+                    className={`
+                      w-full ${inputBg} border ${border} rounded-lg 
+                      px-4 py-2.5 pr-10
+                      text-sm font-semibold 
+                      outline-none ${textColor} 
+                      cursor-pointer min-h-[44px] 
+                      hover:border-blue-500/50 focus:border-blue-500
+                      transition-all duration-200
+                      appearance-none
+                      ${subject.finalGrade === '' ? 'text-gray-400' : ''}
+                    `}
+                    aria-label="Final grade"
+                  >
+                    <option value="" disabled className="text-gray-400">Select grade</option>
+                    {GRADE_OPTIONS_WITH_DESC.map(({ value, label, description }) => (
+                      <option key={value} value={value} className={darkMode ? 'bg-[#0a0a0a]' : 'bg-white'}>
+                        {label} - {description}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted} pointer-events-none`} />
+                </div>
               </div>
               
               <div>
-                <label className={`block text-[9px] font-semibold ${textMuted} mb-1 uppercase tracking-wider`}>
+                <label className={`block text-[9px] font-semibold ${textMuted} mb-1.5 uppercase tracking-wider`}>
                   Units
                 </label>
-                <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  step="0.5"
-                  value={subject.units}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    onUpdateSubject(subject.id, 'units', val === '' ? '' : parseFloat(val));
-                  }}
-                  placeholder="3"
-                  className={`w-20 ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold text-center outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none min-h-[40px]`}
-                  aria-label="Units"
-                />
+                <div className="relative">
+                  <select
+                    value={subject.units}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      onUpdateSubject(subject.id, 'units', val === '' ? '' : parseFloat(val));
+                    }}
+                    className={`
+                      w-24 ${inputBg} border ${border} rounded-lg 
+                      px-3 py-2.5 pr-8
+                      text-sm font-semibold text-center
+                      outline-none ${textColor} 
+                      cursor-pointer min-h-[44px] 
+                      hover:border-blue-500/50 focus:border-blue-500
+                      transition-all duration-200
+                      appearance-none
+                      ${subject.units === '' ? 'text-gray-400' : ''}
+                    `}
+                    aria-label="Units"
+                  >
+                    <option value="" disabled className="text-gray-400">--</option>
+                    {UNIT_OPTIONS_WITH_DESC.map(({ value, label }) => (
+                      <option key={value} value={value} className={darkMode ? 'bg-[#0a0a0a]' : 'bg-white'}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted} pointer-events-none`} />
+                </div>
               </div>
-            </div>
-          </Card>
+              </div>
+            </Card>
         ))}
 
         {/* Add Subject Button */}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 import { Subject, GradeResult } from '../../types';
 import { Card, Badge } from '../shared';
+import { UNIT_OPTIONS_WITH_DESC } from '../../utils/constants';
 
 interface SubjectCardProps {
   subject: Subject;
@@ -29,9 +30,9 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   onRemove,
   darkMode
 }) => {
-  const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
-  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
+  const textMuted = darkMode ? 'text-[#444]' : 'text-gray-500';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
+  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-300';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
   return (
@@ -53,21 +54,36 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           aria-label="Subject name"
         />
         
-        {/* Units Input - Inline */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Units Dropdown - Inline */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           <span className={`text-[9px] font-semibold ${textMuted} uppercase hidden sm:inline`}>Units:</span>
           <span className={`text-[9px] font-semibold ${textMuted} uppercase sm:hidden`}>U:</span>
-          <input
-            type="number"
-            min="0"
-            max="10"
-            step="0.5"
-            value={subject.units}
-            onChange={(e) => onUpdate('units', e.target.value)}
-            className={`w-12 sm:w-14 ${inputBg} border ${border} rounded-lg px-1.5 py-1 text-xs sm:text-sm font-bold text-center outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-            placeholder="3"
-            aria-label="Units"
-          />
+          <div className="relative">
+            <select
+              value={subject.units}
+              onChange={(e) => onUpdate('units', e.target.value)}
+              className={`
+                w-14 sm:w-16 ${inputBg} border ${border} rounded-lg 
+                pl-2 pr-6 py-1.5
+                text-xs sm:text-sm font-semibold text-center
+                outline-none ${textColor} 
+                cursor-pointer 
+                hover:border-blue-500/50 focus:border-blue-500
+                transition-all duration-200
+                appearance-none
+                ${subject.units === '' ? 'text-gray-400' : ''}
+              `}
+              aria-label="Units"
+            >
+              <option value="" disabled className="text-gray-400">--</option>
+              {UNIT_OPTIONS_WITH_DESC.map(({ value, label }) => (
+                <option key={value} value={value} className={darkMode ? 'bg-[#0a0a0a]' : 'bg-white'}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className={`absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 ${textMuted} pointer-events-none`} />
+          </div>
         </div>
         
         {/* Result Badge */}
