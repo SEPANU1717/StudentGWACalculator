@@ -10,6 +10,8 @@
   ],
   "routes": [
     { "handle": "filesystem" },
+    { "src": "/sitemap.xml", "dest": "/StudentGWACalculator/sitemap.xml" },
+    { "src": "/robots.txt", "dest": "/StudentGWACalculator/robots.txt" },
     { "src": "/(.*)", "dest": "/StudentGWACalculator/index.html" }
   ]
 }
