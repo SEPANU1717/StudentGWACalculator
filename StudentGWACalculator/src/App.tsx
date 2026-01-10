@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { TabNavigation, Tab } from './components/TabNavigation';
 import { LandingPage } from './components/landing/LandingPage';
@@ -10,9 +11,10 @@ import { HonorsTab } from './components/honors/HonorsTab';
 import { Subject, SemesterRecord, QuickEntrySubject } from './types';
 
 export default function STIGradeCalculator() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showLanding, setShowLanding] = useState(true);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>('calculator');
   const [darkMode, setDarkMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showGradeTable, setShowGradeTable] = useState(false);
@@ -68,8 +70,22 @@ export default function STIGradeCalculator() {
   const handleGetStarted = () => {
     setShowLanding(false);
     localStorage.setItem('hasVisited', 'true');
+    navigate('/calculator');
     // Show update modal after 500ms
     setTimeout(() => setShowUpdateModal(true), 500);
+  };
+
+  // Get current tab from URL
+  const getCurrentTab = (): Tab => {
+    const path = location.pathname.slice(1) || 'calculator';
+    if (['calculator', 'cumulative', 'predictions', 'honors'].includes(path)) {
+      return path as Tab;
+    }
+    return 'calculator';
+  };
+
+  const handleTabChange = (tab: Tab) => {
+    navigate(`/${tab}`);
   };
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
@@ -129,13 +145,14 @@ export default function STIGradeCalculator() {
   const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
 
-  if (showLanding) {
+  // Show landing page only on root path
+  if (location.pathname === '/' && showLanding) {
     return <LandingPage darkMode={darkMode} onGetStarted={handleGetStarted} toggleDarkMode={toggleDarkMode} />;
   }
 
   return (
     <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} onShowLanding={() => setShowLanding(true)} />
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} onShowLanding={() => { setShowLanding(true); navigate('/'); }} />
       
       {/* Update Modal */}
       <UpdateModal 
@@ -147,66 +164,80 @@ export default function STIGradeCalculator() {
       <main className="max-w-lg mx-auto px-4 py-6">
         {/* Tab Navigation */}
         <TabNavigation 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+          activeTab={getCurrentTab()} 
+          onTabChange={handleTabChange} 
           darkMode={darkMode} 
         />
 
-        {/* Tab Content */}
+        {/* Routes */}
         <div className="animate-fade-in">
-          {activeTab === 'calculator' && (
-          <CalculatorTab
-            darkMode={darkMode}
-            singleSubject={singleSubject}
-            targetGrade={targetGrade}
-            showSettings={showSettings}
-            showGradeTable={showGradeTable}
-            selectedHistoryGWA={selectedHistoryGWA}
-            onUpdateSingleSubject={updateSingleSubject}
-            onSetTargetGrade={setTargetGrade}
-            onToggleSettings={() => setShowSettings(!showSettings)}
-            onToggleGradeTable={() => setShowGradeTable(!showGradeTable)}
-            onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
-          />
-        )}
-
-        {activeTab === 'predictions' && (
-          <PredictionsTab
-            darkMode={darkMode}
-            singleSubject={singleSubject}
-            targetGrade={targetGrade}
-            canPredict={false}
-          />
-        )}
-
-        {activeTab === 'cumulative' && (
-          <CumulativeTab
-            darkMode={darkMode}
-            subjects={subjects}
-            isBaccalaureate={isBaccalaureate}
-            gradeHistory={gradeHistory}
-            onAddSubject={addSubject}
-            onRemoveSubject={removeSubject}
-            onUpdateSubject={updateSubject}
-            onClearAllSubjects={clearAllSubjects}
-            onAddToHistory={addToHistory}
-            onRemoveFromHistory={removeFromHistory}
-            selectedHistoryGWA={selectedHistoryGWA}
-            onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
-            onRestoreSubjects={restoreSubjects}
-          />
-        )}
-
-        {activeTab === 'honors' && (
-          <HonorsTab
-            darkMode={darkMode}
-            subjects={subjects}
-            gradeHistory={gradeHistory.filter(record => record.mode === 'detailed')}
-            isBaccalaureate={isBaccalaureate}
-            onSetIsBaccalaureate={setIsBaccalaureate}
-            selectedHistoryGWA={selectedHistoryGWA}
-          />
-        )}
+          <Routes>
+            <Route path="/" element={
+              <CalculatorTab
+                darkMode={darkMode}
+                singleSubject={singleSubject}
+                targetGrade={targetGrade}
+                showSettings={showSettings}
+                showGradeTable={showGradeTable}
+                selectedHistoryGWA={selectedHistoryGWA}
+                onUpdateSingleSubject={updateSingleSubject}
+                onSetTargetGrade={setTargetGrade}
+                onToggleSettings={() => setShowSettings(!showSettings)}
+                onToggleGradeTable={() => setShowGradeTable(!showGradeTable)}
+                onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
+              />
+            } />
+            <Route path="/calculator" element={
+              <CalculatorTab
+                darkMode={darkMode}
+                singleSubject={singleSubject}
+                targetGrade={targetGrade}
+                showSettings={showSettings}
+                showGradeTable={showGradeTable}
+                selectedHistoryGWA={selectedHistoryGWA}
+                onUpdateSingleSubject={updateSingleSubject}
+                onSetTargetGrade={setTargetGrade}
+                onToggleSettings={() => setShowSettings(!showSettings)}
+                onToggleGradeTable={() => setShowGradeTable(!showGradeTable)}
+                onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
+              />
+            } />
+            <Route path="/predictions" element={
+              <PredictionsTab
+                darkMode={darkMode}
+                singleSubject={singleSubject}
+                targetGrade={targetGrade}
+                canPredict={false}
+              />
+            } />
+            <Route path="/cumulative" element={
+              <CumulativeTab
+                darkMode={darkMode}
+                subjects={subjects}
+                isBaccalaureate={isBaccalaureate}
+                gradeHistory={gradeHistory}
+                onAddSubject={addSubject}
+                onRemoveSubject={removeSubject}
+                onUpdateSubject={updateSubject}
+                onClearAllSubjects={clearAllSubjects}
+                onAddToHistory={addToHistory}
+                onRemoveFromHistory={removeFromHistory}
+                selectedHistoryGWA={selectedHistoryGWA}
+                onClearSelectedHistory={() => setSelectedHistoryGWA(null)}
+                onRestoreSubjects={restoreSubjects}
+              />
+            } />
+            <Route path="/honors" element={
+              <HonorsTab
+                darkMode={darkMode}
+                subjects={subjects}
+                gradeHistory={gradeHistory.filter(record => record.mode === 'detailed')}
+                isBaccalaureate={isBaccalaureate}
+                onSetIsBaccalaureate={setIsBaccalaureate}
+                selectedHistoryGWA={selectedHistoryGWA}
+              />
+            } />
+          </Routes>
         </div>
       </main>
     </div>
