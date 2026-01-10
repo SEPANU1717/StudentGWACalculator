@@ -76,18 +76,6 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
       id="calculator-panel"
       aria-labelledby="calculator-tab"
     >
-      {/* Grade Inputs Section */}
-      <section>
-        <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
-          Enter Grades
-        </p>
-        <GradeInputGrid
-          subject={singleSubject}
-          onUpdateSubject={onUpdateSingleSubject}
-          darkMode={darkMode}
-        />
-      </section>
-
       {/* GWA Result Card */}
       <GWAResultCard
         percentage={displayPercentage}
@@ -100,6 +88,18 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         selectedHistoryGWA={useSelectedHistory ? selectedHistoryGWA : null}
         onClearSelectedHistory={onClearSelectedHistory}
       />
+
+      {/* Grade Inputs Section */}
+      <section>
+        <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
+          Enter Grades
+        </p>
+        <GradeInputGrid
+          subject={singleSubject}
+          onUpdateSubject={onUpdateSingleSubject}
+          darkMode={darkMode}
+        />
+      </section>
 
       {/* Prediction Cards */}
       {canPredict && (

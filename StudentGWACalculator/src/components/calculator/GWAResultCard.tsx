@@ -33,8 +33,9 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
   // If showing selected history GWA
   const showingHistory = selectedHistoryGWA !== null && selectedHistoryGWA !== undefined;
 
-  // Don't render if no grades entered AND no history selected
-  if (filledCount === 0 && !showingHistory) return null;
+  // Always render the card. When there are no grades and no history selected,
+  // show a lightweight placeholder so the result area stays visible.
+  const showingEmpty = filledCount === 0 && !showingHistory;
 
   const displayPercentage = percentage?.toFixed(2) ?? null;
   
@@ -90,7 +91,7 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
 
           <div className="flex items-baseline gap-3 flex-wrap">
             <div className={`text-4xl font-black tracking-tight ${textColor} tabular-nums`}>
-              {displayPercentage ?? '—'}%
+                      {displayPercentage !== null ? `${displayPercentage}%` : 'N/A'}
             </div>
             {result && (
               <Badge variant={result.status === 'passed' ? 'success' : 'error'} size="sm">
@@ -100,6 +101,9 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
             {isPartial && !result && (
               <Badge variant="warning" size="sm">In Progress</Badge>
             )}
+                    {showingEmpty && (
+                      <Badge variant="neutral" size="sm">No data</Badge>
+                    )}
           </div>
 
           {/* Progress bar */}
@@ -112,19 +116,14 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
             </div>
           )}
 
-          {/* Subtitle */}
-          <div className={`text-xs ${textLight} mt-3`}>
-            {result ? (
-              <>
-                <span className={`font-semibold ${getGradeColor(result.grade)}`}>
-                  Grade: {result.grade.toFixed(2)}
-                </span>
-                <span> • {result.status === 'passed' ? '✓ Passed' : '✗ Failed'}</span>
-              </>
-            ) : (
-              <>{filledCount}/4 grades entered • {remainingGrades.join(', ')} remaining</>
-            )}
-          </div>
+          {/* Progress bar placeholder for empty state */}
+          {showingEmpty && (
+            <div className={`w-full h-1.5 rounded-full overflow-hidden mt-4 ${progressBg}`}>
+              <div className="h-full w-0" />
+            </div>
+          )}
+
+
         </div>
       )}
     </Card>
