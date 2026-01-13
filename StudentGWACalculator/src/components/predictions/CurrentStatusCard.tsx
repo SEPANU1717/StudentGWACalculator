@@ -17,9 +17,9 @@ export const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
   remainingWeight,
   darkMode
 }) => {
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
-  const textLight = darkMode ? 'text-[#777]' : 'text-gray-500';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const progressBg = darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200';
 
   const getDisplayValue = () => {

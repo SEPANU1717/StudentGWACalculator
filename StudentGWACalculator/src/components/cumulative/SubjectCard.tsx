@@ -30,9 +30,9 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   onRemove,
   darkMode
 }) => {
-  const textMuted = darkMode ? 'text-[#444]' : 'text-gray-500';
+  const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
-  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-300';
+  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
   return (

@@ -48,11 +48,11 @@ export const Button: React.FC<ButtonProps> = ({
     primary: 'bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white',
     secondary: darkMode 
       ? 'bg-[#1a1a1a] hover:bg-[#222] active:bg-[#2a2a2a] text-white border border-[#2a2a2a]'
-      : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-900 border border-gray-200',
+      : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-800 border border-gray-200',
     danger: 'bg-red-500/10 hover:bg-red-500/20 active:bg-red-500/30 text-red-400',
     ghost: darkMode
       ? 'bg-transparent hover:bg-[#1a1a1a] active:bg-[#222] text-[#888] hover:text-white'
-      : 'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-600 hover:text-gray-900'
+      : 'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-600 hover:text-gray-800'
   };
 
   const disabledStyles = 'opacity-50 cursor-not-allowed pointer-events-none';

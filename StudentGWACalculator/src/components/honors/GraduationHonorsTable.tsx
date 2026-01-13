@@ -25,10 +25,10 @@ export const GraduationHonorsTable: React.FC<GraduationHonorsTableProps> = ({
   darkMode
 }) => {
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
-  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-500';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const border = darkMode ? 'border-[#222]' : 'border-gray-200';
-  const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-100';
+  const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const divider = darkMode ? 'divide-[#1a1a1a]' : 'divide-gray-150';
   const hoverBg = darkMode ? 'hover:bg-[#0f0f0f]' : 'hover:bg-gray-50';
 

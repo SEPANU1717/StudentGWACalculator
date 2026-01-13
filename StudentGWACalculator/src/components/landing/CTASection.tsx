@@ -14,10 +14,23 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
   const sectionBg = darkMode ? 'bg-[#050505]' : 'bg-white';
 
+  const ref = React.useRef<HTMLElement | null>(null);
+  const [visible, setVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => setVisible(entry.isIntersecting));
+    }, { threshold: 0.12, rootMargin: '0px 0px -40% 0px' });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section className={`py-16 sm:py-20 ${sectionBg}`}>
+    <section ref={ref} style={{ scrollMarginTop: '48px' }} className={`py-12 sm:py-16 ${sectionBg} transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
       <div className="max-w-3xl mx-auto px-6 text-center">
-        <div className={`${cardBg} rounded-2xl p-8 sm:p-12 border ${border}`}>
+        <div className={`${cardBg} rounded-2xl p-6 sm:p-10 border ${border}`}>
           {/* Icon */}
           <div className={`w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center ${
             darkMode ? 'bg-emerald-500/15' : 'bg-emerald-50'

@@ -21,8 +21,8 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   
-  const textLight = darkMode ? 'text-[#666]' : 'text-gray-500';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
@@ -47,7 +47,7 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
               <div key={record.id} className="space-y-0">
                 <button 
                   onClick={() => setExpandedId(isExpanded ? null : record.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg ${inputBg} border ${border} transition-all hover:${darkMode ? 'bg-[#111] border-[#222]' : 'bg-gray-100 border-gray-300'} ${isExpanded ? (darkMode ? 'border-b-transparent rounded-b-none bg-[#111]' : 'border-b-transparent rounded-b-none bg-gray-100') : ''}`}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg ${inputBg} border ${border} transition-all hover:${darkMode ? 'bg-[#111] border-[#222]' : 'bg-gray-100 border-gray-200'} ${isExpanded ? (darkMode ? 'border-b-transparent rounded-b-none bg-[#111]' : 'border-b-transparent rounded-b-none bg-gray-100') : ''}`}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <ChevronRight className={`w-4 h-4 ${textLight} transition-transform flex-shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
@@ -97,7 +97,7 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
                 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className={`p-4 rounded-b-lg ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-50 border-gray-300'} border-x border-b animate-scale-in`}>
+                  <div className={`p-4 rounded-b-lg ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-50 border-gray-200'} border-x border-b animate-scale-in`}>
                     <div className="space-y-3">
                       {/* Stats Row */}
                       <div className={`flex items-center justify-between gap-4 pb-3 border-b ${border}`}>

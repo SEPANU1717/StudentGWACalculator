@@ -13,8 +13,8 @@ export const HonorsHeader: React.FC<HonorsHeaderProps> = ({
 }) => {
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
-  const border = darkMode ? 'border-[#222]' : 'border-gray-300';
-  const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-100';
+  const border = darkMode ? 'border-[#222]' : 'border-gray-200';
+  const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
   return (
     <div className="flex items-center justify-between">

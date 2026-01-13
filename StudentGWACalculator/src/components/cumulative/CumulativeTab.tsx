@@ -59,7 +59,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const [pastSemSubjects, setPastSemSubjects] = useState('');
 
   const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 

@@ -8,7 +8,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ darkMode }) => {
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const year = new Date().getFullYear();
 
   return (

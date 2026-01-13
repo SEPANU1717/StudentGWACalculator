@@ -30,7 +30,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   onToggleHistory,
   mode = 'detailed'
 }) => {
-  const textMuted = darkMode ? 'text-[#666]' : 'text-gray-500';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const cardBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
 
@@ -68,7 +68,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
                 showHistory
                   ? (darkMode ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-blue-100 text-blue-700 border border-blue-300')
-                  : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a]' : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 border border-gray-200')
+                  : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a]' : 'bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-800 border border-gray-200')
               }`}
               aria-label="Toggle history"
             >
@@ -110,7 +110,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
                   showHistory
                     ? (darkMode ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40' : 'bg-blue-100 text-blue-600 border border-blue-300')
-                    : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a] hover:border-[#333]' : 'bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300')
+                    : (darkMode ? 'bg-[#0f0f0f] hover:bg-[#1a1a1a] text-[#888] hover:text-white border border-[#1a1a1a] hover:border-[#333]' : 'bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-800 border border-gray-200 hover:border-gray-200')
                 }`}
                 aria-label="Toggle history"
               >

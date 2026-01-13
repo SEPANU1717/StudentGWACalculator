@@ -17,8 +17,8 @@ export const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({
   canPredict,
   darkMode
 }) => {
-  const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
-  const textLight = darkMode ? 'text-[#666]' : 'text-gray-500';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
 
   const getDisplayValue = (value: number | null) => {
     if (!canPredict) return '—';

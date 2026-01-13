@@ -24,9 +24,9 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
   selectedHistoryGWA,
   onClearSelectedHistory
 }) => {
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
-  const textLight = darkMode ? 'text-[#888]' : 'text-gray-500';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const progressBg = darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200';
 
   // If showing selected history GWA
@@ -101,7 +101,9 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
               <Badge variant="warning" size="sm">In Progress</Badge>
             )}
                     {showingEmpty && (
-                      <Badge variant="neutral" size="sm">No data</Badge>
+                      <Badge variant="neutral" size="sm" className={`${!darkMode ? 'bg-[#0a0a0a] text-white border-[#1a1a1a]' : ''}`}>
+                        No data
+                      </Badge>
                     )}
           </div>
 

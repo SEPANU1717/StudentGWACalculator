@@ -12,7 +12,7 @@ export const CompletionCard: React.FC<CompletionCardProps> = ({
   result,
   darkMode
 }) => {
-  const textLight = darkMode ? 'text-[#666]' : 'text-gray-500';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
 
   const isPassed = result.status === 'passed';
   const Icon = isPassed ? CheckCircle : XCircle;

@@ -33,6 +33,7 @@ export default function STIGradeCalculator() {
   const [gradeHistory, setGradeHistory] = useState<SemesterRecord[]>([]);
   const [selectedHistoryGWA, setSelectedHistoryGWA] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -72,7 +73,10 @@ export default function STIGradeCalculator() {
     localStorage.setItem('hasVisited', 'true');
     navigate('/calculator');
     // Show update modal after 500ms
-    setTimeout(() => setShowUpdateModal(true), 500);
+    setTimeout(() => {
+      const seen = localStorage.getItem(UPDATE_MODAL_SEEN_KEY);
+      if (!seen) setShowUpdateModal(true);
+    }, 500);
   };
 
   // Get current tab from URL
@@ -157,7 +161,10 @@ export default function STIGradeCalculator() {
       {/* Update Modal */}
       <UpdateModal 
         isOpen={showUpdateModal} 
-        onClose={() => setShowUpdateModal(false)} 
+        onClose={() => {
+          localStorage.setItem(UPDATE_MODAL_SEEN_KEY, '1');
+          setShowUpdateModal(false);
+        }}
         darkMode={darkMode} 
       />
       

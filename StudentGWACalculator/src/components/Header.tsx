@@ -10,7 +10,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShowLanding }) => {
   const bgColor = darkMode ? 'bg-[#000]/95' : 'bg-white/95';
   const borderColor = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const textMuted = darkMode ? 'text-[#666]' : 'text-gray-500';
   const buttonBg = darkMode ? 'bg-[#0a0a0a] hover:bg-[#111] active:bg-[#1a1a1a]' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300';
 

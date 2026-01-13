@@ -23,7 +23,7 @@ export const EligibilityRequirements: React.FC<EligibilityRequirementsProps> = (
   darkMode
 }) => {
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
-  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-500';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
 

@@ -16,9 +16,9 @@ export const ScenariosTable: React.FC<ScenariosTableProps> = ({
   scenarios,
   darkMode
 }) => {
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
-  const textLight = darkMode ? 'text-[#777]' : 'text-gray-500';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const divider = darkMode ? 'divide-[#111]' : 'divide-gray-100';

@@ -21,20 +21,33 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
   const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
   const innerBg = darkMode ? 'bg-[#000]' : 'bg-gray-50';
+  
+  const ref = React.useRef<HTMLElement | null>(null);
+  const [visible, setVisible] = React.useState(false);
+  
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => setVisible(entry.isIntersecting));
+    }, { threshold: 0.12, rootMargin: '0px 0px -40% 0px' });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <section className="py-16 sm:py-20">
+    <section ref={ref} style={{ scrollMarginTop: '48px' }} className={`py-8 sm:py-12 ${innerBg} transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           {/* Left - Text Content */}
           <div>
             <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
               Why Choose This
             </span>
-            <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-6 ${textColor}`}>
+            <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-4 ${textColor}`}>
               Smart and Simple
             </h2>
-            <p className={`text-base mb-8 ${textMuted} leading-relaxed`}>
+            <p className={`text-base mb-6 ${textMuted} leading-relaxed`}>
               Purpose-built for STI College students with features that understand your academic needs. 
               From detailed term calculations to cumulative GWA tracking, everything you need is here.
             </p>

@@ -19,9 +19,9 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
   onUpdateSubject,
   darkMode
 }) => {
-  const textColor = darkMode ? 'text-white' : 'text-gray-800';
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
-  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-300';
+  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
+  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
   return (

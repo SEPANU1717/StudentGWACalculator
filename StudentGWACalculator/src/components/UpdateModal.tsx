@@ -11,7 +11,7 @@ interface UpdateModalProps {
 export const UpdateModal: React.FC<UpdateModalProps> = ({ isOpen, onClose, darkMode }) => {
   if (!isOpen) return null;
 
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const textMuted = darkMode ? 'text-[#666]' : 'text-gray-500';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const overlayBg = darkMode ? 'bg-black/80' : 'bg-gray-900/50';

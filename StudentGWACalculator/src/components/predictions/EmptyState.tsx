@@ -7,8 +7,8 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({ darkMode }) => {
-  const textLight = darkMode ? 'text-[#666]' : 'text-gray-500';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
+  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
+  const textColor = darkMode ? 'text-white' : 'text-gray-800';
 
   return (
     <Card darkMode={darkMode} padding="lg">
