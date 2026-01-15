@@ -58,21 +58,21 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
   const hasAllGrades = progress.filled === 4;
   const canPredict = progress.filled >= 1 && progress.filled < 4;
   const showWhatIf = progress.filled === 3 && !hasAllGrades;
-  
+
   const deansEligible = singleResult ? isDeansListEligible(singleResult.grade) : false;
-  
+
   // Clear selected history when user starts typing new grades
   const hasAnyInput = progress.filled > 0;
   const useSelectedHistory = selectedHistoryGWA !== null && !hasAnyInput;
 
-  const displayPercentage = singleResult 
-    ? singleResult.percentage 
+  const displayPercentage = singleResult
+    ? singleResult.percentage
     : partialPercentage;
 
   return (
-    <div 
-      className="space-y-6" 
-      role="tabpanel" 
+    <div
+      className="space-y-6"
+      role="tabpanel"
       id="calculator-panel"
       aria-labelledby="calculator-tab"
     >
@@ -128,7 +128,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
           Tools
         </p>
-        
+
         {/* Grade Table */}
         <GradeTable
           isOpen={showGradeTable}

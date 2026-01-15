@@ -20,11 +20,11 @@ export default function STIGradeCalculator() {
   const [showGradeTable, setShowGradeTable] = useState(false);
   const [targetGrade, setTargetGrade] = useState<number>(1.00);
   const [isBaccalaureate, setIsBaccalaureate] = useState(true);
-  
+
   const [singleSubject, setSingleSubject] = useState<Subject>({
     id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: ''
   });
-  
+
   const [subjects, setSubjects] = useState<Subject[]>([
     { id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }
   ]);
@@ -55,16 +55,16 @@ export default function STIGradeCalculator() {
   }, []);
 
   // Save gradeHistory to localStorage only after initial load
-  useEffect(() => { 
+  useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem('gradeHistory', JSON.stringify(gradeHistory)); 
+      localStorage.setItem('gradeHistory', JSON.stringify(gradeHistory));
     }
   }, [gradeHistory, isLoaded]);
-  
+
   // Save darkMode preference to localStorage
-  useEffect(() => { 
+  useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem('darkMode', JSON.stringify(darkMode)); 
+      localStorage.setItem('darkMode', JSON.stringify(darkMode));
     }
   }, [darkMode, isLoaded]);
 
@@ -125,11 +125,11 @@ export default function STIGradeCalculator() {
   };
 
   const addToHistory = (name: string, gwa: number, subjectCount: number, subjectsData?: Subject[], finalGradesData?: QuickEntrySubject[], mode?: 'detailed' | 'final') => {
-    const record: SemesterRecord = { 
-      id: Date.now().toString(), 
-      name, 
-      gwa, 
-      subjects: subjectCount, 
+    const record: SemesterRecord = {
+      id: Date.now().toString(),
+      name,
+      gwa,
+      subjects: subjectCount,
       date: new Date().toLocaleDateString(),
       subjectsData,
       finalGradesData,
@@ -157,23 +157,23 @@ export default function STIGradeCalculator() {
   return (
     <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} onShowLanding={() => { setShowLanding(true); navigate('/'); }} />
-      
+
       {/* Update Modal */}
-      <UpdateModal 
-        isOpen={showUpdateModal} 
+      <UpdateModal
+        isOpen={showUpdateModal}
         onClose={() => {
           localStorage.setItem(UPDATE_MODAL_SEEN_KEY, '1');
           setShowUpdateModal(false);
         }}
-        darkMode={darkMode} 
+        darkMode={darkMode}
       />
-      
+
       <main className="max-w-lg mx-auto px-4 py-6">
         {/* Tab Navigation */}
-        <TabNavigation 
-          activeTab={getCurrentTab()} 
-          onTabChange={handleTabChange} 
-          darkMode={darkMode} 
+        <TabNavigation
+          activeTab={getCurrentTab()}
+          onTabChange={handleTabChange}
+          darkMode={darkMode}
         />
 
         {/* Routes */}

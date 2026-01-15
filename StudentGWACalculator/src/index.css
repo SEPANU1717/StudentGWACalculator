@@ -23,23 +23,51 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -59,17 +87,34 @@ body {
 }
 
 /* Stagger children */
-.animate-stagger > * {
+.animate-stagger>* {
   opacity: 0;
   animation: fadeIn 0.4s ease-out forwards;
 }
 
-.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.animate-stagger > *:nth-child(2) { animation-delay: 75ms; }
-.animate-stagger > *:nth-child(3) { animation-delay: 150ms; }
-.animate-stagger > *:nth-child(4) { animation-delay: 225ms; }
-.animate-stagger > *:nth-child(5) { animation-delay: 300ms; }
-.animate-stagger > *:nth-child(6) { animation-delay: 375ms; }
+.animate-stagger>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.animate-stagger>*:nth-child(2) {
+  animation-delay: 75ms;
+}
+
+.animate-stagger>*:nth-child(3) {
+  animation-delay: 150ms;
+}
+
+.animate-stagger>*:nth-child(4) {
+  animation-delay: 225ms;
+}
+
+.animate-stagger>*:nth-child(5) {
+  animation-delay: 300ms;
+}
+
+.animate-stagger>*:nth-child(6) {
+  animation-delay: 375ms;
+}
 
 /* Range slider styling */
 input[type="range"] {
@@ -150,7 +195,7 @@ input[type="range"]:focus::-webkit-slider-thumb {
     height: 28px;
     margin-top: -9px;
   }
-  
+
   input[type="range"]::-moz-range-thumb {
     width: 28px;
     height: 28px;
@@ -163,7 +208,7 @@ input[type="range"]:focus::-webkit-slider-thumb {
     border-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
-  
+
   input[type="range"]::-moz-range-thumb {
     border-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);

@@ -34,11 +34,11 @@ export const GradeInputGrid: React.FC<GradeInputGridProps> = ({
     <div className="grid grid-cols-2 gap-3">
       {gradeInputs.map(({ field, label, weight }) => {
         const value = getValue(field);
-        
+
         return (
           <Card key={field} darkMode={darkMode} padding="md">
             <div className="flex items-center justify-between mb-2">
-              <label 
+              <label
                 htmlFor={`grade-${field}`}
                 className={`text-[11px] font-semibold ${textLight} uppercase tracking-wider`}
               >

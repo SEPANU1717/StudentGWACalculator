@@ -13,10 +13,10 @@ interface LandingPageProps {
   toggleDarkMode: () => void;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ 
-  darkMode, 
-  onGetStarted, 
-  toggleDarkMode 
+export const LandingPage: React.FC<LandingPageProps> = ({
+  darkMode,
+  onGetStarted,
+  toggleDarkMode
 }) => {
   const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
   const headerBg = darkMode ? 'bg-[#000]/95' : 'bg-white/95';
@@ -32,16 +32,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center ${
-              darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'
-            }`}>
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'
+              }`}>
               <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
             </div>
             <span className={`text-sm sm:text-base font-bold ${textColor}`}>
               Sepanode Calculator
             </span>
           </div>
-          
+
           {/* Theme Toggle */}
           <button
             onClick={toggleDarkMode}
@@ -57,7 +56,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             ) : (
               <Moon className={`w-5 h-5 sm:w-4 sm:h-4 ${textMuted}`} />
             )}
-            </button>
+          </button>
         </div>
       </header>
 

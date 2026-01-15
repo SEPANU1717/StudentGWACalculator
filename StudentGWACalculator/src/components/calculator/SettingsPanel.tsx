@@ -28,9 +28,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   return (
     <div className="space-y-3">
       {/* Toggle Button */}
-      <Card 
-        darkMode={darkMode} 
-        padding="md" 
+      <Card
+        darkMode={darkMode}
+        padding="md"
         onClick={onToggle}
         className="cursor-pointer group"
       >
@@ -39,8 +39,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <Settings className={`w-4 h-4 ${textMuted} group-hover:text-white transition-colors`} />
             <span className={`text-sm font-medium ${textColor}`}>Settings</span>
           </div>
-          <ChevronDown 
-            className={`w-4 h-4 ${textMuted} transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} 
+          <ChevronDown
+            className={`w-4 h-4 ${textMuted} transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
           />
         </div>
       </Card>
@@ -51,7 +51,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           <div className="space-y-4">
             {/* Target GWA */}
             <div>
-              <label 
+              <label
                 htmlFor="target-grade"
                 className={`block text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-2`}
               >

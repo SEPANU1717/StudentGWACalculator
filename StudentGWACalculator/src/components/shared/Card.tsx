@@ -31,14 +31,14 @@ export const Card: React.FC<CardProps> = ({
   };
 
   const baseStyles = 'rounded-xl transition-all duration-200';
-  
+
   const bgColor = darkMode ? 'bg-[#0a0a0a]' : 'bg-white';
   const borderColor = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
-  
+
   const variantStyles = {
     default: `${bgColor} border ${borderColor}`,
     bordered: `${bgColor} border-2 ${borderColor}`,
-    highlighted: highlightColor 
+    highlighted: highlightColor
       ? `${bgColor} border border-${highlightColor}-500/30`
       : `${bgColor} border ${borderColor}`,
     dashed: `${bgColor} border border-dashed ${borderColor}`
@@ -52,8 +52,8 @@ export const Card: React.FC<CardProps> = ({
   };
 
   const hoverStyles = hoverable
-    ? darkMode 
-      ? 'hover:border-[#2a2a2a] hover:bg-[#0f0f0f] cursor-pointer' 
+    ? darkMode
+      ? 'hover:border-[#2a2a2a] hover:bg-[#0f0f0f] cursor-pointer'
       : 'hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
     : '';
 
