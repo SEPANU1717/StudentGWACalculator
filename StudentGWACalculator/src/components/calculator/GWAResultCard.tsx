@@ -1,7 +1,8 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { GradeResult } from '../../types';
 import { Card, Badge } from '../shared';
+import { exportToImage } from '../../utils/exportUtils';
 
 interface GWAResultCardProps {
   percentage: number | null;
@@ -49,8 +50,25 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
     return darkMode ? 'text-red-400' : 'text-red-600';
   };
 
+  const handleExport = () => {
+    exportToImage('gwa-result-card', 'my-gwa-result');
+  };
+
   return (
-    <Card darkMode={darkMode} padding="lg" className="mt-4">
+    <Card darkMode={darkMode} padding="lg" className="mt-4 relative group" id="gwa-result-card">
+
+      {/* Export Button (Absolute to top-right) */}
+      {!showingEmpty && (
+        <button
+          onClick={handleExport}
+          className={`absolute top-4 right-4 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all ${darkMode ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-400 hover:text-gray-900 hover:bg-black/5'
+            }`}
+          title="Export as Image"
+        >
+          <Download className="w-4 h-4" />
+        </button>
+      )}
+
       {/* If showing history GWA */}
       {showingHistory ? (
         <div>

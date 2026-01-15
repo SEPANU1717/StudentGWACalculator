@@ -25,9 +25,7 @@ export default function STIGradeCalculator() {
     id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: ''
   });
 
-  const [subjects, setSubjects] = useState<Subject[]>([
-    { id: '1', name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }
-  ]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   // Initialize state first, then load from localStorage
   const [gradeHistory, setGradeHistory] = useState<SemesterRecord[]>([]);
@@ -104,11 +102,11 @@ export default function STIGradeCalculator() {
   };
 
   const removeSubject = (id: string) => {
-    if (subjects.length > 1) setSubjects(prev => prev.filter(s => s.id !== id));
+    setSubjects(prev => prev.filter(s => s.id !== id));
   };
 
   const clearAllSubjects = () => {
-    setSubjects([{ id: Date.now().toString(), name: '', units: '', prelim: '', midterm: '', preFinal: '', finals: '' }]);
+    setSubjects([]);
   };
 
   const restoreSubjects = (restoredSubjects: Subject[]) => {

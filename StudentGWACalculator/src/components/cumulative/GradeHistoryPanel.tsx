@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Award, Star, Percent, ChevronRight, RotateCcw } from 'lucide-react';
+import { X, Award, Star, Percent, ChevronRight, RotateCcw, Download } from 'lucide-react';
 import { SemesterRecord } from '../../types';
-import { isDeansListEligible, getTuitionDiscount } from '../../utils/gradingCalculations';
+import { isDeansListEligible, getTuitionDiscount, calculateSubjectGWA } from '../../utils/gradingCalculations';
 import { Card } from '../shared';
 
 interface GradeHistoryPanelProps {
@@ -9,6 +9,7 @@ interface GradeHistoryPanelProps {
   gradeHistory: SemesterRecord[];
   onRemoveFromHistory: (id: string) => void;
   onRestoreRecord?: (record: SemesterRecord) => void;
+  onExportRecord?: (record: SemesterRecord) => void;
   darkMode: boolean;
 }
 
@@ -17,6 +18,7 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
   gradeHistory,
   onRemoveFromHistory,
   onRestoreRecord,
+  onExportRecord,
   darkMode
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -39,8 +41,15 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
       <div className="space-y-2">
         {/* Records List */}
         {gradeHistory.map((record) => {
-          const isEligible = isDeansListEligible(record.gwa);
-          const discount = getTuitionDiscount(record.gwa);
+          const hasViolation = record.mode === 'detailed'
+            ? record.subjectsData?.some(s => {
+              const res = calculateSubjectGWA(s);
+              return res && res.grade > 2.00;
+            })
+            : record.finalGradesData?.some(s => s.finalGrade !== '' && Number(s.finalGrade) > 2.00);
+
+          const isEligible = !hasViolation && isDeansListEligible(record.gwa);
+          const discount = !hasViolation ? getTuitionDiscount(record.gwa) : 0;
           const isExpanded = expandedId === record.id;
 
           return (
@@ -130,15 +139,27 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
                     </div>
 
                     {/* Actions */}
-                    {onRestoreRecord && (record.subjectsData || record.finalGradesData) && (
-                      <button
-                        onClick={() => onRestoreRecord(record)}
-                        className={`w-full py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${darkMode ? 'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25 border border-blue-500/30' : 'bg-blue-100 text-blue-600 hover:bg-blue-200 border border-blue-300'}`}
-                      >
-                        <RotateCcw className="w-4 h-4" />
-                        Restore & Edit This Semester
-                      </button>
-                    )}
+                    <div className="flex gap-2">
+                      {onRestoreRecord && (record.subjectsData || record.finalGradesData) && (
+                        <button
+                          onClick={() => onRestoreRecord(record)}
+                          className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${darkMode ? 'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25 border border-blue-500/30' : 'bg-blue-100 text-blue-600 hover:bg-blue-200 border border-blue-300'}`}
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          Restore
+                        </button>
+                      )}
+
+                      {onExportRecord && (
+                        <button
+                          onClick={() => onExportRecord(record)}
+                          className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${darkMode ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30' : 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200 border border-emerald-300'}`}
+                        >
+                          <Download className="w-4 h-4" />
+                          Export
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

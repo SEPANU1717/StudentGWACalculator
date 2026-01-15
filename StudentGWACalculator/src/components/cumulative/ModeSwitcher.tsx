@@ -22,13 +22,13 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({
   const hoverText = darkMode ? 'hover:text-white' : 'hover:text-gray-900';
 
   return (
-    <div className={`${bgColor} border ${border} rounded-xl p-1 flex gap-1 w-full sm:w-auto`}>
+    <div className={`${bgColor} border ${border} rounded-xl p-1 flex gap-1 w-full`}>
       <button
         onClick={() => onModeChange('detailed')}
         className={`
-          flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 outline-none
-          ${mode === 'detailed' 
-            ? `${activeBg} ${textColor} shadow-sm` 
+          flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 outline-none
+          ${mode === 'detailed'
+            ? `${activeBg} ${textColor} shadow-sm`
             : `${textMuted} ${hoverText}`
           }
         `}
@@ -36,13 +36,13 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({
         <Calculator className="w-4 h-4" />
         <span>Detailed</span>
       </button>
-      
+
       <button
         onClick={() => onModeChange('final')}
         className={`
-          flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 outline-none
-          ${mode === 'final' 
-            ? `${activeBg} ${textColor} shadow-sm` 
+          flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 outline-none
+          ${mode === 'final'
+            ? `${activeBg} ${textColor} shadow-sm`
             : `${textMuted} ${hoverText}`
           }
         `}

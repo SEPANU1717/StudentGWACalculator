@@ -9,7 +9,8 @@ import { OverallGWACard } from './OverallGWACard';
 import { SaveToHistoryPanel } from './SaveToHistoryPanel';
 import { FinalGradesInput } from './FinalGradesInput';
 import { ModeSwitcher } from './ModeSwitcher';
-import { Card, Button } from '../shared';
+import { Card, Button, SummaryReport } from '../shared';
+import { exportToImage } from '../../utils/exportUtils';
 
 type CalculationMode = 'detailed' | 'final';
 
@@ -48,15 +49,34 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const [semesterName, setSemesterName] = useState('');
   const [calculationMode, setCalculationMode] = useState<CalculationMode>('detailed');
   const [editingHistoryId, setEditingHistoryId] = useState<string | null>(null);
-  
+
   // State for Final Grades Mode
   const [finalGradeSubjects, setFinalGradeSubjects] = useState<QuickEntrySubject[]>([]);
-  
+
   // State for adding past semester directly
   const [showAddPastSemester, setShowAddPastSemester] = useState(false);
   const [pastSemName, setPastSemName] = useState('');
   const [pastSemGWA, setPastSemGWA] = useState('');
   const [pastSemSubjects, setPastSemSubjects] = useState('');
+
+  // History Record Export State
+  const [exportRecord, setExportRecord] = useState<SemesterRecord | null>(null);
+
+  // Effect to trigger export when record is ready
+  React.useEffect(() => {
+    if (exportRecord) {
+      // Small delay to ensure render
+      const timer = setTimeout(() => {
+        exportToImage('history-export-target', `academic-report-${exportRecord.name.replace(/\s+/g, '-').toLowerCase()}`);
+        setExportRecord(null); // Reset after export
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [exportRecord]);
+
+  const handleExportHistoryRecord = (record: SemesterRecord) => {
+    setExportRecord(record);
+  };
 
   const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
@@ -83,7 +103,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   }, [subjects]);
 
   const overallGWA = useMemo(() => calculateOverallGWA(subjects), [subjects]);
-  
+
   // Calculate GWA for Final Grades Mode (weighted by units)
   const finalGradeGWA = useMemo(() => {
     const validGrades = finalGradeSubjects.filter(s => {
@@ -92,7 +112,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       return !isNaN(grade) && !isNaN(units) && grade >= 1.00 && grade <= 5.00 && units > 0;
     });
     if (validGrades.length === 0) return null;
-    
+
     const totalWeighted = validGrades.reduce((acc, s) => {
       const grade = typeof s.finalGrade === 'number' ? s.finalGrade : parseFloat(s.finalGrade as string);
       const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
@@ -102,19 +122,14 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
       return acc + units;
     }, 0);
-    
+
     if (totalUnits === 0) return null;
     return Math.round((totalWeighted / totalUnits) * 100) / 100;
   }, [finalGradeSubjects]);
-  
+
   // Use appropriate GWA based on mode
   const currentGWA = calculationMode === 'detailed' ? overallGWA : finalGradeGWA;
-  
-  const honorClass = useMemo(() => 
-    currentGWA ? getHonorClass(currentGWA, isBaccalaureate) : null, 
-    [currentGWA, isBaccalaureate]
-  );
-  
+
   const completedSubjects = useMemo(() => {
     if (calculationMode === 'detailed') {
       return subjects.filter(s => calculateSubjectGWA(s)).length;
@@ -127,25 +142,27 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const cumulativeGWA = useMemo(() => {
     // Only calculate cumulative GWA in detailed mode
     if (calculationMode !== 'detailed') return null;
-    
+
     const historyWeightedGWA = detailedHistory.reduce((sum, r) => sum + (r.gwa * r.subjects), 0);
     const historySubjects = detailedHistory.reduce((sum, r) => sum + r.subjects, 0);
-    
+
     const currentTermGWA = currentGWA;
     const currentTermSubjects = completedSubjects;
-    
+
     if (historySubjects === 0 && currentTermSubjects === 0) return null;
-    
+
     const totalWeightedGWA = historyWeightedGWA + (currentTermGWA ? currentTermGWA * currentTermSubjects : 0);
     const totalSubjects = historySubjects + currentTermSubjects;
-    
+
     if (totalSubjects === 0) return null;
-    
+
     return Math.round((totalWeightedGWA / totalSubjects) * 100) / 100;
   }, [detailedHistory, currentGWA, completedSubjects, calculationMode]);
 
-  // Check if any completed subject has a grade > 2.00
-  const hasGradeBelowThreshold = useMemo(() => {
+  // Check if any completed subject in current term has a grade > 2.00
+  const hasTermViolation = useMemo(() => {
+    if (completedSubjects === 0) return false;
+
     if (calculationMode === 'detailed') {
       for (const [, result] of subjectResults) {
         if (result && result.grade > 2.00) return true;
@@ -153,20 +170,48 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       return false;
     } else {
       // For final grades mode
-      return finalGradeSubjects.some(s => 
-        s.finalGrade !== '' && (s.finalGrade as number) > 3.00
+      return finalGradeSubjects.some(s =>
+        s.finalGrade !== '' && !isNaN(Number(s.finalGrade)) && Number(s.finalGrade) > 2.00
       );
     }
-  }, [subjectResults, finalGradeSubjects, calculationMode]);
+  }, [subjectResults, finalGradeSubjects, calculationMode, completedSubjects]);
 
-  const hasAnyGrades = calculationMode === 'detailed' 
+  // Check if any grade in history or current term has a grade > 2.00
+  const hasGlobalViolation = useMemo(() => {
+    if (hasTermViolation) return true;
+
+    // Check all history records
+    for (const record of gradeHistory) {
+      if (record.mode === 'detailed') {
+        const violation = record.subjectsData?.some(s => {
+          const res = calculateSubjectGWA(s);
+          return res && res.grade > 2.00;
+        });
+        if (violation) return true;
+      } else if (record.mode === 'final') {
+        const violation = record.finalGradesData?.some(s =>
+          s.finalGrade !== '' && !isNaN(Number(s.finalGrade)) && Number(s.finalGrade) > 2.00
+        );
+        if (violation) return true;
+      }
+    }
+
+    return false;
+  }, [hasTermViolation, gradeHistory]);
+
+  const honorClass = useMemo(() =>
+    (currentGWA && !hasGlobalViolation) ? getHonorClass(currentGWA, isBaccalaureate) : null,
+    [currentGWA, hasGlobalViolation, isBaccalaureate]
+  );
+
+  const hasAnyGrades = calculationMode === 'detailed'
     ? subjects.some(s => s.prelim !== '' || s.midterm !== '' || s.preFinal !== '' || s.finals !== '')
     : finalGradeSubjects.some(s => s.finalGrade !== '');
 
   const handleSaveToHistory = () => {
     if (currentGWA && completedSubjects > 0) {
       const name = semesterName.trim() || `Semester ${gradeHistory.length + 1}`;
-      
+
       // If editing an existing entry, update it
       if (editingHistoryId) {
         const existingRecord = gradeHistory.find(r => r.id === editingHistoryId);
@@ -189,9 +234,9 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
           onAddToHistory(name, currentGWA, completedSubjects, undefined, [...finalGradeSubjects], 'final');
         }
       }
-      
+
       setSemesterName('');
-      
+
       // Clear based on mode
       if (calculationMode === 'detailed') {
         onClearAllSubjects();
@@ -205,7 +250,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const handleAddPastSemester = () => {
     const gwa = parseFloat(pastSemGWA);
     const subjectCount = parseInt(pastSemSubjects);
-    
+
     if (gwa >= 1.00 && gwa <= 5.00 && subjectCount > 0) {
       const name = pastSemName.trim() || `Past Semester ${gradeHistory.length + 1}`;
       onAddToHistory(name, Math.round(gwa * 100) / 100, subjectCount, undefined, undefined, 'detailed');
@@ -243,7 +288,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     }
     setShowHistory(false);
   };
-  
+
   // Handlers for Final Grades Mode
   const handleAddFinalGradeSubject = () => {
     const newSubject: QuickEntrySubject = {
@@ -272,12 +317,12 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     setSemesterName('');
   };
 
-  const canAddPastSemester = pastSemGWA !== '' && pastSemSubjects !== '' && 
-    parseFloat(pastSemGWA) >= 1.00 && parseFloat(pastSemGWA) <= 5.00 && 
+  const canAddPastSemester = pastSemGWA !== '' && pastSemSubjects !== '' &&
+    parseFloat(pastSemGWA) >= 1.00 && parseFloat(pastSemGWA) <= 5.00 &&
     parseInt(pastSemSubjects) > 0;
 
   return (
-    <div 
+    <div
       className="space-y-5"
       role="tabpanel"
       id="cumulative-panel"
@@ -297,12 +342,14 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         completedSubjects={completedSubjects}
         cumulativeGWA={cumulativeGWA}
         selectedHistoryGWA={selectedHistoryGWA}
-        hasGradeBelowThreshold={hasGradeBelowThreshold}
+        hasTermViolation={hasTermViolation}
+        hasGlobalViolation={hasGlobalViolation}
         darkMode={darkMode}
         historyCount={filteredHistory.length}
         showHistory={showHistory}
         onToggleHistory={() => setShowHistory(!showHistory)}
         mode={calculationMode}
+        onExport={completedSubjects > 0 ? () => exportToImage('summary-report-export', 'academic-report') : undefined}
       />
 
       {/* History Panel - Shown below GWA card when toggled */}
@@ -311,6 +358,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         gradeHistory={filteredHistory}
         onRemoveFromHistory={onRemoveFromHistory}
         onRestoreRecord={handleRestoreFromHistory}
+        onExportRecord={handleExportHistoryRecord}
         darkMode={darkMode}
       />
 
@@ -347,91 +395,91 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       {/* Add Past Semester Section - Only show in detailed mode */}
       {calculationMode === 'detailed' && (
         <section className="space-y-3">
-        <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
-          Quick Add Past Semester
-        </p>
+          <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
+            Quick Add Past Semester
+          </p>
 
-        {!showAddPastSemester ? (
-          <button
-            onClick={() => setShowAddPastSemester(true)}
-            className={`
+          {!showAddPastSemester ? (
+            <button
+              onClick={() => setShowAddPastSemester(true)}
+              className={`
               w-full py-3 rounded-xl border border-dashed 
               ${darkMode ? 'border-[#1a1a1a] hover:border-[#333] hover:bg-[#0a0a0a]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
               ${textMuted} hover:${darkMode ? 'text-white' : 'text-gray-700'}
               transition-colors flex items-center justify-center gap-2 min-h-[48px]
               outline-none
             `}
-          >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm font-medium">Add Past Semester GWA</span>
-          </button>
-        ) : (
-          <Card darkMode={darkMode} padding="md">
-            <div className="space-y-3">
-              <p className={`text-sm font-semibold ${textColor}`}>Add Previous Semester</p>
-              
-              <input
-                type="text"
-                value={pastSemName}
-                onChange={(e) => setPastSemName(e.target.value)}
-                placeholder="e.g., 1st Year 1st Sem"
-                className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm outline-none ${textColor} placeholder-[#555]`}
-                style={{ fontSize: '16px' }}
-              />
-              
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className={`block text-[10px] font-semibold ${textMuted} mb-1 uppercase`}>GWA</label>
-                  <input
-                    type="number"
-                    min="1.00"
-                    max="5.00"
-                    step="0.01"
-                    value={pastSemGWA}
-                    onChange={(e) => setPastSemGWA(e.target.value)}
-                    placeholder="1.00"
-                    className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                    style={{ fontSize: '16px' }}
-                  />
+            >
+              <Plus className="w-4 h-4" />
+              <span className="text-sm font-medium">Add Past Semester GWA</span>
+            </button>
+          ) : (
+            <Card darkMode={darkMode} padding="md">
+              <div className="space-y-3">
+                <p className={`text-sm font-semibold ${textColor}`}>Add Previous Semester</p>
+
+                <input
+                  type="text"
+                  value={pastSemName}
+                  onChange={(e) => setPastSemName(e.target.value)}
+                  placeholder="e.g., 1st Year 1st Sem"
+                  className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm outline-none ${textColor} placeholder-[#555]`}
+                  style={{ fontSize: '16px' }}
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className={`block text-[10px] font-semibold ${textMuted} mb-1 uppercase`}>GWA</label>
+                    <input
+                      type="number"
+                      min="1.00"
+                      max="5.00"
+                      step="0.01"
+                      value={pastSemGWA}
+                      onChange={(e) => setPastSemGWA(e.target.value)}
+                      placeholder="1.00"
+                      className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                      style={{ fontSize: '16px' }}
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-[10px] font-semibold ${textMuted} mb-1 uppercase`}>Subjects</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={pastSemSubjects}
+                      onChange={(e) => setPastSemSubjects(e.target.value)}
+                      placeholder="7"
+                      className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                      style={{ fontSize: '16px' }}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className={`block text-[10px] font-semibold ${textMuted} mb-1 uppercase`}>Subjects</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="20"
-                    value={pastSemSubjects}
-                    onChange={(e) => setPastSemSubjects(e.target.value)}
-                    placeholder="7"
-                    className={`w-full ${inputBg} border ${border} rounded-lg px-3 py-2 text-sm font-bold outline-none ${textColor} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                    style={{ fontSize: '16px' }}
-                  />
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setShowAddPastSemester(false)}
+                    variant="ghost"
+                    size="sm"
+                    darkMode={darkMode}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleAddPastSemester}
+                    variant="primary"
+                    size="sm"
+                    disabled={!canAddPastSemester}
+                    darkMode={darkMode}
+                  >
+                    Add to History
+                  </Button>
                 </div>
               </div>
-              
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => setShowAddPastSemester(false)}
-                  variant="ghost"
-                  size="sm"
-                  darkMode={darkMode}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleAddPastSemester}
-                  variant="primary"
-                  size="sm"
-                  disabled={!canAddPastSemester}
-                  darkMode={darkMode}
-                >
-                  Add to History
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-      </section>
+            </Card>
+          )}
+        </section>
       )}
 
       {/* Clear All Button */}
@@ -447,6 +495,37 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
           <Trash2 className="w-4 h-4" />
           Clear All
         </button>
+      )}
+      {/* Hidden Report for Exporting */}
+      <div className="absolute left-[-9999px] top-[-9999px]">
+        <SummaryReport
+          subjects={subjects}
+          finalGradeSubjects={finalGradeSubjects}
+          gwa={currentGWA}
+          cumulativeGWA={cumulativeGWA}
+          mode={calculationMode}
+          isBaccalaureate={isBaccalaureate}
+          darkMode={false}
+          id="summary-report-export"
+          hasGlobalViolation={hasGlobalViolation}
+        />
+      </div>
+
+      {/* Hidden Report for Exporting History Record */}
+      {exportRecord && (
+        <div className="absolute left-[-9999px] top-[-9999px]">
+          <SummaryReport
+            subjects={exportRecord.subjectsData || []}
+            finalGradeSubjects={exportRecord.finalGradesData || []}
+            gwa={exportRecord.gwa}
+            mode={exportRecord.mode || 'detailed'}
+            isBaccalaureate={isBaccalaureate}
+            darkMode={false}
+            studentName={exportRecord.name}
+            id="history-export-target"
+            hasGlobalViolation={hasGlobalViolation}
+          />
+        </div>
       )}
     </div>
   );

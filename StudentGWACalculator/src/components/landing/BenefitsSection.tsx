@@ -20,11 +20,11 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
   const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
-  const innerBg = darkMode ? 'bg-[#000]' : 'bg-gray-50';
-  
+  const innerBg = '';
+
   const ref = React.useRef<HTMLElement | null>(null);
   const [visible, setVisible] = React.useState(false);
-  
+
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -48,10 +48,10 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
               Smart and Simple
             </h2>
             <p className={`text-base mb-6 ${textMuted} leading-relaxed`}>
-              Purpose-built for STI College students with features that understand your academic needs. 
+              Purpose-built for STI College students with features that understand your academic needs.
               From detailed term calculations to cumulative GWA tracking, everything you need is here.
             </p>
-            
+
             {/* Benefits List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {benefits.map((benefit, i) => (
@@ -71,7 +71,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                 <Users className={`w-5 h-5 ${textMuted}`} />
                 <span className={`text-sm font-medium ${textColor}`}>For STI Students</span>
               </div>
-              
+
               {/* Sample Calculation */}
               <div className={`${innerBg} rounded-xl p-4 border ${border}`}>
                 <div className="flex justify-between items-center mb-4">
@@ -80,7 +80,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                     Passed
                   </span>
                 </div>
-                
+
                 {/* Grades Grid */}
                 <div className="grid grid-cols-4 gap-2 mb-4">
                   {[
@@ -97,14 +97,14 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                     </div>
                   ))}
                 </div>
-                
+
                 {/* Result */}
                 <div className={`pt-4 border-t ${border} flex items-center justify-between`}>
                   <span className={`text-sm ${textMuted}`}>Final GWA:</span>
                   <span className="text-xl font-bold text-emerald-400 tabular-nums">87.00</span>
                 </div>
               </div>
-              
+
               {/* Footer Note */}
               <div className={`flex items-center gap-2 text-xs ${textMuted}`}>
                 <BookOpen className="w-4 h-4" />

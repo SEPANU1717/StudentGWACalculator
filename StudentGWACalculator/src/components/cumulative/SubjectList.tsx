@@ -27,7 +27,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
       <p className={`text-[11px] font-semibold ${darkMode ? 'text-[#444]' : 'text-gray-400'} uppercase tracking-wider mb-3`}>
         Subjects
       </p>
-      
+
       <div className="space-y-3">
         {/* Subject Cards */}
         {subjects.map((subject, index) => (
@@ -36,7 +36,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
             subject={subject}
             index={index}
             result={subjectResults.get(subject.id) || null}
-            canRemove={subjects.length > 1}
+            canRemove={true}
             onUpdate={(field, value) => onUpdateSubject(subject.id, field, value)}
             onRemove={() => onRemoveSubject(subject.id)}
             darkMode={darkMode}

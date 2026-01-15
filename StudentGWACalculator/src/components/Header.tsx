@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
                     </div>
                     <span className={`text-sm sm:text-base font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         <span className="hidden sm:inline">Student GWA Calculator</span>
-                        <span className="sm:hidden">GWA Calc</span>
+                        <span className="sm:hidden">Student GWA Calculator</span>
                     </span>
                 </div>
 

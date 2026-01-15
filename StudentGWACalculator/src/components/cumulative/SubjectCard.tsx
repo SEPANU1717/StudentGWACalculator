@@ -43,7 +43,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
         <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
           {index + 1}
         </span>
-        
+
         {/* Subject Name Input */}
         <input
           type="text"
@@ -53,7 +53,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           placeholder="Subject name"
           aria-label="Subject name"
         />
-        
+
         {/* Units Dropdown - Inline */}
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <span className={`text-[9px] font-semibold ${textMuted} uppercase hidden sm:inline`}>Units:</span>
@@ -85,17 +85,17 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
             <ChevronDown className={`absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 ${textMuted} pointer-events-none`} />
           </div>
         </div>
-        
+
         {/* Result Badge */}
         {result && (
-          <Badge 
-            variant={result.status === 'passed' ? 'success' : 'error'} 
+          <Badge
+            variant={result.status === 'passed' ? 'success' : 'error'}
             size="sm"
           >
             {result.grade.toFixed(2)}
           </Badge>
         )}
-        
+
         {/* Remove Button */}
         {canRemove && (
           <button
@@ -107,7 +107,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           </button>
         )}
       </div>
-      
+
       {/* Grade Inputs - Single Row */}
       <div className="flex gap-2">
         {gradeFields.map(({ field, label }) => (

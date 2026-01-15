@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { Subject, SemesterRecord } from '../../types';
-import { 
-  calculateOverallGWA, 
-  getHonorClass, 
-  isDeansListEligible, 
+import {
+  calculateOverallGWA,
+  getHonorClass,
+  isDeansListEligible,
   isPresidentsListEligible,
   calculateSubjectGWA
 } from '../../utils/gradingCalculations';
@@ -36,7 +36,7 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
   // Calculate current term GWA - use computed or selected history
   const computedGWA = useMemo(() => calculateOverallGWA(subjects), [subjects]);
   const currentGWA = computedGWA ?? selectedHistoryGWA ?? null;
-  
+
   // Calculate cumulative GWA including history
   const cumulativeGWA = useMemo(() => {
     const allRecords = [...gradeHistory];
@@ -58,15 +58,45 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
     return totalSubjects > 0 ? totalWeightedGWA / totalSubjects : null;
   }, [gradeHistory, currentGWA, subjects]);
 
+  // Check for violations in the current term
+  const hasTermViolation = useMemo(() => {
+    return subjects.some(s => {
+      const res = calculateSubjectGWA(s);
+      return res && res.grade > 2.00;
+    });
+  }, [subjects]);
+
+  // Check for ANY grade violation in entire residency (history or current)
+  const hasGlobalViolation = useMemo(() => {
+    if (hasTermViolation) return true;
+
+    for (const record of gradeHistory) {
+      if (record.mode === 'detailed') {
+        const violation = record.subjectsData?.some(s => {
+          const res = calculateSubjectGWA(s);
+          return res && res.grade > 2.00;
+        });
+        if (violation) return true;
+      } else {
+        const violation = record.finalGradesData?.some(s =>
+          s.finalGrade !== '' && !isNaN(Number(s.finalGrade)) && Number(s.finalGrade) > 2.00
+        );
+        if (violation) return true;
+      }
+    }
+
+    return false;
+  }, [hasTermViolation, gradeHistory]);
+
   // Eligibility checks
-  const deansListEligible = currentGWA ? isDeansListEligible(currentGWA) : false;
-  const presidentsListEligible = cumulativeGWA ? isPresidentsListEligible(cumulativeGWA) : false;
-  const graduationHonor = cumulativeGWA ? getHonorClass(cumulativeGWA, isBaccalaureate) : null;
+  const deansListEligible = (currentGWA && !hasTermViolation) ? isDeansListEligible(currentGWA) : false;
+  const presidentsListEligible = (cumulativeGWA && !hasGlobalViolation) ? isPresidentsListEligible(cumulativeGWA) : false;
+  const graduationHonor = (cumulativeGWA && !hasGlobalViolation) ? getHonorClass(cumulativeGWA, isBaccalaureate) : null;
 
   const hasData = currentGWA !== null || cumulativeGWA !== null;
 
   return (
-    <div 
+    <div
       className="space-y-6"
       role="tabpanel"
       id="honors-panel"
@@ -86,13 +116,27 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
 
       {/* GWA Overview Cards */}
       {hasData && (
-        <GWAOverviewCards
-          termGWA={currentGWA}
-          cumulativeGWA={cumulativeGWA}
-          deansListEligible={deansListEligible}
-          presidentsListEligible={presidentsListEligible}
-          darkMode={darkMode}
-        />
+        <>
+          {hasGlobalViolation && (
+            <div className={`p-4 rounded-xl border ${darkMode ? 'bg-amber-400/10 border-amber-400/20 text-amber-400' : 'bg-amber-50 border-amber-200 text-amber-700'} flex items-center justify-center gap-3 text-sm font-bold mb-6 shadow-sm`}>
+              <span className="text-xl">⚠</span>
+              <span>Graduation Honors Disqualified: Grade &gt; 2.00 detected in residency.</span>
+            </div>
+          )}
+          {!hasGlobalViolation && hasTermViolation && (
+            <div className={`p-4 rounded-xl border ${darkMode ? 'bg-amber-400/10 border-amber-400/20 text-amber-400' : 'bg-amber-50 border-amber-200 text-amber-700'} flex items-center justify-center gap-3 text-sm font-bold mb-6 shadow-sm`}>
+              <span className="text-xl">⚠</span>
+              <span>Term Honors Disqualified: Current grade &gt; 2.00 detected.</span>
+            </div>
+          )}
+          <GWAOverviewCards
+            termGWA={currentGWA}
+            cumulativeGWA={cumulativeGWA}
+            deansListEligible={deansListEligible}
+            presidentsListEligible={presidentsListEligible}
+            darkMode={darkMode}
+          />
+        </>
       )}
 
       {/* Graduation Honors Table */}

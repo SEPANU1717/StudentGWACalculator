@@ -12,35 +12,35 @@ interface FeaturesGridProps {
 }
 
 const features: Feature[] = [
-  { 
-    icon: Split, 
-    title: 'Dual Calculation Modes', 
-    description: 'Switch between Detailed grades and Final grades input for maximum flexibility.' 
+  {
+    icon: Split,
+    title: 'Dual Calculation Modes',
+    description: 'Switch between Detailed grades and Final grades input for maximum flexibility.'
   },
-  { 
-    icon: Calculator, 
-    title: 'Weighted GWA', 
-    description: 'Accurate calculations using credit units and STI\'s 20-20-20-40 system.' 
+  {
+    icon: Calculator,
+    title: 'Weighted GWA',
+    description: 'Accurate calculations using credit units and STI\'s 20-20-20-40 system.'
   },
-  { 
-    icon: History, 
-    title: 'Smart History', 
-    description: 'Independent history tracking for each mode with edit and restore capabilities.' 
+  {
+    icon: History,
+    title: 'Smart History',
+    description: 'Independent history tracking for each mode with edit and restore capabilities.'
   },
-  { 
-    icon: Award, 
-    title: 'Latin Honors', 
-    description: "Check eligibility for Dean's List, President's List, and graduation honors." 
+  {
+    icon: Award,
+    title: 'Latin Honors',
+    description: "Check eligibility for Dean's List, President's List, and graduation honors."
   },
-  { 
-    icon: TrendingUp, 
-    title: 'Cumulative GWA', 
-    description: 'Track your overall GWA across multiple semesters for the complete picture.' 
+  {
+    icon: TrendingUp,
+    title: 'Cumulative GWA',
+    description: 'Track your overall GWA across multiple semesters for the complete picture.'
   },
-  { 
-    icon: Zap, 
-    title: 'Real-time Results', 
-    description: 'Instant calculations with pass/fail status and grade predictions.' 
+  {
+    icon: Zap,
+    title: 'Real-time Results',
+    description: 'Instant calculations with pass/fail status and grade predictions.'
   }
 ];
 
@@ -49,7 +49,7 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const textColor = darkMode ? 'text-white' : 'text-gray-800';
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
-  const sectionBg = darkMode ? 'bg-[#050505]' : 'bg-white';
+  const sectionBg = darkMode ? '' : 'bg-white';
 
   const ref = React.useRef<HTMLElement | null>(null);
   const [visible, setVisible] = React.useState(false);
@@ -90,7 +90,7 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
         {/* Features Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {features.map((feature) => (
-            <div 
+            <div
               key={feature.title}
               className={`
                 ${cardBg} rounded-xl p-4 border ${border} 
