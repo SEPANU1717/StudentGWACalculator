@@ -7,6 +7,6 @@ export default defineConfig({
   // Use root base for Vercel deployments so assets load from '/'
   base: '/',
   build: {
-    outDir: 'dist', // Output folder for GitHub Actions deployment
+    outDir: 'dist',
   },
 })
