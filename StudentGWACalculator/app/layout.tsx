@@ -55,23 +55,6 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
                 />
-                <style>{`html { background-color: #f9fafb; } html.dark { background-color: #000000; } body { background-color: inherit; }`}</style>
-                {/* Pre-hydration script: set dark class from stored preference or system to avoid flash on mobile/browsers */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `(() => {
-                            try {
-                                const stored = localStorage.getItem('theme');
-                                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                                if (stored === 'dark' || (stored === null && prefersDark)) {
-                                    document.documentElement.classList.add('dark');
-                                } else {
-                                    document.documentElement.classList.remove('dark');
-                                }
-                            } catch (e) {}
-                        })();`,
-                    }}
-                />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

@@ -7,7 +7,6 @@ import { Subject, SemesterRecord, QuickEntrySubject } from '../types';
 interface AppContextType {
     // Dark mode
     darkMode: boolean;
-    theme?: string | null;
     toggleDarkMode: () => void;
 
     // Single subject (calculator tab)
@@ -107,16 +106,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [gradeHistory, isLoaded]);
 
-    // Derive darkMode from next-themes and update body background
+    // Derive darkMode from next-themes
     const darkMode = theme === 'dark';
-
-    useEffect(() => {
-        if (darkMode) {
-            document.body.style.backgroundColor = '#000000';
-        } else {
-            document.body.style.backgroundColor = '#f9fafb'; // gray-50
-        }
-    }, [darkMode]);
 
     const toggleDarkMode = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
