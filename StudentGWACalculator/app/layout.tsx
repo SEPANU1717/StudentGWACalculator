@@ -54,6 +54,25 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
                 />
+                {/* Inline script to set theme before hydration to prevent flash */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(() => {
+                            try {
+                                const saved = localStorage.getItem('darkMode');
+                                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                                const dark = saved !== null ? JSON.parse(saved) : prefersDark;
+                                if (dark) {
+                                    document.documentElement.classList.add('dark');
+                                    document.documentElement.style.backgroundColor = '#000000';
+                                } else {
+                                    document.documentElement.classList.remove('dark');
+                                    document.documentElement.style.backgroundColor = '#f9fafb';
+                                }
+                            } catch (e) {}
+                        })();`,
+                    }}
+                />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
