@@ -1,21 +1,12 @@
 'use client';
 
-import { PredictionsTab } from '../../../src/components/predictions/PredictionsTab';
-import { useAppContext } from '../../../src/context/AppContext';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function PredictionsPage() {
-    const {
-        darkMode,
-        singleSubject,
-        targetGrade,
-    } = useAppContext();
-
-    return (
-        <PredictionsTab
-            darkMode={darkMode}
-            singleSubject={singleSubject}
-            targetGrade={targetGrade}
-            canPredict={false}
-        />
-    );
+    const router = useRouter();
+    useEffect(() => {
+        router.replace('/app');
+    }, [router]);
+    return null;
 }
