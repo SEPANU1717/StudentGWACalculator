@@ -1,19 +1,15 @@
 {
   "version": 2,
-  "outputDirectory": "StudentGWACalculator/dist",
+  "builds": [
+    {
+      "src": "StudentGWACalculator/package.json",
+      "use": "@vercel/next"
+    }
+  ],
   "routes": [
     {
-      "src": "/robots.txt",
-      "headers": {
-        "Content-Type": "text/plain; charset=utf-8"
-      }
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/StudentGWACalculator/$1"
     }
   ]
 }
