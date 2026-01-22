@@ -107,10 +107,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [gradeHistory, isLoaded]);
 
-    // Save darkMode preference to localStorage
+    // Save darkMode preference to localStorage and update body background
     useEffect(() => {
         if (isLoaded) {
             localStorage.setItem('darkMode', JSON.stringify(darkMode));
+        }
+        // Update body background to prevent flashes
+        if (darkMode) {
+            document.body.style.backgroundColor = '#000000';
+        } else {
+            document.body.style.backgroundColor = '#f9fafb'; // gray-50
         }
     }, [darkMode, isLoaded]);
 
