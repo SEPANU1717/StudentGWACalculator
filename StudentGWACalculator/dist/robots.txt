@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sep-student-gwa-calculator.vercel.app/sitemap.xml
