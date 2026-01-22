@@ -18,7 +18,8 @@ export default function AppLayout({
         darkMode,
         toggleDarkMode,
         showUpdateModal,
-        markUpdateModalSeen
+        markUpdateModalSeen,
+        isLoaded,
     } = useAppContext();
 
     const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
@@ -41,8 +42,10 @@ export default function AppLayout({
         router.push('/');
     };
 
+    const transitionClass = isLoaded ? 'transition-colors duration-150' : '';
+
     return (
-        <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
+        <div className={`min-h-screen ${bgColor} ${textColor} ${transitionClass}`}>
             <Header
                 darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}
