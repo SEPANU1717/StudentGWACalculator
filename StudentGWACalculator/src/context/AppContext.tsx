@@ -7,6 +7,7 @@ import { Subject, SemesterRecord, QuickEntrySubject } from '../types';
 interface AppContextType {
     // Dark mode
     darkMode: boolean;
+    theme?: string | null;
     toggleDarkMode: () => void;
 
     // Single subject (calculator tab)
@@ -62,7 +63,6 @@ const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';
 
 export function AppProvider({ children }: { children: ReactNode }) {
     const { theme, setTheme, systemTheme } = useTheme();
-    const [darkMode, setDarkMode] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showGradeTable, setShowGradeTable] = useState(false);
     const [targetGrade, setTargetGrade] = useState<number>(1.0);
@@ -107,21 +107,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [gradeHistory, isLoaded]);
 
-    // Sync theme from next-themes into context and update body background
-    useEffect(() => {
-        const currentTheme = theme === 'system' ? systemTheme : theme;
-        const isDark = currentTheme === 'dark';
-        setDarkMode(isDark);
+    // Derive dark mode from next-themes and update body background
+    const resolvedTheme = theme === 'system' ? systemTheme : theme;
+    const darkMode = resolvedTheme === 'dark';
 
-        if (isDark) {
+    useEffect(() => {
+        if (darkMode) {
             document.body.style.backgroundColor = '#000000';
         } else {
             document.body.style.backgroundColor = '#f9fafb'; // gray-50
         }
-    }, [theme, systemTheme]);
+    }, [darkMode]);
 
     const toggleDarkMode = () => {
-        const current = theme === 'system' ? systemTheme : theme;
+        const current = resolvedTheme;
         setTheme(current === 'dark' ? 'light' : 'dark');
     };
 
