@@ -18,8 +18,11 @@ export default function AppLayout({
         darkMode,
         toggleDarkMode,
         showUpdateModal,
-        markUpdateModalSeen,
+        markUpdateModalSeen
     } = useAppContext();
+
+    const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
+    const textColor = darkMode ? 'text-white' : 'text-gray-900';
 
     // Get current tab from URL
     const getCurrentTab = (): Tab => {
@@ -39,8 +42,7 @@ export default function AppLayout({
     };
 
     return (
-        // Use CSS-driven dark classes to avoid JS-driven flashes during navigation
-        <div className={`min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white`}>
+        <div className={`min-h-screen ${bgColor} ${textColor} transition-colors duration-150`}>
             <Header
                 darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}

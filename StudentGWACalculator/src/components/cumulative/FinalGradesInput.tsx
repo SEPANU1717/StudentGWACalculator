@@ -39,7 +39,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
               <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
                 {index + 1}
               </span>
-              
+
               {/* Subject Name Input */}
               <input
                 type="text"
@@ -52,8 +52,8 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
 
               {/* Status Badge */}
               {subject.finalGrade !== '' && typeof subject.finalGrade === 'number' && (
-                <Badge 
-                  variant={subject.finalGrade <= 3.00 ? 'success' : 'error'} 
+                <Badge
+                  variant={subject.finalGrade <= 3.00 ? 'success' : 'error'}
                   size="sm"
                 >
                   {subject.finalGrade <= 3.00 ? 'Passed' : 'Failed'}
@@ -69,7 +69,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 <X className="w-4 h-4" />
               </button>
             </div>
-            
+
 
             {/* Final Grade and Units - Side by Side */}
             <div className="grid grid-cols-[1fr_auto] gap-3">
@@ -107,7 +107,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                   <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted} pointer-events-none`} />
                 </div>
               </div>
-              
+
               <div>
                 <label className={`block text-[9px] font-semibold ${textMuted} mb-1.5 uppercase tracking-wider`}>
                   Units
@@ -142,8 +142,8 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                   <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textMuted} pointer-events-none`} />
                 </div>
               </div>
-              </div>
-            </Card>
+            </div>
+          </Card>
         ))}
 
         {/* Add Subject Button */}

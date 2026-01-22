@@ -15,16 +15,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Ensure immediate background color on html/body to avoid flashes during route changes */
-html, body {
-  background-color: #f9fafb; /* light default */
-  transition: background-color 0s !important;
-}
-
-html.dark, .dark body {
-  background-color: #000000 !important;
-}
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

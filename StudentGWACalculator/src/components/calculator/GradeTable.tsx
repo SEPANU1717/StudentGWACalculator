@@ -24,9 +24,9 @@ export const GradeTable: React.FC<GradeTableProps> = ({
   return (
     <div className="space-y-3">
       {/* Toggle Button */}
-      <Card 
-        darkMode={darkMode} 
-        padding="md" 
+      <Card
+        darkMode={darkMode}
+        padding="md"
         onClick={onToggle}
         className="cursor-pointer group"
       >
@@ -65,7 +65,7 @@ export const GradeTable: React.FC<GradeTableProps> = ({
                 {GRADE_TABLE.map((g) => {
                   const isExcellent = g.grade <= 1.50;
                   const isFailed = g.grade === 5.00;
-                  
+
                   return (
                     <tr key={g.grade} className={`${darkMode ? 'hover:bg-[#0a0a0a]' : 'hover:bg-gray-50'} transition-colors`}>
                       <td className={`px-3 py-2 font-bold ${textColor}`}>
@@ -74,9 +74,8 @@ export const GradeTable: React.FC<GradeTableProps> = ({
                       <td className={`px-3 py-2 ${textLight} font-medium`}>
                         {g.min.toFixed(2)}–{g.max.toFixed(2)}
                       </td>
-                      <td className={`px-3 py-2 font-medium ${
-                        isFailed ? 'text-red-400' : isExcellent ? 'text-emerald-400' : textLight
-                      }`}>
+                      <td className={`px-3 py-2 font-medium ${isFailed ? 'text-red-400' : isExcellent ? 'text-emerald-400' : textLight
+                        }`}>
                         {g.description}
                       </td>
                     </tr>
