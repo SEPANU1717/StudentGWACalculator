@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useTheme } from 'next-themes';
 import { Subject, SemesterRecord, QuickEntrySubject } from '../types';
 
 interface AppContextType {
@@ -60,6 +61,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';
 
 export function AppProvider({ children }: { children: ReactNode }) {
+    const { theme, setTheme, systemTheme } = useTheme();
     const [darkMode, setDarkMode] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showGradeTable, setShowGradeTable] = useState(false);
@@ -82,7 +84,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [selectedHistoryGWA, setSelectedHistoryGWA] = useState<number | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Load from localStorage on mount
+    // Load gradeHistory from localStorage on mount
     useEffect(() => {
         try {
             const saved = localStorage.getItem('gradeHistory');
@@ -92,8 +94,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     setGradeHistory(parsed);
                 }
             }
-            const savedDarkMode = localStorage.getItem('darkMode');
-            if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode));
         } catch (e) {
             console.error('Error loading from localStorage:', e);
         }
@@ -107,20 +107,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [gradeHistory, isLoaded]);
 
-    // Save darkMode preference to localStorage and update body background
+    // Sync theme from next-themes into context and update body background
     useEffect(() => {
-        if (isLoaded) {
-            localStorage.setItem('darkMode', JSON.stringify(darkMode));
-        }
-        // Update body background to prevent flashes
-        if (darkMode) {
+        const currentTheme = theme === 'system' ? systemTheme : theme;
+        const isDark = currentTheme === 'dark';
+        setDarkMode(isDark);
+
+        if (isDark) {
             document.body.style.backgroundColor = '#000000';
         } else {
             document.body.style.backgroundColor = '#f9fafb'; // gray-50
         }
-    }, [darkMode, isLoaded]);
+    }, [theme, systemTheme]);
 
-    const toggleDarkMode = () => setDarkMode((prev) => !prev);
+    const toggleDarkMode = () => {
+        const current = theme === 'system' ? systemTheme : theme;
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    };
 
     const updateSingleSubject = (field: keyof Subject, value: string) => {
         const numValue = value === '' ? '' : Math.min(100, Math.max(0, Number(value)));
