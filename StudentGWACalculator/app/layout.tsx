@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '../src/index.css';
-import { Providers } from './providers';
+import { ThemeProvider } from '../src/providers/ThemeProvider';
+import { AppProvider } from '../src/context/AppContext';
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://sep-student-gwa-calculator.vercel.app'),
@@ -48,31 +49,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <head>
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
                 />
-                {/* Inline script to set theme before hydration to prevent flash */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `(() => {
-                            try {
-                                const saved = localStorage.getItem('darkMode');
-                                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                                const dark = saved !== null ? JSON.parse(saved) : prefersDark;
-                                if (dark) {
-                                    document.documentElement.classList.add('dark');
-                                    document.documentElement.style.backgroundColor = '#000000';
-                                } else {
-                                    document.documentElement.classList.remove('dark');
-                                    document.documentElement.style.backgroundColor = '#f9fafb';
-                                }
-                            } catch (e) {}
-                        })();`,
-                    }}
-                />
+                <style>{`html { background-color: #f9fafb; } html.dark { background-color: #000000; } body { background-color: inherit; }`}</style>
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -86,7 +69,9 @@ export default function RootLayout({
                 />
             </head>
             <body>
-                <Providers>{children}</Providers>
+                <ThemeProvider>
+                    <AppProvider>{children}</AppProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

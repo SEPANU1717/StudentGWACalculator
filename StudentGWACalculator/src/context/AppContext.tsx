@@ -208,6 +208,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         <AppContext.Provider
             value={{
                 darkMode,
+                theme,
                 toggleDarkMode,
                 singleSubject,
                 updateSingleSubject,
