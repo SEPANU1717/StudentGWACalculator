@@ -62,7 +62,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';
 
 export function AppProvider({ children }: { children: ReactNode }) {
-    const { theme, setTheme, systemTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
     const [showSettings, setShowSettings] = useState(false);
     const [showGradeTable, setShowGradeTable] = useState(false);
     const [targetGrade, setTargetGrade] = useState<number>(1.0);
@@ -107,9 +107,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [gradeHistory, isLoaded]);
 
-    // Derive dark mode from next-themes and update body background
-    const resolvedTheme = theme === 'system' ? systemTheme : theme;
-    const darkMode = resolvedTheme === 'dark';
+    // Derive darkMode from next-themes and update body background
+    const darkMode = theme === 'dark';
 
     useEffect(() => {
         if (darkMode) {
@@ -119,10 +118,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
     }, [darkMode]);
 
-    const toggleDarkMode = () => {
-        const current = resolvedTheme;
-        setTheme(current === 'dark' ? 'light' : 'dark');
-    };
+    const toggleDarkMode = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
     const updateSingleSubject = (field: keyof Subject, value: string) => {
         const numValue = value === '' ? '' : Math.min(100, Math.max(0, Number(value)));
@@ -208,7 +204,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         <AppContext.Provider
             value={{
                 darkMode,
-                theme,
                 toggleDarkMode,
                 singleSubject,
                 updateSingleSubject,
