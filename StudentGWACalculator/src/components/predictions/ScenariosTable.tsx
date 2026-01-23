@@ -31,7 +31,7 @@ export const ScenariosTable: React.FC<ScenariosTableProps> = ({
       <p className={`text-[11px] font-semibold ${darkMode ? 'text-[#444]' : 'text-gray-400'} uppercase tracking-wider mb-3`}>
         Scenarios
       </p>
-      
+
       <Card darkMode={darkMode} padding="none" className="overflow-hidden">
         {/* Table */}
         <div className="overflow-x-auto">
@@ -56,7 +56,7 @@ export const ScenariosTable: React.FC<ScenariosTableProps> = ({
               {scenarios.map((s) => {
                 const isExcellent = s.result?.grade && s.result.grade <= 1.50;
                 const isFailed = s.result?.grade === 5.00;
-                
+
                 return (
                   <tr key={s.score} className={`${hoverBg} transition-colors`}>
                     <td className={`px-3 py-2 font-bold ${textColor} tabular-nums`}>
@@ -65,14 +65,13 @@ export const ScenariosTable: React.FC<ScenariosTableProps> = ({
                     <td className={`px-3 py-2 ${textLight} font-medium tabular-nums`}>
                       {s.result?.percentage.toFixed(2)}%
                     </td>
-                    <td className={`px-3 py-2 font-bold tabular-nums ${
-                      isFailed ? 'text-red-400' : isExcellent ? 'text-emerald-400' : textLight
-                    }`}>
+                    <td className={`px-3 py-2 font-bold tabular-nums ${isFailed ? 'text-red-400' : isExcellent ? 'text-emerald-400' : textLight
+                      }`}>
                       {s.result?.grade.toFixed(2)}
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <Badge 
-                        variant={s.result?.status === 'passed' ? 'success' : 'error'} 
+                      <Badge
+                        variant={s.result?.status === 'passed' ? 'success' : 'error'}
                         size="sm"
                       >
                         {s.result?.status === 'passed' ? 'Pass' : 'Fail'}

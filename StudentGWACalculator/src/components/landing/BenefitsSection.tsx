@@ -1,5 +1,7 @@
 import React from 'react';
 import { CheckCircle, Users, BookOpen } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { slideUp, fadeIn } from '../shared/animations';
 
 interface BenefitsSectionProps {
   darkMode: boolean;
@@ -22,98 +24,130 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
   const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
   const innerBg = '';
 
-  const ref = React.useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = React.useState(false);
+  // Adapt animations
+  const slideUpVariant = {
+    initial: slideUp.initial,
+    animate: { ...slideUp.animate, transition: slideUp.transition }
+  };
 
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => setVisible(entry.isIntersecting));
-    }, { threshold: 0.12, rootMargin: '0px 0px -40% 0px' });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const fadeInVariant = {
+    initial: fadeIn.initial,
+    animate: { ...fadeIn.animate, transition: fadeIn.transition }
+  };
 
   return (
-    <section ref={ref} style={{ scrollMarginTop: '48px' }} className={`py-8 sm:py-12 ${innerBg} transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+    <motion.section
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true, margin: "-100px" }}
+      style={{ scrollMarginTop: '48px' }}
+      className="py-12 sm:py-20"
+    >
       <div className="max-w-5xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Text Content */}
-          <div>
-            <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
+          <motion.div variants={staggerLocal}>
+            <motion.span variants={fadeInVariant} className={`text-xs font-medium uppercase tracking-wider ${textMuted} block mb-3`}>
               Why Choose This
-            </span>
-            <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-4 ${textColor}`}>
+            </motion.span>
+            <motion.h2 variants={slideUpVariant} className={`text-3xl sm:text-4xl font-semibold mb-6 ${textColor} leading-tight`}>
               Smart and Simple
-            </h2>
-            <p className={`text-base mb-6 ${textMuted} leading-relaxed`}>
+            </motion.h2>
+            <motion.p variants={slideUpVariant} className={`text-base sm:text-lg mb-8 ${textMuted} leading-relaxed`}>
               Purpose-built for STI College students with features that understand your academic needs.
               From detailed term calculations to cumulative GWA tracking, everything you need is here.
-            </p>
+            </motion.p>
 
             {/* Benefits List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <motion.div variants={staggerLocal} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {benefits.map((benefit, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <benefit.icon className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <motion.div variants={slideUpVariant} key={i} className="flex items-center gap-3">
+                  <benefit.icon className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                   <span className={`text-sm ${textLight}`}>{benefit.text}</span>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right - Sample Calculator Card */}
-          <div className={`${cardBg} rounded-2xl p-6 border ${border}`}>
-            <div className="space-y-4">
-              {/* Card Header */}
-              <div className="flex items-center gap-3 mb-4">
-                <Users className={`w-5 h-5 ${textMuted}`} />
-                <span className={`text-sm font-medium ${textColor}`}>For STI Students</span>
-              </div>
-
-              {/* Sample Calculation */}
-              <div className={`${innerBg} rounded-xl p-4 border ${border}`}>
-                <div className="flex justify-between items-center mb-4">
-                  <span className={`text-xs ${textMuted}`}>Sample Calculation</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-medium">
-                    Passed
-                  </span>
-                </div>
-
-                {/* Grades Grid */}
-                <div className="grid grid-cols-4 gap-2 mb-4">
-                  {[
-                    { value: 85, label: 'Prelim' },
-                    { value: 88, label: 'Midterm' },
-                    { value: 82, label: 'Pre-Fi' },
-                    { value: 90, label: 'Finals' }
-                  ].map((grade) => (
-                    <div key={grade.label} className="text-center">
-                      <div className={`text-lg font-bold ${textColor} tabular-nums`}>
-                        {grade.value}
-                      </div>
-                      <div className={`text-xs ${textMuted}`}>{grade.label}</div>
+          <motion.div
+            variants={slideUpVariant}
+            className="relative"
+          >
+            <div className={`${cardBg} relative rounded-3xl p-8 border ${border} shadow-xl rotate-[-1deg] hover:rotate-0 transition-transform duration-700 ease-out`}>
+              <div className="space-y-6">
+                {/* Card Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-100'}`}>
+                      <Users className={`w-5 h-5 ${textMuted}`} />
                     </div>
-                  ))}
+                    <div>
+                      <span className={`block text-xs font-bold uppercase tracking-wider ${textMuted}`}>Target Audience</span>
+                      <span className={`block text-sm font-semibold ${textColor}`}>STI Students</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
+                  </div>
                 </div>
 
-                {/* Result */}
-                <div className={`pt-4 border-t ${border} flex items-center justify-between`}>
-                  <span className={`text-sm ${textMuted}`}>Final GWA:</span>
-                  <span className="text-xl font-bold text-emerald-400 tabular-nums">87.00</span>
-                </div>
-              </div>
+                {/* Sample Calculation UI */}
+                <div className={`rounded-2xl p-6 border ${border} ${darkMode ? 'bg-[#111]' : 'bg-gray-50/80'}`}>
+                  <div className="flex justify-between items-center mb-6">
+                    <span className={`text-xs font-bold ${textMuted} uppercase tracking-wide`}>Sample GWA Computation</span>
+                    <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                      Passed
+                    </span>
+                  </div>
 
-              {/* Footer Note */}
-              <div className={`flex items-center gap-2 text-xs ${textMuted}`}>
-                <BookOpen className="w-4 h-4" />
-                <span>Weights: 20% + 20% + 20% + 40% = 100%</span>
+                  {/* Grades Grid */}
+                  <div className="grid grid-cols-4 gap-4 mb-6">
+                    {[
+                      { value: 1.25, label: 'Prelim' },
+                      { value: 1.50, label: 'Midterm' },
+                      { value: 1.75, label: 'Pre-Fi' },
+                      { value: 1.25, label: 'Finals' }
+                    ].map((grade) => (
+                      <div key={grade.label} className="text-center group cursor-default">
+                        <div className={`text-lg sm:text-lg font-black ${textColor} tabular-nums mb-1 group-hover:text-emerald-500 transition-colors`}>
+                          {grade.value.toFixed(2)}
+                        </div>
+                        <div className={`text-[9px] uppercase font-bold ${textMuted}`}>{grade.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Result */}
+                  <div className={`pt-5 border-t ${border} flex items-center justify-between`}>
+                    <span className={`text-xs font-bold uppercase ${textMuted}`}>Final Grade</span>
+                    <div className="text-right">
+                      <span className="block text-2xl font-black text-emerald-500 tabular-nums leading-none">1.44</span>
+                      <span className="text-[9px] text-emerald-600/60 font-medium">Dean's List Eligible</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Note */}
+                <div className={`flex items-center gap-2 text-[10px] font-medium ${textMuted} uppercase tracking-wider justify-center opacity-60`}>
+                  <BookOpen className="w-3 h-3" />
+                  <span>Based on DO 20-20-20-40 System</span>
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
+};
+
+const staggerLocal = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
 };

@@ -1,6 +1,8 @@
 import React from 'react';
 import { GraduationCap } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '../shared';
+import { scaleIn } from '../shared/animations';
 
 interface CTASectionProps {
   onGetStarted: () => void;
@@ -14,37 +16,39 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
   const sectionBg = darkMode ? '' : 'bg-white';
 
-  const ref = React.useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => setVisible(entry.isIntersecting));
-    }, { threshold: 0.12, rootMargin: '0px 0px -40% 0px' });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  // Adapt animation
+  const scaleInVariant = {
+    initial: scaleIn.initial,
+    animate: { ...scaleIn.animate, transition: scaleIn.transition }
+  };
 
   return (
-    <section ref={ref} style={{ scrollMarginTop: '48px' }} className={`py-12 sm:py-16 ${sectionBg} transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+    <motion.section
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true, margin: "-50px" }}
+      style={{ scrollMarginTop: '48px' }}
+      className={`py-12 sm:py-24 ${sectionBg}`}
+    >
       <div className="max-w-3xl mx-auto px-6 text-center">
-        <div className={`${cardBg} rounded-2xl p-6 sm:p-10 border ${border}`}>
+        <motion.div
+          variants={scaleInVariant}
+          className={`${cardBg} rounded-3xl p-8 sm:p-12 border ${border} shadow-xl`}
+        >
           {/* Icon */}
-          <div className={`w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center ${darkMode ? 'bg-emerald-500/15' : 'bg-emerald-50'
-            }`}>
-            <GraduationCap className="w-8 h-8 text-emerald-500" />
+          <div className={`w-20 h-20 rounded-2xl mx-auto mb-8 flex items-center justify-center ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}>
+            <GraduationCap className="w-10 h-10 text-emerald-500" />
           </div>
 
           {/* Title */}
-          <h3 className={`text-2xl sm:text-3xl font-semibold mb-4 ${textColor}`}>
+          <h3 className={`text-3xl sm:text-4xl font-bold mb-6 ${textColor}`}>
             Start Calculating Today
           </h3>
 
           {/* Description */}
-          <p className={`text-base ${textMuted} mb-8 max-w-md mx-auto leading-relaxed`}>
+          <p className={`text-lg ${textMuted} mb-10 max-w-lg mx-auto leading-relaxed`}>
             Join STI students tracking their academic journey with confidence.
+            Free, private, and easy to use.
           </p>
 
           {/* CTA Button */}
@@ -52,12 +56,13 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
             onClick={onGetStarted}
             variant="primary"
             size="lg"
+            className="px-10 py-4 text-lg"
             darkMode={darkMode}
           >
             Start Now — It's Free
           </Button>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Calculator, Split, History, Award, TrendingUp, Zap, LucideIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { staggerContainer, scaleIn, hoverScale } from '../shared/animations';
 
 interface Feature {
   icon: LucideIcon;
@@ -51,31 +53,24 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const sectionBg = darkMode ? '' : 'bg-white';
 
-  const ref = React.useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        setVisible(entry.isIntersecting);
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40% 0px' });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  // Adapt animations
+  const scaleInVariant = {
+    initial: scaleIn.initial,
+    animate: { ...scaleIn.animate, transition: scaleIn.transition }
+  };
 
   return (
-    <section
+    <motion.section
       id="features"
-      ref={ref}
-      style={{ scrollMarginTop: '48px' }}
-      className={`py-6 sm:py-10 ${sectionBg} transition-all duration-700 ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={staggerContainer}
+      className={`py-8 sm:py-16 ${sectionBg}`}
     >
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-10">
+        <motion.div variants={scaleInVariant} className="text-center mb-12">
           <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
             Key Features
           </span>
@@ -85,32 +80,36 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
           <p className={`text-base max-w-2xl mx-auto ${textMuted}`}>
             Powerful tools designed specifically for accurate GWA tracking and academic planning.
           </p>
-        </div>
+        </motion.div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {features.map((feature) => (
-            <div
+            <motion.div
               key={feature.title}
+              variants={scaleInVariant}
+              whileHover={hoverScale.whileHover}
               className={`
-                ${cardBg} rounded-xl p-4 border ${border} 
-                transition-all duration-200 
-                hover:border-emerald-500/30 hover:scale-[1.02]
+                ${cardBg} rounded-2xl p-6 border ${border}
+                transition-all duration-300
+                hover:border-emerald-500/30
               `}
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3">
-                <feature.icon className="w-5 h-5 text-emerald-400" />
+              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
+                <feature.icon className="w-6 h-6 text-emerald-500" />
               </div>
-              <h3 className={`text-base font-semibold mb-2 ${textColor}`}>
+
+              <h3 className={`text-lg font-bold mb-2 ${textColor}`}>
                 {feature.title}
               </h3>
+
               <p className={`text-sm ${textMuted} leading-relaxed`}>
                 {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };

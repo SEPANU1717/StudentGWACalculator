@@ -44,7 +44,7 @@ export const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({
       <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
         Requirements
       </p>
-      
+
       <div className="grid grid-cols-2 gap-3">
         {/* To Pass */}
         <Card darkMode={darkMode} padding="md">

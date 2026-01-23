@@ -1,4 +1,6 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { scaleIn, hoverScale } from './animations';
 
 export interface CardProps {
   children: React.ReactNode;
@@ -10,6 +12,8 @@ export interface CardProps {
   onClick?: () => void;
   hoverable?: boolean;
   id?: string;
+  animate?: boolean;
+  delay?: number;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -21,7 +25,9 @@ export const Card: React.FC<CardProps> = ({
   highlightColor,
   onClick,
   hoverable = false,
-  id
+  id,
+  animate = true,
+  delay = 0
 }) => {
   const paddingStyles = {
     none: '',
@@ -30,7 +36,7 @@ export const Card: React.FC<CardProps> = ({
     lg: 'p-5'
   };
 
-  const baseStyles = 'rounded-xl transition-all duration-200';
+  const baseStyles = 'rounded-xl transition-colors duration-200';
 
   const bgColor = darkMode ? 'bg-[#0a0a0a]' : 'bg-white';
   const borderColor = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
@@ -53,8 +59,8 @@ export const Card: React.FC<CardProps> = ({
 
   const hoverStyles = hoverable
     ? darkMode
-      ? 'hover:border-[#2a2a2a] hover:bg-[#0f0f0f] cursor-pointer'
-      : 'hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+      ? 'hover:border-[#2a2a2a] hover:bg-[#0f0f0f] cursor-pointer shadow-lg shadow-black/20'
+      : 'hover:border-gray-300 hover:bg-gray-50 cursor-pointer shadow-md'
     : '';
 
   const clickableStyles = onClick ? 'cursor-pointer' : '';
@@ -67,9 +73,14 @@ export const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <div
+    <motion.div
       id={id}
       onClick={onClick}
+      initial={animate ? scaleIn.initial : undefined}
+      animate={animate ? scaleIn.animate : undefined}
+      transition={animate ? { ...scaleIn.transition, delay } : undefined}
+      whileHover={hoverable ? hoverScale.whileHover : undefined}
+      whileTap={onClick ? { scale: 0.98 } : undefined}
       className={`
         ${baseStyles}
         ${paddingStyles[padding]}
@@ -82,6 +93,7 @@ export const Card: React.FC<CardProps> = ({
       tabIndex={onClick ? 0 : undefined}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
+

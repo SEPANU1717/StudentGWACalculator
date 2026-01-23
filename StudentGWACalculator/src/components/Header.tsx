@@ -8,8 +8,14 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShowLanding }) => {
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
-        <header className={`sticky top-0 z-50 ${darkMode ? 'bg-[#000]/95' : 'bg-white/95'} backdrop-blur-md border-b ${darkMode ? 'border-[#1a1a1a]' : 'border-gray-200'}`}>
+        <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#000]/95 backdrop-blur-md border-b border-gray-200 dark:border-[#1a1a1a]">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-14 flex items-center justify-between">
                 {/* Logo & Brand */}
                 <div
@@ -22,19 +28,13 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
                             onShowLanding && onShowLanding();
                         }
                     }}
-                    className={`
-            flex items-center gap-2 sm:gap-2.5 cursor-pointer outline-none
-            rounded-xl py-1.5 px-2 -ml-2
-            transition-all duration-150
-            ${darkMode ? 'hover:bg-[#1a1a1a] active:bg-[#222]' : 'hover:bg-emerald-50 active:bg-emerald-100'}
-          `}
+                    className="flex items-center gap-2 sm:gap-2.5 cursor-pointer outline-none rounded-xl py-1.5 px-2 -ml-2 transition-all duration-150 hover:bg-emerald-50 active:bg-emerald-100 dark:hover:bg-[#1a1a1a] dark:active:bg-[#222]"
                     aria-label="Go to landing page"
                 >
-                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'
-                        }`}>
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10">
                         <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                     </div>
-                    <span className={`text-sm sm:text-base font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <span className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
                         <span className="hidden sm:inline">Student GWA Calculator</span>
                         <span className="sm:hidden">Student GWA Calculator</span>
                     </span>
@@ -43,18 +43,15 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
                 {/* Theme Toggle */}
                 <button
                     onClick={toggleDarkMode}
-                    className={`
-            p-2.5 sm:p-2 rounded-xl transition-all duration-150 outline-none
-            ${darkMode ? 'bg-[#1a1a1a] hover:bg-[#222] active:bg-[#2a2a2a]' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300'}
-            min-h-[44px] min-w-[44px] sm:min-h-[40px] sm:min-w-[40px] 
-            flex items-center justify-center
-          `}
+                    className="p-2.5 sm:p-2 rounded-xl transition-all duration-150 outline-none bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-[#1a1a1a] dark:hover:bg-[#222] dark:active:bg-[#2a2a2a] min-h-[44px] min-w-[44px] sm:min-h-[40px] sm:min-w-[40px] flex items-center justify-center text-gray-500 dark:text-gray-400"
                     aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
-                    {darkMode ? (
-                        <Sun className="w-5 h-5 sm:w-4 sm:h-4 text-gray-400" />
+                    {!mounted ? (
+                        <div className="w-5 h-5 sm:w-4 sm:h-4" /> // Placeholder to prevent layout shift
+                    ) : darkMode ? (
+                        <Sun className="w-5 h-5 sm:w-4 sm:h-4" />
                     ) : (
-                        <Moon className="w-5 h-5 sm:w-4 sm:h-4 text-gray-500" />
+                        <Moon className="w-5 h-5 sm:w-4 sm:h-4" />
                     )}
                 </button>
             </div>

@@ -3,7 +3,7 @@ import { WEIGHTS, GRADE_TABLE, PASSING_PERCENTAGE } from './constants';
 
 export const percentageToGrade = (percentage: number): { grade: number; description: string } => {
   const entry = GRADE_TABLE.find(g => percentage >= g.min && percentage <= g.max);
-  return entry 
+  return entry
     ? { grade: entry.grade, description: entry.description }
     : { grade: 5.00, description: 'Failed' };
 };
@@ -12,12 +12,12 @@ export const calculatePartialPercentage = (subject: Subject): number | null => {
   const { prelim, midterm, preFinal, finals } = subject;
   let total = 0;
   let weightUsed = 0;
-  
+
   if (prelim !== '') { total += (prelim as number) * WEIGHTS.prelim; weightUsed += WEIGHTS.prelim; }
   if (midterm !== '') { total += (midterm as number) * WEIGHTS.midterm; weightUsed += WEIGHTS.midterm; }
   if (preFinal !== '') { total += (preFinal as number) * WEIGHTS.preFinal; weightUsed += WEIGHTS.preFinal; }
   if (finals !== '') { total += (finals as number) * WEIGHTS.finals; weightUsed += WEIGHTS.finals; }
-  
+
   return weightUsed === 0 ? null : total;
 };
 
@@ -25,7 +25,7 @@ export const calculateSubjectGWA = (subject: Subject): GradeResult | null => {
   const { prelim, midterm, preFinal, finals } = subject;
   if (prelim === '' || midterm === '' || preFinal === '' || finals === '') return null;
 
-  const percentage = 
+  const percentage =
     (prelim as number) * WEIGHTS.prelim +
     (midterm as number) * WEIGHTS.midterm +
     (preFinal as number) * WEIGHTS.preFinal +
@@ -42,13 +42,13 @@ export const calculateOverallGWA = (subjects: Subject[]): number | null => {
     const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
     return result !== null && !isNaN(units) && units > 0;
   });
-  
+
   if (validSubjects.length === 0) return null;
-  
+
   // Calculate weighted GWA by units
   let totalWeighted = 0;
   let totalUnits = 0;
-  
+
   validSubjects.forEach(s => {
     const result = calculateSubjectGWA(s);
     const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
@@ -57,7 +57,7 @@ export const calculateOverallGWA = (subjects: Subject[]): number | null => {
       totalUnits += units;
     }
   });
-  
+
   if (totalUnits === 0) return null;
   return Math.round((totalWeighted / totalUnits) * 100) / 100;
 };
@@ -69,13 +69,13 @@ export const getGradeProgress = (subject: Subject) => {
   let currentScore = 0;
   let remainingWeight = 0;
 
-  if (prelim !== '') { filled.push('Prelim'); currentScore += (prelim as number) * WEIGHTS.prelim; } 
+  if (prelim !== '') { filled.push('Prelim'); currentScore += (prelim as number) * WEIGHTS.prelim; }
   else { remaining.push('Prelim'); remainingWeight += WEIGHTS.prelim; }
-  if (midterm !== '') { filled.push('Midterm'); currentScore += (midterm as number) * WEIGHTS.midterm; } 
+  if (midterm !== '') { filled.push('Midterm'); currentScore += (midterm as number) * WEIGHTS.midterm; }
   else { remaining.push('Midterm'); remainingWeight += WEIGHTS.midterm; }
-  if (preFinal !== '') { filled.push('Pre-Final'); currentScore += (preFinal as number) * WEIGHTS.preFinal; } 
+  if (preFinal !== '') { filled.push('Pre-Final'); currentScore += (preFinal as number) * WEIGHTS.preFinal; }
   else { remaining.push('Pre-Final'); remainingWeight += WEIGHTS.preFinal; }
-  if (finals !== '') { filled.push('Finals'); currentScore += (finals as number) * WEIGHTS.finals; } 
+  if (finals !== '') { filled.push('Finals'); currentScore += (finals as number) * WEIGHTS.finals; }
   else { remaining.push('Finals'); remainingWeight += WEIGHTS.finals; }
 
   return { filled: filled.length, filledNames: filled, remaining, currentScore, remainingWeight };
@@ -115,32 +115,32 @@ export const predictForTarget = (subject: Subject, targetGrade: number): number 
 export const calculateWhatIfGWA = (subject: Subject, simulatedAverage: number): GradeResult | null => {
   const { prelim, midterm, preFinal, finals } = subject;
   const { filled, remaining } = getGradeProgress(subject);
-  
+
   if (filled === 0 || filled === 4) return null;
-  
+
   let percentage = 0;
-  
+
   // Add filled grades
   if (prelim !== '') percentage += (prelim as number) * WEIGHTS.prelim;
   else percentage += simulatedAverage * WEIGHTS.prelim;
-  
+
   if (midterm !== '') percentage += (midterm as number) * WEIGHTS.midterm;
   else percentage += simulatedAverage * WEIGHTS.midterm;
-  
+
   if (preFinal !== '') percentage += (preFinal as number) * WEIGHTS.preFinal;
   else percentage += simulatedAverage * WEIGHTS.preFinal;
-  
+
   if (finals !== '') percentage += (finals as number) * WEIGHTS.finals;
   else percentage += simulatedAverage * WEIGHTS.finals;
-  
+
   const rounded = Math.round(percentage * 100) / 100;
   const pg = percentageToGrade(rounded);
-  return { 
-    percentage: rounded, 
-    grade: pg.grade, 
-    status: pg.grade < 5.00 ? 'passed' : 'failed', 
+  return {
+    percentage: rounded,
+    grade: pg.grade,
+    status: pg.grade < 5.00 ? 'passed' : 'failed',
     description: pg.description,
-    remaining 
+    remaining
   };
 };
 

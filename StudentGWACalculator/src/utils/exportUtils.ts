@@ -7,7 +7,7 @@ export const exportToImage = async (elementId: string, fileName: string = 'gwa-r
     try {
         const dataUrl = await toPng(node, {
             cacheBust: true,
-            backgroundColor: node.classList.contains('dark') || node.closest('.dark') ? '#000' : '#fff',
+            backgroundColor: '#fff',
             style: {
                 transform: 'scale(1)', // Ensure no scaling issues
             }

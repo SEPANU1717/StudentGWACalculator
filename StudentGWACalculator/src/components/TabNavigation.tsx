@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Calculator, TrendingUp, BarChart3, Award } from 'lucide-react';
 
 type Tab = 'calculator' | 'predictions' | 'cumulative' | 'honors';
@@ -35,18 +36,27 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
                             aria-selected={isActive}
                             aria-controls={`${id}-panel`}
                             className={`
-                flex flex-col items-center justify-center gap-1
-                py-2.5 rounded-lg text-[10px] sm:text-xs font-semibold
-                transition-all duration-150 min-h-[52px] outline-none
-                ${isActive
-                                    ? `${darkMode ? 'bg-[#1a1a1a] text-white' : 'bg-emerald-50 text-emerald-700'}`
-                                    : `${darkMode ? 'text-gray-500 hover:bg-[#111] hover:text-gray-300' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'}`
+                                relative flex flex-col items-center justify-center gap-1
+                                py-2.5 rounded-lg text-[10px] sm:text-xs font-semibold
+                                transition-colors duration-200 min-h-[52px] outline-none
+                                ${isActive
+                                    ? `${darkMode ? 'text-white' : 'text-emerald-700'}`
+                                    : `${darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`
                                 }
-              `}
+                            `}
                         >
-                            <Icon className={`w-4 h-4 ${isActive ? (darkMode ? 'text-emerald-400' : 'text-emerald-600') : ''}`} />
-                            <span className="hidden sm:block">{label}</span>
-                            <span className="sm:hidden">{shortLabel}</span>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="activeTab"
+                                    className={`absolute inset-0 rounded-lg ${darkMode ? 'bg-[#1a1a1a]' : 'bg-emerald-50'}`}
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                />
+                            )}
+                            <div className="relative z-10 flex flex-col items-center gap-1">
+                                <Icon className={`w-4 h-4 ${isActive ? (darkMode ? 'text-emerald-400' : 'text-emerald-600') : ''}`} />
+                                <span className="hidden sm:block">{label}</span>
+                                <span className="sm:hidden">{shortLabel}</span>
+                            </div>
                         </button>
                     );
                 })}
