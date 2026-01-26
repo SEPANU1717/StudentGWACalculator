@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, onShow
                             onShowLanding && onShowLanding();
                         }
                     }}
-                    className="flex items-center gap-2 sm:gap-2.5 cursor-pointer outline-none rounded-xl py-1.5 px-2 -ml-2 transition-all duration-150 hover:bg-emerald-50 active:bg-emerald-100 dark:hover:bg-[#1a1a1a] dark:active:bg-[#222]"
+                    className="flex items-center gap-2 sm:gap-2.5 cursor-pointer outline-none rounded-xl py-1.5 px-2 -ml-2 transition-all duration-150"
                     aria-label="Go to landing page"
                 >
                     <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10">
