@@ -4,19 +4,22 @@ import { ThemeProvider } from '../src/providers/ThemeProvider';
 import { AppProvider } from '../src/context/AppContext';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://sep-student-gwa-calculator.vercel.app'),
-    title: 'STI Grade Calculator',
+    metadataBase: new URL('https://gwa.markmnl.dev'),
+    title: {
+        default: 'STI Grade Calculator',
+        template: '%s | STI Grade Calculator'
+    },
     description:
-        'STI Grade Calculator — fast, private GWA/GPA calculator for STI students. Calculate semester and cumulative GWAs, simulate "what-if" grade scenarios, check honors eligibility, and save grade history for easy tracking.',
+        'The smart GWA calculator built for STI students. Calculate semester and cumulative GWAs, simulate "what-if" grade scenarios, and check honors eligibility.',
     keywords:
-        'STI grade calculator, GWA calculator, GPA calculator, grade simulator, what-if grades, honors eligibility, grade tracker, cumulative GWA',
+        'STI grade calculator, GWA calculator, GPA calculator, STI grades, honors eligibility, grade tracker, cumulative GWA',
     openGraph: {
         title: 'STI Grade Calculator — Fast, Private GWA Calculator',
         siteName: 'STI Grade Calculator',
         description:
             'Calculate semester and cumulative GWAs, simulate grade scenarios, and track academic progress with the STI Grade Calculator.',
         type: 'website',
-        url: 'https://sep-student-gwa-calculator.vercel.app/',
+        url: 'https://gwa.markmnl.dev/',
         images: [
             {
                 url: '/calculator.png',
@@ -31,16 +34,24 @@ export const metadata: Metadata = {
         title: 'STI Grade Calculator — Fast, Private GWA Calculator',
         description:
             'Calculate semester and cumulative GWAs, simulate grade scenarios, and track academic progress with the STI Grade Calculator.',
+        images: ['/calculator.png'],
     },
     verification: {
         google: 'wjA-ea2Wy6l8GZMB1w21EIYmMv21QWJboo4fPfqLMJY',
     },
     alternates: {
-        canonical: 'https://sep-student-gwa-calculator.vercel.app/',
+        canonical: 'https://gwa.markmnl.dev/',
     },
     icons: {
-        icon: '/gwacalc.ico',
+        icon: [
+            { url: '/favicon.ico' },
+            { url: '/icon.png', type: 'image/png' },
+        ],
+        apple: [
+            { url: '/apple-touch-icon.png' },
+        ],
     },
+    manifest: '/manifest.webmanifest',
 };
 
 export default function RootLayout({
@@ -55,6 +66,9 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
                 />
+                <meta name="apple-mobile-web-app-title" content="STI GWA" />
+                <meta name="application-name" content="STI Grade Calculator" />
+                <meta name="theme-color" content="#10b981" />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -62,7 +76,8 @@ export default function RootLayout({
                             '@context': 'https://schema.org',
                             '@type': 'WebSite',
                             name: 'STI Grade Calculator',
-                            url: 'https://sep-student-gwa-calculator.vercel.app/',
+                            alternateName: ['Student GWA Calculator', 'GWA Calc'],
+                            url: 'https://gwa.markmnl.dev/',
                         }),
                     }}
                 />

@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-# Sitemap URL - update this if you use a custom domain
-Sitemap: https://sep-student-gwa-calculator.vercel.app/sitemap.xml
