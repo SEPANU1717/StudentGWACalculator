@@ -37,7 +37,10 @@ export const metadata: Metadata = {
         images: ['/calculator.png'],
     },
     verification: {
-        google: 'wjA-ea2Wy6l8GZMB1w21EIYmMv21QWJboo4fPfqLMJY',
+        google: [
+            'wjA-ea2Wy6l8GZMB1w21EIYmMv21QWJboo4fPfqLMJY',
+            'mRBD1C_9Oc7a3IlohzHp3OvCMPeRmLy63tPbzFtlnas'
+        ],
     },
     alternates: {
         canonical: 'https://gwa.markmnl.dev/',
