@@ -19,11 +19,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onGetStarted,
   toggleDarkMode
 }) => {
-  const bgColor = darkMode ? 'bg-[#000]' : 'bg-gray-50';
-  const textColor = darkMode ? 'text-white' : 'text-gray-800';
-
   return (
-    <div className={`min-h-screen ${bgColor} ${textColor}`}>
+    <div
+      className="min-h-screen bg-gray-50 dark:bg-black text-gray-800 dark:text-white"
+      suppressHydrationWarning
+    >
       {/* Header - matches main app */}
       <Header
         darkMode={darkMode}

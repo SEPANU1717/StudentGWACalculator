@@ -28,25 +28,26 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
       whileInView="animate"
       viewport={{ once: true, margin: "-50px" }}
       style={{ scrollMarginTop: '48px' }}
-      className={`py-12 sm:py-24 ${sectionBg}`}
+      className="py-12 sm:py-24 bg-white dark:bg-black transition-colors duration-300"
+      suppressHydrationWarning
     >
       <div className="max-w-3xl mx-auto px-6 text-center">
         <motion.div
           variants={scaleInVariant}
-          className={`${cardBg} rounded-3xl p-8 sm:p-12 border ${border} shadow-xl`}
+          className="bg-white dark:bg-[#0a0a0a] rounded-3xl p-8 sm:p-12 border border-gray-200 dark:border-[#1a1a1a] shadow-xl"
         >
           {/* Icon */}
-          <div className={`w-20 h-20 rounded-2xl mx-auto mb-8 flex items-center justify-center ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}>
+          <div className="w-20 h-20 rounded-2xl mx-auto mb-8 flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10">
             <GraduationCap className="w-10 h-10 text-emerald-500" />
           </div>
 
           {/* Title */}
-          <h3 className={`text-3xl sm:text-4xl font-bold mb-6 ${textColor}`}>
+          <h3 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white" suppressHydrationWarning>
             Start Calculating Today
           </h3>
 
           {/* Description */}
-          <p className={`text-lg ${textMuted} mb-10 max-w-lg mx-auto leading-relaxed`}>
+          <p className="text-lg text-gray-400 dark:text-[#555] mb-10 max-w-lg mx-auto leading-relaxed" suppressHydrationWarning>
             Join STI students tracking their academic journey with confidence.
             Free, private, and easy to use.
           </p>

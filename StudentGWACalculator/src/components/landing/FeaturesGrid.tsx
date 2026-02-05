@@ -66,18 +66,19 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
       whileInView="animate"
       viewport={{ once: true, margin: "-50px" }}
       variants={staggerContainer}
-      className={`py-8 sm:py-16 ${sectionBg}`}
+      className="py-8 sm:py-16 bg-white dark:bg-black"
+      suppressHydrationWarning
     >
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Header */}
         <motion.div variants={scaleInVariant} className="text-center mb-12">
-          <span className={`text-xs font-medium uppercase tracking-wider ${textMuted}`}>
+          <span className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-[#555]">
             Key Features
           </span>
-          <h2 className={`text-3xl sm:text-4xl font-semibold mt-3 mb-3 ${textColor}`}>
+          <h2 className="text-3xl sm:text-4xl font-semibold mt-3 mb-3 text-gray-900 dark:text-white" suppressHydrationWarning>
             Built for STI Students
           </h2>
-          <p className={`text-base max-w-2xl mx-auto ${textMuted}`}>
+          <p className="text-base max-w-2xl mx-auto text-gray-500 dark:text-[#555]" suppressHydrationWarning>
             Powerful tools designed specifically for accurate GWA tracking and academic planning.
           </p>
         </motion.div>
@@ -89,21 +90,18 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
               key={feature.title}
               variants={scaleInVariant}
               whileHover={hoverScale.whileHover}
-              className={`
-                ${cardBg} rounded-2xl p-6 border ${border}
-                transition-all duration-300
-                hover:border-emerald-500/30
-              `}
+              className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-6 border border-gray-200 dark:border-[#1a1a1a] transition-all duration-300 hover:border-emerald-500/30"
+              suppressHydrationWarning
             >
               <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
                 <feature.icon className="w-6 h-6 text-emerald-500" />
               </div>
 
-              <h3 className={`text-lg font-bold mb-2 ${textColor}`}>
+              <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white" suppressHydrationWarning>
                 {feature.title}
               </h3>
 
-              <p className={`text-sm ${textMuted} leading-relaxed`}>
+              <p className="text-sm text-gray-500 dark:text-[#555] leading-relaxed" suppressHydrationWarning>
                 {feature.description}
               </p>
             </motion.div>

@@ -17,13 +17,6 @@ const benefits = [
 ];
 
 export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) => {
-  const cardBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-white';
-  const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
-  const textColor = darkMode ? 'text-white' : 'text-gray-900';
-  const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
-  const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
-  const innerBg = '';
-
   // Adapt animations
   const slideUpVariant = {
     initial: slideUp.initial,
@@ -47,13 +40,25 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Text Content */}
           <motion.div variants={staggerLocal}>
-            <motion.span variants={fadeInVariant} className={`text-xs font-medium uppercase tracking-wider ${textMuted} block mb-3`}>
+            <motion.span
+              variants={fadeInVariant}
+              className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-[#555] block mb-3"
+              suppressHydrationWarning
+            >
               Why Choose This
             </motion.span>
-            <motion.h2 variants={slideUpVariant} className={`text-3xl sm:text-4xl font-semibold mb-6 ${textColor} leading-tight`}>
+            <motion.h2
+              variants={slideUpVariant}
+              className="text-3xl sm:text-4xl font-semibold mb-6 text-gray-900 dark:text-white leading-tight"
+              suppressHydrationWarning
+            >
               Smart and Simple
             </motion.h2>
-            <motion.p variants={slideUpVariant} className={`text-base sm:text-lg mb-8 ${textMuted} leading-relaxed`}>
+            <motion.p
+              variants={slideUpVariant}
+              className="text-base sm:text-lg mb-8 text-gray-400 dark:text-[#555] leading-relaxed"
+              suppressHydrationWarning
+            >
               Purpose-built for STI College students with features that understand your academic needs.
               From detailed term calculations to cumulative GWA tracking, everything you need is here.
             </motion.p>
@@ -63,7 +68,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
               {benefits.map((benefit, i) => (
                 <motion.div variants={slideUpVariant} key={i} className="flex items-center gap-3">
                   <benefit.icon className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className={`text-sm ${textLight}`}>{benefit.text}</span>
+                  <span className="text-sm text-gray-600 dark:text-[#888]" suppressHydrationWarning>{benefit.text}</span>
                 </motion.div>
               ))}
             </motion.div>
@@ -74,17 +79,17 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
             variants={slideUpVariant}
             className="relative"
           >
-            <div className={`${cardBg} relative rounded-3xl p-8 border ${border} shadow-xl rotate-[-1deg] hover:rotate-0 transition-transform duration-700 ease-out`}>
+            <div className="bg-white dark:bg-[#0a0a0a] relative rounded-3xl p-8 border border-gray-200 dark:border-[#1a1a1a] shadow-xl rotate-[-1deg] hover:rotate-0 transition-transform duration-700 ease-out">
               <div className="space-y-6">
                 {/* Card Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-100'}`}>
-                      <Users className={`w-5 h-5 ${textMuted}`} />
+                    <div className="p-2 rounded-lg bg-gray-100 dark:bg-[#1a1a1a]">
+                      <Users className="w-5 h-5 text-gray-400 dark:text-[#555]" />
                     </div>
                     <div>
-                      <span className={`block text-xs font-bold uppercase tracking-wider ${textMuted}`}>Target Audience</span>
-                      <span className={`block text-sm font-semibold ${textColor}`}>STI Students</span>
+                      <span className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-[#555]" suppressHydrationWarning>Target Audience</span>
+                      <span className="block text-sm font-semibold text-gray-900 dark:text-white" suppressHydrationWarning>STI Students</span>
                     </div>
                   </div>
                   <div className="flex gap-1.5">
@@ -95,9 +100,9 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                 </div>
 
                 {/* Sample Calculation UI */}
-                <div className={`rounded-2xl p-6 border ${border} ${darkMode ? 'bg-[#111]' : 'bg-gray-50/80'}`}>
+                <div className="rounded-2xl p-6 border border-gray-200 dark:border-[#1a1a1a] bg-gray-50/80 dark:bg-[#111]">
                   <div className="flex justify-between items-center mb-6">
-                    <span className={`text-xs font-bold ${textMuted} uppercase tracking-wide`}>Sample GWA Computation</span>
+                    <span className="text-xs font-bold text-gray-400 dark:text-[#555] uppercase tracking-wide" suppressHydrationWarning>Sample GWA Computation</span>
                     <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                       Passed
                     </span>
@@ -112,17 +117,17 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                       { value: 1.25, label: 'Finals' }
                     ].map((grade) => (
                       <div key={grade.label} className="text-center group cursor-default">
-                        <div className={`text-lg sm:text-lg font-black ${textColor} tabular-nums mb-1 group-hover:text-emerald-500 transition-colors`}>
+                        <div className="text-lg sm:text-lg font-black text-gray-900 dark:text-white tabular-nums mb-1 group-hover:text-emerald-500 transition-colors" suppressHydrationWarning>
                           {grade.value.toFixed(2)}
                         </div>
-                        <div className={`text-[9px] uppercase font-bold ${textMuted}`}>{grade.label}</div>
+                        <div className="text-[9px] uppercase font-bold text-gray-400 dark:text-[#555]" suppressHydrationWarning>{grade.label}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Result */}
-                  <div className={`pt-5 border-t ${border} flex items-center justify-between`}>
-                    <span className={`text-xs font-bold uppercase ${textMuted}`}>Final Grade</span>
+                  <div className="pt-5 border-t border-gray-200 dark:border-[#1a1a1a] flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase text-gray-400 dark:text-[#555]" suppressHydrationWarning>Final Grade</span>
                     <div className="text-right">
                       <span className="block text-2xl font-black text-emerald-500 tabular-nums leading-none">1.44</span>
                       <span className="text-[9px] text-emerald-600/60 font-medium">Dean's List Eligible</span>
@@ -131,7 +136,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                 </div>
 
                 {/* Footer Note */}
-                <div className={`flex items-center gap-2 text-[10px] font-medium ${textMuted} uppercase tracking-wider justify-center opacity-60`}>
+                <div className="flex items-center gap-2 text-[10px] font-medium text-gray-400 dark:text-[#555] uppercase tracking-wider justify-center opacity-60" suppressHydrationWarning>
                   <BookOpen className="w-3 h-3" />
                   <span>Based on DO 20-20-20-40 System</span>
                 </div>

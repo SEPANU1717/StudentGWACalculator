@@ -47,22 +47,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 w-full text-center">
         {/* Badge (small) */}
         <motion.div variants={heroVariants} className="flex justify-center">
-          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${cardBg} border ${border} mb-6`}>
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#1a1a1a] mb-6"
+            suppressHydrationWarning
+          >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className={`text-xs font-medium ${textLight}`}>STI Grading System 2025-2026</span>
+            <span className="text-xs font-medium text-gray-600 dark:text-[#888]">STI Grading System 2025-2026</span>
           </div>
         </motion.div>
 
         {/* Title (reduced weight, no gradient) */}
-        <motion.h1 variants={heroVariants} className={`text-4xl sm:text-5xl lg:text-7xl font-semibold mb-6 leading-tight ${textColor} max-w-4xl mx-auto tracking-tight`}>
+        <motion.h1
+          variants={heroVariants}
+          className="text-4xl sm:text-5xl lg:text-7xl font-semibold mb-6 leading-tight text-gray-900 dark:text-white max-w-4xl mx-auto tracking-tight"
+          suppressHydrationWarning
+        >
           <span className="block">Calculate Your</span>
-          <span className={`block ${darkMode ? 'text-emerald-400' : 'text-emerald-500'}`}>
+          <span className="block text-emerald-500 dark:text-emerald-400">
             Academic Success
           </span>
         </motion.h1>
 
         {/* Short description (provided) */}
-        <motion.p variants={heroVariants} className={`text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed ${textMuted}`}>
+        <motion.p
+          variants={heroVariants}
+          className="text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed text-gray-400 dark:text-[#555]"
+          suppressHydrationWarning
+        >
           The smart GWA calculator built for STI students. Calculate grades, predict requirements, track multiple subjects, and check your honors eligibility.
         </motion.p>
 
@@ -85,9 +96,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <motion.div variants={heroVariants} className="mt-12">
           <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 px-4">
             {stats.map((s) => (
-              <div key={s.label} className={`flex flex-col items-center justify-center ${darkMode ? 'bg-[#0a0a0a]' : 'bg-white'} border ${darkMode ? 'border-[#1a1a1a]' : 'border-gray-200'} rounded-2xl py-4 px-4 shadow-sm`}>
-                <div className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'} tabular-nums`}>{s.value}</div>
-                <div className={`text-xs ${darkMode ? 'text-[#888]' : 'text-gray-500'} mt-1`}>{s.label}</div>
+              <div
+                key={s.label}
+                className="flex flex-col items-center justify-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#1a1a1a] rounded-2xl py-4 px-4 shadow-sm"
+                suppressHydrationWarning
+              >
+                <div className="text-sm font-bold text-gray-800 dark:text-white tabular-nums" suppressHydrationWarning>{s.value}</div>
+                <div className="text-xs text-gray-500 dark:text-[#888] mt-1" suppressHydrationWarning>{s.label}</div>
               </div>
             ))}
           </div>

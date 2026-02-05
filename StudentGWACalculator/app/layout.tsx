@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         ],
     },
     alternates: {
-        canonical: 'https://gwa.markmnl.dev/',
+        canonical: './',
     },
     icons: {
         icon: [

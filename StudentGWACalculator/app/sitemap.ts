@@ -3,16 +3,26 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://gwa.markmnl.dev';
 
-    // Add all your routes here
+    // List all routes for the site
     const routes = [
-        '',
-        '/app',
+        {
+            url: '',
+            lastModified: new Date(),
+            changeFrequency: 'daily' as const,
+            priority: 1,
+        },
+        {
+            url: '/app',
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        },
     ];
 
     return routes.map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: route === '' ? 'daily' : 'weekly',
-        priority: route === '' ? 1 : 0.8,
+        url: `${baseUrl}${route.url}`,
+        lastModified: route.lastModified,
+        changeFrequency: route.changeFrequency,
+        priority: route.priority,
     }));
 }

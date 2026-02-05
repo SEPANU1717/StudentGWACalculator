@@ -17,7 +17,7 @@ export default function HomePage() {
     const handleGetStarted = () => {
         try {
             localStorage.setItem('hasVisited', 'true');
-        } catch (e) {}
+        } catch (e) { }
         router.push('/app');
 
         // Show update modal after 500ms
@@ -26,17 +26,17 @@ export default function HomePage() {
                 const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';
                 const seen = localStorage.getItem(UPDATE_MODAL_SEEN_KEY);
                 if (!seen) setShowUpdateModal(true);
-            } catch (e) {}
+            } catch (e) { }
         }, 500);
     };
 
-    if (!mounted) return <div suppressHydrationWarning />;
-
     return (
-        <LandingPage
-            darkMode={darkMode}
-            onGetStarted={handleGetStarted}
-            toggleDarkMode={toggleDarkMode}
-        />
+        <>
+            <LandingPage
+                darkMode={darkMode}
+                onGetStarted={handleGetStarted}
+                toggleDarkMode={toggleDarkMode}
+            />
+        </>
     );
 }
