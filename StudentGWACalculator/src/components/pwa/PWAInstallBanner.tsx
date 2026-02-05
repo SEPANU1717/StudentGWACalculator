@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Download, X, Smartphone } from 'lucide-react';
+import { Download, X, Smartphone, Share, PlusSquare } from 'lucide-react';
 
 // Types for the install prompt
 interface BeforeInstallPromptEvent extends Event {
@@ -17,10 +17,12 @@ interface BeforeInstallPromptEvent extends Event {
  * PWA Install Banner Component
  * 
  * Shows a banner prompting users to install the PWA.
- * Uses native browser APIs to detect install capability.
+ * Supports both native 'beforeinstallprompt' (Android/Desktop)
+ * and manual instructions for iOS (Safari).
  */
 export function PWAInstallBanner() {
     const [isInstallable, setIsInstallable] = useState(false);
+    const [isIOS, setIsIOS] = useState(false);
     const [isInstalled, setIsInstalled] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isDismissed, setIsDismissed] = useState(false);
@@ -28,6 +30,11 @@ export function PWAInstallBanner() {
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
     useEffect(() => {
+        // Detect iOS
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+        setIsIOS(isIosDevice);
+
         // Check if already installed
         const checkInstalled = () => {
             if (typeof window === 'undefined') return false;
@@ -47,12 +54,20 @@ export function PWAInstallBanner() {
         const dismissedTime = dismissed ? parseInt(dismissed, 10) : 0;
         const daysSinceDismiss = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
 
+        // For iOS, show banner if not installed (since no event fires)
+        if (isIosDevice && dismissed && daysSinceDismiss < 7) {
+            // Don't show if dismissed recently on iOS
+        } else if (isIosDevice) {
+            setTimeout(() => setIsVisible(true), 3000);
+            return;
+        }
+
         if (dismissed && daysSinceDismiss < 7) {
             setIsDismissed(true);
             return;
         }
 
-        // Listen for install prompt
+        // For Android/Desktop, listen for prompt event
         const handleBeforeInstallPrompt = (event: Event) => {
             event.preventDefault();
             setDeferredPrompt(event as BeforeInstallPromptEvent);
@@ -70,12 +85,18 @@ export function PWAInstallBanner() {
     }, []);
 
     const handleInstall = useCallback(async () => {
-        if (!deferredPrompt) return;
+        if (!deferredPrompt && !isIOS) return;
+
+        // Note: For iOS we can't programmatically install, we just show instructions
+        if (isIOS) {
+            // iOS instructions are already visible in the banner body
+            return;
+        }
 
         setIsInstalling(true);
         try {
-            await deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
+            await deferredPrompt?.prompt();
+            const { outcome } = await deferredPrompt?.userChoice!;
 
             if (outcome === 'accepted') {
                 setIsInstalled(true);
@@ -87,7 +108,7 @@ export function PWAInstallBanner() {
         } finally {
             setIsInstalling(false);
         }
-    }, [deferredPrompt]);
+    }, [deferredPrompt, isIOS]);
 
     const handleDismiss = useCallback(() => {
         setIsDismissed(true);
@@ -95,7 +116,10 @@ export function PWAInstallBanner() {
         localStorage.setItem('pwa-banner-dismissed', Date.now().toString());
     }, []);
 
-    if (!isVisible || isDismissed || isInstalled || !isInstallable) {
+    // Render logic - show if installable OR on iOS (and not installed/dismissed)
+    const shouldShow = !isDismissed && !isInstalled && isVisible && (isInstallable || isIOS);
+
+    if (!shouldShow) {
         return null;
     }
 
@@ -113,37 +137,64 @@ export function PWAInstallBanner() {
                         <h3 className="text-white font-semibold text-sm mb-1">
                             Install STI Grade Calculator
                         </h3>
-                        <p className="text-slate-400 text-xs leading-relaxed">
-                            Add to your home screen for quick access and offline support.
-                        </p>
 
-                        {/* Actions */}
-                        <div className="flex items-center gap-2 mt-3">
-                            <button
-                                onClick={handleInstall}
-                                disabled={isInstalling}
-                                className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25"
-                            >
-                                <Download className={`w-3.5 h-3.5 ${isInstalling ? 'animate-bounce' : ''}`} />
-                                {isInstalling ? 'Installing...' : 'Install'}
-                            </button>
+                        {isIOS ? (
+                            <div className="space-y-2 mt-2">
+                                <p className="text-slate-400 text-xs leading-relaxed">
+                                    To install on iOS:
+                                </p>
+                                <ol className="text-slate-300 text-xs space-y-1 ml-1">
+                                    <li className="flex items-center gap-1">1. Tap <Share className="w-3 h-3" /> <span className="font-medium">Share</span></li>
+                                    <li className="flex items-center gap-1">2. Tap <PlusSquare className="w-3 h-3" /> <span className="font-medium">Add to Home Screen</span></li>
+                                </ol>
+                            </div>
+                        ) : (
+                            <p className="text-slate-400 text-xs leading-relaxed">
+                                Add to your home screen for quick access and offline support.
+                            </p>
+                        )}
+
+                        {/* Actions (Only for Android/Desktop) */}
+                        {!isIOS && (
+                            <div className="flex items-center gap-2 mt-3">
+                                <button
+                                    onClick={handleInstall}
+                                    disabled={isInstalling}
+                                    className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25"
+                                >
+                                    <Download className={`w-3.5 h-3.5 ${isInstalling ? 'animate-bounce' : ''}`} />
+                                    {isInstalling ? 'Installing...' : 'Install'}
+                                </button>
+                                <button
+                                    onClick={handleDismiss}
+                                    className="px-3 py-2 text-slate-400 hover:text-slate-300 text-xs font-medium transition-colors"
+                                >
+                                    Not now
+                                </button>
+                            </div>
+                        )}
+
+                        {/* iOS Dismiss Button */}
+                        {isIOS && (
                             <button
                                 onClick={handleDismiss}
-                                className="px-3 py-2 text-slate-400 hover:text-slate-300 text-xs font-medium transition-colors"
+                                className="mt-3 w-full px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium rounded-lg transition-colors"
                             >
-                                Not now
+                                Close
                             </button>
-                        </div>
+                        )}
                     </div>
 
-                    {/* Close Button */}
-                    <button
-                        onClick={handleDismiss}
-                        className="flex-shrink-0 p-1 text-slate-500 hover:text-slate-400 transition-colors"
-                        aria-label="Close"
-                    >
-                        <X className="w-4 h-4" />
-                    </button>
+                    {/* Close Button (Top Right) */}
+                    {!isIOS && (
+                        <button
+                            onClick={handleDismiss}
+                            className="flex-shrink-0 p-1 text-slate-500 hover:text-slate-400 transition-colors"
+                            aria-label="Close"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
