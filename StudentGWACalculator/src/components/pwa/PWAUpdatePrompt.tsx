@@ -73,7 +73,7 @@ export function PWAUpdatePrompt() {
 
     return (
         <div className="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-sm z-50 animate-in slide-in-from-top-4 duration-300">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 border border-blue-500/30 rounded-2xl p-4 shadow-2xl shadow-blue-500/20">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 border border-emerald-500/30 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20">
                 <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className="flex-shrink-0 bg-white/20 p-2 rounded-lg">
@@ -85,7 +85,7 @@ export function PWAUpdatePrompt() {
                         <h3 className="text-white font-semibold text-sm mb-1">
                             Update Available!
                         </h3>
-                        <p className="text-blue-100 text-xs leading-relaxed">
+                        <p className="text-emerald-50 text-xs leading-relaxed">
                             A new version is ready. Refresh to get the latest features and improvements.
                         </p>
 
@@ -94,14 +94,14 @@ export function PWAUpdatePrompt() {
                             <button
                                 onClick={handleUpdate}
                                 disabled={isUpdating}
-                                className="flex items-center gap-1.5 px-4 py-2 bg-white text-blue-600 text-xs font-semibold rounded-lg transition-all duration-200 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                                className="flex items-center gap-1.5 px-4 py-2 bg-white text-emerald-700 text-xs font-semibold rounded-lg transition-all duration-200 hover:bg-emerald-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                             >
                                 <RefreshCw className={`w-3.5 h-3.5 ${isUpdating ? 'animate-spin' : ''}`} />
                                 {isUpdating ? 'Updating...' : 'Refresh Now'}
                             </button>
                             <button
                                 onClick={handleDismiss}
-                                className="px-3 py-2 text-blue-200 hover:text-white text-xs font-medium transition-colors"
+                                className="px-3 py-2 text-emerald-100 hover:text-white text-xs font-medium transition-colors"
                             >
                                 Later
                             </button>
@@ -111,7 +111,7 @@ export function PWAUpdatePrompt() {
                     {/* Close Button */}
                     <button
                         onClick={handleDismiss}
-                        className="flex-shrink-0 p-1 text-blue-200 hover:text-white transition-colors"
+                        className="flex-shrink-0 p-1 text-emerald-200 hover:text-white transition-colors"
                         aria-label="Close"
                     >
                         <X className="w-4 h-4" />
