@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, X, Sparkles } from 'lucide-react';
+import { RefreshCw, X, GraduationCap } from 'lucide-react';
 
 /**
  * PWA Update Prompt Component
@@ -25,7 +25,7 @@ export function PWAUpdatePrompt() {
                 const reg = await navigator.serviceWorker.ready;
                 setRegistration(reg);
 
-                // Check if there's a waiting worker
+                // Check if there's a waiting worker (update already downloaded)
                 if (reg.waiting) {
                     setIsUpdateAvailable(true);
                     setIsVisible(true);
@@ -35,6 +35,8 @@ export function PWAUpdatePrompt() {
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
                     newWorker?.addEventListener('statechange', () => {
+                        // If the new worker is installed and there is an existing controller,
+                        // it means an update is available (but waiting)
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             setIsUpdateAvailable(true);
                             setIsVisible(true);
@@ -50,17 +52,30 @@ export function PWAUpdatePrompt() {
     }, []);
 
     const handleUpdate = useCallback(() => {
-        if (!registration?.waiting) return;
+        if (!registration?.waiting) {
+            // If no waiting worker, generic reload might fix it
+            window.location.reload();
+            return;
+        }
 
         setIsUpdating(true);
 
-        // Tell the waiting service worker to skip waiting
+        // send message to SW to skip waiting
         registration.waiting.postMessage({ type: 'SKIP_WAITING' });
 
-        // Reload once the new service worker takes over
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
+        // Wait for control change, then reload
+        const handleControllerChange = () => {
             window.location.reload();
-        });
+        };
+
+        navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+
+        // Fallback: reload anyway after 1 second if event doesn't fire
+        // This handles cases where the event might be missed or delayed
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+
     }, [registration]);
 
     const handleDismiss = useCallback(() => {
@@ -75,18 +90,18 @@ export function PWAUpdatePrompt() {
         <div className="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-sm z-50 animate-in slide-in-from-top-4 duration-300">
             <div className="bg-gradient-to-r from-emerald-600 to-teal-600 border border-emerald-500/30 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20">
                 <div className="flex items-start gap-3">
-                    {/* Icon */}
+                    {/* Icon - Graduation Cap for Educational theme */}
                     <div className="flex-shrink-0 bg-white/20 p-2 rounded-lg">
-                        <Sparkles className="w-5 h-5 text-white" />
+                        <GraduationCap className="w-5 h-5 text-white" />
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                         <h3 className="text-white font-semibold text-sm mb-1">
-                            Update Available!
+                            New Version Available!
                         </h3>
                         <p className="text-emerald-50 text-xs leading-relaxed">
-                            A new version is ready. Refresh to get the latest features and improvements.
+                            A new grade calculator update is ready. Refresh now to get the latest features.
                         </p>
 
                         {/* Actions */}
@@ -97,7 +112,7 @@ export function PWAUpdatePrompt() {
                                 className="flex items-center gap-1.5 px-4 py-2 bg-white text-emerald-700 text-xs font-semibold rounded-lg transition-all duration-200 hover:bg-emerald-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                             >
                                 <RefreshCw className={`w-3.5 h-3.5 ${isUpdating ? 'animate-spin' : ''}`} />
-                                {isUpdating ? 'Updating...' : 'Refresh Now'}
+                                {isUpdating ? 'Refreshing...' : 'Refresh Now'}
                             </button>
                             <button
                                 onClick={handleDismiss}
