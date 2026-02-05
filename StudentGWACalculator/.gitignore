@@ -41,3 +41,13 @@ next-env.d.ts
 
 # Dist folder (old Vite build)
 dist/
+
+# PWA Generated Files (auto-generated during build)
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/worker-*.js
+public/worker-*.js.map
+public/fallback-*.js
+public/fallback-*.js.map

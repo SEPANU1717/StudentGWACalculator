@@ -1,11 +1,21 @@
 {
     "name": "STI Grade Calculator",
     "short_name": "STI GWA",
-    "description": "The smart GWA calculator built for STI students.",
+    "description": "The smart GWA calculator built for STI students. Calculate semester and cumulative GWAs, simulate grade scenarios, and check honors eligibility.",
     "start_url": "/app",
+    "scope": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "background_color": "#0f172a",
     "theme_color": "#10b981",
+    "dir": "ltr",
+    "lang": "en-US",
+    "categories": [
+        "education",
+        "utilities",
+        "productivity"
+    ],
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "/favicon.ico",
@@ -15,12 +25,67 @@
         {
             "src": "/icon.png",
             "type": "image/png",
-            "sizes": "192x192"
+            "sizes": "192x192",
+            "purpose": "any"
         },
         {
             "src": "/icon.png",
             "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "512x512",
+            "purpose": "any"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "type": "image/png",
+            "sizes": "180x180",
+            "purpose": "maskable"
         }
-    ]
+    ],
+    "shortcuts": [
+        {
+            "name": "Calculate GWA",
+            "short_name": "Calculator",
+            "description": "Open the GWA calculator",
+            "url": "/app",
+            "icons": [
+                {
+                    "src": "/icon.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/calculator.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "STI Grade Calculator Dashboard"
+        }
+    ],
+    "related_applications": [],
+    "display_override": [
+        "standalone",
+        "minimal-ui"
+    ],
+    "edge_side_panel": {
+        "preferred_width": 400
+    },
+    "launch_handler": {
+        "client_mode": [
+            "navigate-existing",
+            "auto"
+        ]
+    },
+    "handle_links": "preferred",
+    "share_target": {
+        "action": "/app",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    }
 }
