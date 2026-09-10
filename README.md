@@ -1,6 +1,6 @@
 # Student GWA Calculator
 
-A private, installable web app that helps Philippine students understand and manage their general weighted average (GWA).
+A private, installable web app that helps STI College students understand and manage their general weighted average (GWA).
 
 ## Features
 
