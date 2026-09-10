@@ -17,9 +17,9 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
   const textColor = darkMode ? 'text-white' : 'text-gray-900';
 
   return (
-    <Card 
-      darkMode={darkMode} 
-      padding="md" 
+    <Card
+      darkMode={darkMode}
+      padding="md"
       onClick={onToggleHistory}
       className="cursor-pointer group"
     >

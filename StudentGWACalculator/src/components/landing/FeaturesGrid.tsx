@@ -53,7 +53,6 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const sectionBg = darkMode ? '' : 'bg-white';
 
-  // Adapt animations
   const scaleInVariant = {
     initial: scaleIn.initial,
     animate: { ...scaleIn.animate, transition: scaleIn.transition }
@@ -70,7 +69,7 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
       suppressHydrationWarning
     >
       <div className="max-w-5xl mx-auto px-6">
-        {/* Section Header */}
+
         <motion.div variants={scaleInVariant} className="text-center mb-12">
           <span className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-[#555]">
             Key Features
@@ -83,7 +82,7 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({ darkMode }) => {
           </p>
         </motion.div>
 
-        {/* Features Grid */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {features.map((feature) => (
             <motion.div

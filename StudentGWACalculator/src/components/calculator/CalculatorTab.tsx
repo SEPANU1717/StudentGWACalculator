@@ -47,7 +47,6 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
   const [simulatedFinals, setSimulatedFinals] = useState<number>(75);
   const textMuted = darkMode ? 'text-[#444]' : 'text-gray-400';
 
-  // Memoized calculations
   const singleResult = useMemo(() => calculateSubjectGWA(singleSubject), [singleSubject]);
   const partialPercentage = useMemo(() => calculatePartialPercentage(singleSubject), [singleSubject]);
   const toPass = useMemo(() => predictToPass(singleSubject), [singleSubject]);
@@ -61,7 +60,6 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
 
   const deansEligible = singleResult ? isDeansListEligible(singleResult.grade) : false;
 
-  // Clear selected history when user starts typing new grades
   const hasAnyInput = progress.filled > 0;
   const useSelectedHistory = selectedHistoryGWA !== null && !hasAnyInput;
 
@@ -76,7 +74,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
       id="calculator-panel"
       aria-labelledby="calculator-tab"
     >
-      {/* GWA Result Card */}
+
       <GWAResultCard
         percentage={displayPercentage}
         result={singleResult}
@@ -89,7 +87,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         onClearSelectedHistory={onClearSelectedHistory}
       />
 
-      {/* Grade Inputs Section */}
+
       <section>
         <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
           Enter Grades
@@ -101,7 +99,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         />
       </section>
 
-      {/* Prediction Cards */}
+
       {canPredict && (
         <PredictionCards
           hasAllGrades={hasAllGrades}
@@ -112,7 +110,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         />
       )}
 
-      {/* What-If Simulator (shows when 3 grades are filled) */}
+
       {showWhatIf && (
         <WhatIfSimulator
           remainingGrade={progress.remaining[0]}
@@ -123,20 +121,20 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         />
       )}
 
-      {/* Tools Section */}
+
       <section className="space-y-3">
         <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
           Tools
         </p>
 
-        {/* Grade Table */}
+
         <GradeTable
           isOpen={showGradeTable}
           onToggle={onToggleGradeTable}
           darkMode={darkMode}
         />
 
-        {/* Settings Panel */}
+
         <SettingsPanel
           isOpen={showSettings}
           onToggle={onToggleSettings}

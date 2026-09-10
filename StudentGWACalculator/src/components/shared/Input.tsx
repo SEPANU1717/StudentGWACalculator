@@ -71,8 +71,8 @@ export const Input: React.FC<InputProps> = ({
     rounded-xl font-medium outline-none transition-all duration-200
     placeholder-gray-500
     ${darkMode ? 'text-white' : 'text-gray-900'}
-    [appearance:textfield] 
-    [&::-webkit-outer-spin-button]:appearance-none 
+    [appearance:textfield]
+    [&::-webkit-outer-spin-button]:appearance-none
     [&::-webkit-inner-spin-button]:appearance-none
   `;
 

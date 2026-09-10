@@ -32,8 +32,8 @@ export const EligibilityRequirements: React.FC<EligibilityRequirementsProps> = (
       <p className={`text-xs font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
         Requirements
       </p>
-      
-      {/* Toggle Button */}
+
+
       <Card
         darkMode={darkMode}
         padding="md"
@@ -53,7 +53,7 @@ export const EligibilityRequirements: React.FC<EligibilityRequirementsProps> = (
         </div>
       </Card>
 
-      {/* Content */}
+
       {isOpen && (
         <Card darkMode={darkMode} padding="md" className="mt-2 animate-scale-in">
           <div className="grid grid-cols-2 gap-2">
@@ -68,7 +68,7 @@ export const EligibilityRequirements: React.FC<EligibilityRequirementsProps> = (
               </div>
             ))}
           </div>
-          
+
           <div className={`mt-3 pt-3 border-t ${border} text-xs ${textLight}`}>
             <strong className={textColor}>Note:</strong> From SY 2025-2026
           </div>

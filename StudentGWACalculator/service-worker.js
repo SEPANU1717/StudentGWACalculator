@@ -1,4 +1,3 @@
-/// <reference lib="webworker" />
 
 import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
@@ -7,16 +6,12 @@ import { registerRoute, setCatchHandler, setDefaultHandler } from 'workbox-routi
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
-// Enable immediate activation
 clientsClaim();
 
-// Precache and route all Next.js static assets
 precacheAndRoute(self.__WB_MANIFEST);
 
-// Clean up old caches
 cleanupOutdatedCaches();
 
-// Set default handler for all requests
 setDefaultHandler(new NetworkFirst({
     cacheName: 'default-cache',
     plugins: [
@@ -26,7 +21,6 @@ setDefaultHandler(new NetworkFirst({
     ],
 }));
 
-// Cache Google Fonts with CacheFirst strategy
 registerRoute(
     /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
     new CacheFirst({
@@ -34,7 +28,7 @@ registerRoute(
         plugins: [
             new ExpirationPlugin({
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                maxAgeSeconds: 60 * 60 * 24 * 365,
             }),
             new CacheableResponsePlugin({
                 statuses: [0, 200],
@@ -43,7 +37,6 @@ registerRoute(
     })
 );
 
-// Cache images with StaleWhileRevalidate
 registerRoute(
     /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
     new StaleWhileRevalidate({
@@ -51,13 +44,12 @@ registerRoute(
         plugins: [
             new ExpirationPlugin({
                 maxEntries: 64,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                maxAgeSeconds: 60 * 60 * 24 * 30,
             }),
         ],
     })
 );
 
-// Cache Next.js static files
 registerRoute(
     /\/_next\/static\/.*/i,
     new CacheFirst({
@@ -65,13 +57,12 @@ registerRoute(
         plugins: [
             new ExpirationPlugin({
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                maxAgeSeconds: 60 * 60 * 24 * 30,
             }),
         ],
     })
 );
 
-// Cache page navigations with NetworkFirst
 registerRoute(
     ({ request }) => request.mode === 'navigate',
     new NetworkFirst({
@@ -82,13 +73,12 @@ registerRoute(
             }),
             new ExpirationPlugin({
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                maxAgeSeconds: 60 * 60 * 24,
             }),
         ],
     })
 );
 
-// Offline fallback
 setCatchHandler(async ({ event }) => {
     if (event.request.destination === 'document') {
         return caches.match('/offline') || caches.match('/');
@@ -96,24 +86,20 @@ setCatchHandler(async ({ event }) => {
     return Response.error();
 });
 
-// Handle messages from client
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
 });
 
-// Background Sync for offline actions (future enhancement)
 self.addEventListener('sync', (event) => {
     if (event.tag === 'sync-data') {
         event.waitUntil(
-            // Implement background sync logic here
             Promise.resolve()
         );
     }
 });
 
-// Push notifications handler (future enhancement)
 self.addEventListener('push', (event) => {
     const options = {
         body: event.data?.text() || 'New update available!',
@@ -141,7 +127,6 @@ self.addEventListener('push', (event) => {
     );
 });
 
-// Notification click handler
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 

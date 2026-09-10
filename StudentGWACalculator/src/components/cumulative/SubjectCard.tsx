@@ -37,14 +37,14 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
 
   return (
     <Card darkMode={darkMode} padding="md">
-      {/* Subject Header - Number, Name, Units, Remove */}
+
       <div className="flex items-center gap-2 sm:gap-3 mb-3">
-        {/* Number Badge */}
+
         <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
           {index + 1}
         </span>
 
-        {/* Subject Name Input */}
+
         <input
           type="text"
           value={subject.name}
@@ -54,7 +54,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           aria-label="Subject name"
         />
 
-        {/* Units Dropdown - Inline */}
+
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <span className={`text-[9px] font-semibold ${textMuted} uppercase hidden sm:inline`}>Units:</span>
           <span className={`text-[9px] font-semibold ${textMuted} uppercase sm:hidden`}>U:</span>
@@ -63,11 +63,11 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
               value={subject.units}
               onChange={(e) => onUpdate('units', e.target.value)}
               className={`
-                w-14 sm:w-16 ${inputBg} border ${border} rounded-lg 
+                w-14 sm:w-16 ${inputBg} border ${border} rounded-lg
                 pl-2 pr-6 py-1.5
                 text-xs sm:text-sm font-semibold text-center
-                outline-none ${textColor} 
-                cursor-pointer 
+                outline-none ${textColor}
+                cursor-pointer
                 hover:border-blue-500/50 focus:border-blue-500
                 transition-all duration-200
                 appearance-none
@@ -86,7 +86,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           </div>
         </div>
 
-        {/* Result Badge */}
+
         {result && (
           <Badge
             variant={result.status === 'passed' ? 'success' : 'error'}
@@ -96,7 +96,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           </Badge>
         )}
 
-        {/* Remove Button */}
+
         {canRemove && (
           <button
             onClick={onRemove}
@@ -108,7 +108,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
         )}
       </div>
 
-      {/* Grade Inputs - Single Row */}
+
       <div className="flex gap-2">
         {gradeFields.map(({ field, label }) => (
           <div key={field} className="flex-1 min-w-0">
@@ -123,11 +123,11 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
               value={subject[field]}
               onChange={(e) => onUpdate(field, e.target.value)}
               className={`
-                w-full ${inputBg} border ${border} rounded-lg 
-                px-2 py-2 text-center text-sm font-bold outline-none ${textColor} 
-                transition-colors 
-                [appearance:textfield] 
-                [&::-webkit-outer-spin-button]:appearance-none 
+                w-full ${inputBg} border ${border} rounded-lg
+                px-2 py-2 text-center text-sm font-bold outline-none ${textColor}
+                transition-colors
+                [appearance:textfield]
+                [&::-webkit-outer-spin-button]:appearance-none
                 [&::-webkit-inner-spin-button]:appearance-none
                 min-h-[40px]
               `}

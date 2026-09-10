@@ -50,25 +50,20 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const [calculationMode, setCalculationMode] = useState<CalculationMode>('detailed');
   const [editingHistoryId, setEditingHistoryId] = useState<string | null>(null);
 
-  // State for Final Grades Mode
   const [finalGradeSubjects, setFinalGradeSubjects] = useState<QuickEntrySubject[]>([]);
 
-  // State for adding past semester directly
   const [showAddPastSemester, setShowAddPastSemester] = useState(false);
   const [pastSemName, setPastSemName] = useState('');
   const [pastSemGWA, setPastSemGWA] = useState('');
   const [pastSemSubjects, setPastSemSubjects] = useState('');
 
-  // History Record Export State
   const [exportRecord, setExportRecord] = useState<SemesterRecord | null>(null);
 
-  // Effect to trigger export when record is ready
   React.useEffect(() => {
     if (exportRecord) {
-      // Small delay to ensure render
       const timer = setTimeout(() => {
         exportToImage('history-export-target', `academic-report-${exportRecord.name.replace(/\s+/g, '-').toLowerCase()}`);
-        setExportRecord(null); // Reset after export
+        setExportRecord(null);
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -83,17 +78,14 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
-  // Filter history based on current mode - independent histories
   const filteredHistory = useMemo(() => {
     return gradeHistory.filter(record => record.mode === calculationMode);
   }, [gradeHistory, calculationMode]);
 
-  // Only use detailed mode history for cumulative calculations and honors
   const detailedHistory = useMemo(() => {
     return gradeHistory.filter(record => record.mode === 'detailed');
   }, [gradeHistory]);
 
-  // Calculate results for each subject
   const subjectResults = useMemo(() => {
     const results = new Map<string, ReturnType<typeof calculateSubjectGWA>>();
     subjects.forEach(s => {
@@ -104,7 +96,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
 
   const overallGWA = useMemo(() => calculateOverallGWA(subjects), [subjects]);
 
-  // Calculate GWA for Final Grades Mode (weighted by units)
   const finalGradeGWA = useMemo(() => {
     const validGrades = finalGradeSubjects.filter(s => {
       const grade = typeof s.finalGrade === 'number' ? s.finalGrade : parseFloat(s.finalGrade as string);
@@ -127,7 +118,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     return Math.round((totalWeighted / totalUnits) * 100) / 100;
   }, [finalGradeSubjects]);
 
-  // Use appropriate GWA based on mode
   const currentGWA = calculationMode === 'detailed' ? overallGWA : finalGradeGWA;
 
   const completedSubjects = useMemo(() => {
@@ -138,9 +128,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     }
   }, [subjects, finalGradeSubjects, calculationMode]);
 
-  // Calculate Cumulative GWA: weighted average of detailed mode history + current term (only in detailed mode)
   const cumulativeGWA = useMemo(() => {
-    // Only calculate cumulative GWA in detailed mode
     if (calculationMode !== 'detailed') return null;
 
     const historyWeightedGWA = detailedHistory.reduce((sum, r) => sum + (r.gwa * r.subjects), 0);
@@ -159,7 +147,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     return Math.round((totalWeightedGWA / totalSubjects) * 100) / 100;
   }, [detailedHistory, currentGWA, completedSubjects, calculationMode]);
 
-  // Check if any completed subject in current term has a grade > 2.00
   const hasTermViolation = useMemo(() => {
     if (completedSubjects === 0) return false;
 
@@ -169,18 +156,15 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       }
       return false;
     } else {
-      // For final grades mode
       return finalGradeSubjects.some(s =>
         s.finalGrade !== '' && !isNaN(Number(s.finalGrade)) && Number(s.finalGrade) > 2.00
       );
     }
   }, [subjectResults, finalGradeSubjects, calculationMode, completedSubjects]);
 
-  // Check if any grade in history or current term has a grade > 2.00
   const hasGlobalViolation = useMemo(() => {
     if (hasTermViolation) return true;
 
-    // Check all history records
     for (const record of gradeHistory) {
       if (record.mode === 'detailed') {
         const violation = record.subjectsData?.some(s => {
@@ -212,22 +196,18 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     if (currentGWA && completedSubjects > 0) {
       const name = semesterName.trim() || `Semester ${gradeHistory.length + 1}`;
 
-      // If editing an existing entry, update it
       if (editingHistoryId) {
         const existingRecord = gradeHistory.find(r => r.id === editingHistoryId);
         if (existingRecord) {
-          // Update the existing record
           if (calculationMode === 'detailed') {
             onAddToHistory(name, currentGWA, completedSubjects, [...subjects], undefined, 'detailed');
           } else {
             onAddToHistory(name, currentGWA, completedSubjects, undefined, [...finalGradeSubjects], 'final');
           }
-          // Remove the old entry
           onRemoveFromHistory(editingHistoryId);
           setEditingHistoryId(null);
         }
       } else {
-        // Save as new entry with subject data for restoration
         if (calculationMode === 'detailed') {
           onAddToHistory(name, currentGWA, completedSubjects, [...subjects], undefined, 'detailed');
         } else {
@@ -237,7 +217,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
 
       setSemesterName('');
 
-      // Clear based on mode
       if (calculationMode === 'detailed') {
         onClearAllSubjects();
       } else {
@@ -258,7 +237,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       setPastSemGWA('');
       setPastSemSubjects('');
       setShowAddPastSemester(false);
-      // Clear editing state to prevent 'Update' button from showing
       setEditingHistoryId(null);
       setSemesterName('');
     }
@@ -273,7 +251,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     onClearSelectedHistory();
   };
 
-  // Handle restoring grades from history record
   const handleRestoreFromHistory = (record: SemesterRecord) => {
     if (record.mode === 'detailed' && record.subjectsData && onRestoreSubjects) {
       setCalculationMode('detailed');
@@ -289,7 +266,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
     setShowHistory(false);
   };
 
-  // Handlers for Final Grades Mode
   const handleAddFinalGradeSubject = () => {
     const newSubject: QuickEntrySubject = {
       id: Date.now().toString(),
@@ -312,7 +288,6 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
 
   const handleModeChange = (mode: CalculationMode) => {
     setCalculationMode(mode);
-    // Clear editing state when switching modes to prevent cross-tab issues
     setEditingHistoryId(null);
     setSemesterName('');
   };
@@ -328,14 +303,14 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
       id="cumulative-panel"
       aria-labelledby="cumulative-tab"
     >
-      {/* Mode Switcher */}
+
       <ModeSwitcher
         mode={calculationMode}
         onModeChange={handleModeChange}
         darkMode={darkMode}
       />
 
-      {/* Overall GWA Card with History Toggle */}
+
       <OverallGWACard
         gwa={currentGWA}
         honorClass={honorClass}
@@ -352,7 +327,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         onExport={completedSubjects > 0 ? () => exportToImage('summary-report-export', 'academic-report') : undefined}
       />
 
-      {/* History Panel - Shown below GWA card when toggled */}
+
       <GradeHistoryPanel
         isOpen={showHistory}
         gradeHistory={filteredHistory}
@@ -362,7 +337,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         darkMode={darkMode}
       />
 
-      {/* Conditional Rendering Based on Mode */}
+
       {calculationMode === 'detailed' ? (
         <SubjectList
           subjects={subjects}
@@ -382,7 +357,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         />
       )}
 
-      {/* Save Current Term to History */}
+
       <SaveToHistoryPanel
         semesterName={semesterName}
         onSemesterNameChange={setSemesterName}
@@ -392,7 +367,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         isEditing={editingHistoryId !== null}
       />
 
-      {/* Add Past Semester Section - Only show in detailed mode */}
+
       {calculationMode === 'detailed' && (
         <section className="space-y-3">
           <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider`}>
@@ -403,7 +378,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
             <button
               onClick={() => setShowAddPastSemester(true)}
               className={`
-              w-full py-3 rounded-xl border border-dashed 
+              w-full py-3 rounded-xl border border-dashed
               ${darkMode ? 'border-[#1a1a1a] hover:border-[#333] hover:bg-[#0a0a0a]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
               ${textMuted} hover:${darkMode ? 'text-white' : 'text-gray-700'}
               transition-colors flex items-center justify-center gap-2 min-h-[48px]
@@ -482,12 +457,12 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         </section>
       )}
 
-      {/* Clear All Button */}
+
       {hasAnyGrades && (
         <button
           onClick={handleClearAll}
           className={`
-            w-full py-2.5 rounded-xl 
+            w-full py-2.5 rounded-xl
             ${darkMode ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400' : 'bg-red-100 hover:bg-red-200 text-red-600'}
             text-sm font-semibold transition-colors flex items-center justify-center gap-2 min-h-[44px]
           `}
@@ -496,7 +471,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
           Clear All
         </button>
       )}
-      {/* Hidden Report for Exporting */}
+
       <div className="absolute left-[-9999px] top-[-9999px]">
         <SummaryReport
           subjects={subjects}
@@ -511,7 +486,7 @@ export const CumulativeTab: React.FC<CumulativeTabProps> = ({
         />
       </div>
 
-      {/* Hidden Report for Exporting History Record */}
+
       {exportRecord && (
         <div className="absolute left-[-9999px] top-[-9999px]">
           <SummaryReport

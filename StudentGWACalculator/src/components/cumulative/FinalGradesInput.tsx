@@ -33,14 +33,14 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
       <div className="space-y-2.5">
         {subjects.map((subject, index) => (
           <Card key={subject.id} darkMode={darkMode} padding="md">
-            {/* Subject Header - Number, Name, Status, Remove */}
+
             <div className="flex items-center gap-2 sm:gap-3 mb-3">
-              {/* Number Badge */}
+
               <span className={`w-6 h-6 rounded-md ${inputBg} flex items-center justify-center text-[10px] font-bold ${textMuted} flex-shrink-0`}>
                 {index + 1}
               </span>
 
-              {/* Subject Name Input */}
+
               <input
                 type="text"
                 value={subject.name}
@@ -50,7 +50,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 aria-label="Subject name"
               />
 
-              {/* Status Badge */}
+
               {subject.finalGrade !== '' && typeof subject.finalGrade === 'number' && (
                 <Badge
                   variant={subject.finalGrade <= 3.00 ? 'success' : 'error'}
@@ -60,7 +60,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                 </Badge>
               )}
 
-              {/* Remove Button */}
+
               <button
                 onClick={() => onRemoveSubject(subject.id)}
                 className={`${textMuted} hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-500/10 min-h-[32px] min-w-[32px] flex items-center justify-center flex-shrink-0`}
@@ -71,7 +71,7 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
             </div>
 
 
-            {/* Final Grade and Units - Side by Side */}
+
             <div className="grid grid-cols-[1fr_auto] gap-3">
               <div>
                 <label className={`block text-[9px] font-semibold ${textMuted} mb-1.5 uppercase tracking-wider`}>
@@ -85,11 +85,11 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                       onUpdateSubject(subject.id, 'finalGrade', val === '' ? '' : parseFloat(val));
                     }}
                     className={`
-                      w-full ${inputBg} border ${border} rounded-lg 
+                      w-full ${inputBg} border ${border} rounded-lg
                       px-4 py-2.5 pr-10
-                      text-sm font-semibold 
-                      outline-none ${textColor} 
-                      cursor-pointer min-h-[44px] 
+                      text-sm font-semibold
+                      outline-none ${textColor}
+                      cursor-pointer min-h-[44px]
                       hover:border-blue-500/50 focus:border-blue-500
                       transition-all duration-200
                       appearance-none
@@ -120,11 +120,11 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
                       onUpdateSubject(subject.id, 'units', val === '' ? '' : parseFloat(val));
                     }}
                     className={`
-                      w-24 ${inputBg} border ${border} rounded-lg 
+                      w-24 ${inputBg} border ${border} rounded-lg
                       px-3 py-2.5 pr-8
                       text-sm font-semibold text-center
-                      outline-none ${textColor} 
-                      cursor-pointer min-h-[44px] 
+                      outline-none ${textColor}
+                      cursor-pointer min-h-[44px]
                       hover:border-blue-500/50 focus:border-blue-500
                       transition-all duration-200
                       appearance-none
@@ -146,11 +146,11 @@ export const FinalGradesInput: React.FC<FinalGradesInputProps> = ({
           </Card>
         ))}
 
-        {/* Add Subject Button */}
+
         <button
           onClick={onAddSubject}
           className={`
-            w-full py-3 rounded-xl border border-dashed 
+            w-full py-3 rounded-xl border border-dashed
             ${darkMode ? 'border-[#1a1a1a] hover:border-[#333] hover:bg-[#0a0a0a]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
             ${textMuted} hover:${darkMode ? 'text-white' : 'text-gray-700'}
             transition-colors flex items-center justify-center gap-2 min-h-[48px]

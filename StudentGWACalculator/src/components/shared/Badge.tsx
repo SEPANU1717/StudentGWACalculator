@@ -80,7 +80,6 @@ export const Badge: React.FC<BadgeProps> = ({
     );
 };
 
-// Special badge variations
 export const DeansListBadge: React.FC<{ size?: 'sm' | 'md' | 'lg'; darkMode?: boolean }> = ({
     size = 'md'
 }) => (

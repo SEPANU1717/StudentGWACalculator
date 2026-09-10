@@ -46,7 +46,7 @@ export const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({
       </p>
 
       <div className="grid grid-cols-2 gap-3">
-        {/* To Pass */}
+
         <Card darkMode={darkMode} padding="md">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1.5 mb-2">
@@ -65,7 +65,7 @@ export const QuickStatsGrid: React.FC<QuickStatsGridProps> = ({
           </div>
         </Card>
 
-        {/* To Target */}
+
         <Card darkMode={darkMode} padding="md">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1.5 mb-2">

@@ -44,16 +44,16 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({ isOpen, onClose, darkM
   ];
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 ${overlayBg} backdrop-blur-sm z-50 flex items-center justify-center p-4`}
       onClick={onClose}
     >
-      <div 
+      <div
         className="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <Card darkMode={darkMode} padding="lg">
-          {/* Header */}
+
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${darkMode ? 'bg-emerald-500/15' : 'bg-emerald-50'}`}>
@@ -73,12 +73,12 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({ isOpen, onClose, darkM
             </button>
           </div>
 
-          {/* Updates Grid */}
+
           <div className="space-y-4 mb-6">
             {updates.map((update, index) => {
               const Icon = update.icon;
               return (
-                <div 
+                <div
                   key={index}
                   className={`p-4 rounded-xl border ${border} ${darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50'} transition-all hover:${darkMode ? 'bg-[#111]' : 'bg-gray-100'}`}
                 >
@@ -96,19 +96,19 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({ isOpen, onClose, darkM
             })}
           </div>
 
-          {/* Version Info */}
+
           <div className={`text-center pt-4 border-t ${border}`}>
             <p className={`text-xs ${textMuted}`}>
               Version 2.0.0 • January 2026
             </p>
           </div>
 
-          {/* CTA Button */}
+
           <button
             onClick={onClose}
             className={`w-full mt-4 py-3 rounded-xl font-bold text-sm transition-all ${
-              darkMode 
-                ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30' 
+              darkMode
+                ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30'
                 : 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200 border border-emerald-300'
             }`}
           >

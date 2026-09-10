@@ -16,7 +16,6 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-400';
   const sectionBg = darkMode ? '' : 'bg-white';
 
-  // Adapt animation
   const scaleInVariant = {
     initial: scaleIn.initial,
     animate: { ...scaleIn.animate, transition: scaleIn.transition }
@@ -36,23 +35,23 @@ export const CTASection: React.FC<CTASectionProps> = ({ onGetStarted, darkMode }
           variants={scaleInVariant}
           className="bg-white dark:bg-[#0a0a0a] rounded-3xl p-8 sm:p-12 border border-gray-200 dark:border-[#1a1a1a] shadow-xl"
         >
-          {/* Icon */}
+
           <div className="w-20 h-20 rounded-2xl mx-auto mb-8 flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10">
             <GraduationCap className="w-10 h-10 text-emerald-500" />
           </div>
 
-          {/* Title */}
+
           <h3 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white" suppressHydrationWarning>
             Start Calculating Today
           </h3>
 
-          {/* Description */}
+
           <p className="text-lg text-gray-400 dark:text-[#555] mb-10 max-w-lg mx-auto leading-relaxed" suppressHydrationWarning>
             Join STI students tracking their academic journey with confidence.
             Free, private, and easy to use.
           </p>
 
-          {/* CTA Button */}
+
           <Button
             onClick={onGetStarted}
             variant="primary"

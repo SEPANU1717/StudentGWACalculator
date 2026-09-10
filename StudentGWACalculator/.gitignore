@@ -1,53 +1,38 @@
-# Dependencies
 node_modules
 .pnp
 .pnp.js
 .yarn/install-state.gz
-
-# Testing
 coverage
-
-# Next.js
 .next/
 out/
 build
-
-# Misc
 .DS_Store
 *.pem
+*.key
 Thumbs.db
-
-# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Local env files
+pnpm-debug.log*
+pnpm-lock.yaml
 .env*.local
 .env
-
-# Vercel
+!.env.example
 .vercel
-
-# TypeScript
 *.tsbuildinfo
 next-env.d.ts
-
-# IDE
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# Dist folder (old Vite build)
 dist/
-
-# PWA Generated Files (auto-generated during build)
 public/sw.js
 public/sw.js.map
 public/workbox-*.js
 public/workbox-*.js.map
 public/worker-*.js
 public/worker-*.js.map
+public/swe-worker-*.js
+public/swe-worker-*.js.map
 public/fallback-*.js
 public/fallback-*.js.map

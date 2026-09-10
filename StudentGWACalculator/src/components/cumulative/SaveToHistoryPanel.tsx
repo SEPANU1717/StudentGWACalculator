@@ -45,7 +45,7 @@ export const SaveToHistoryPanel: React.FC<SaveToHistoryPanelProps> = ({
           onChange={(e) => onSemesterNameChange(e.target.value)}
           placeholder="e.g., 1st Sem 2025"
           className={`
-            flex-1 ${inputBg} border ${border} rounded-lg 
+            flex-1 ${inputBg} border ${border} rounded-lg
             px-3 py-2.5 text-sm font-medium outline-none ${textColor}
             transition-colors min-h-[44px] placeholder-[#333]
           `}

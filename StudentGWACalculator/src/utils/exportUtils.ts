@@ -9,7 +9,7 @@ export const exportToImage = async (elementId: string, fileName: string = 'gwa-r
             cacheBust: true,
             backgroundColor: '#fff',
             style: {
-                transform: 'scale(1)', // Ensure no scaling issues
+                transform: 'scale(1)',
             }
         });
 

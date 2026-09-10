@@ -36,7 +36,6 @@ export const calculateSubjectGWA = (subject: Subject): GradeResult | null => {
 };
 
 export const calculateOverallGWA = (subjects: Subject[]): number | null => {
-  // Filter subjects with complete grades and valid units
   const validSubjects = subjects.filter(s => {
     const result = calculateSubjectGWA(s);
     const units = typeof s.units === 'number' ? s.units : parseFloat(s.units as string);
@@ -45,7 +44,6 @@ export const calculateOverallGWA = (subjects: Subject[]): number | null => {
 
   if (validSubjects.length === 0) return null;
 
-  // Calculate weighted GWA by units
   let totalWeighted = 0;
   let totalUnits = 0;
 
@@ -81,21 +79,15 @@ export const getGradeProgress = (subject: Subject) => {
   return { filled: filled.length, filledNames: filled, remaining, currentScore, remainingWeight };
 };
 
-// Predict needed average for remaining grades to reach target
 export const predictNeededGrade = (subject: Subject, targetPercentage: number): number | null => {
   const { filled, remainingWeight, currentScore } = getGradeProgress(subject);
   if (filled === 0 || filled === 4 || remainingWeight === 0) return null;
   const needed = (targetPercentage - currentScore) / remainingWeight;
 
-  // Round up to 2 decimals initially
   let neededRounded = Math.max(0, Math.ceil(needed * 100) / 100);
 
-  // Ensure that using the rounded value actually reaches the target after rounding to 2 decimals.
-  // This guards against floating-point errors where a seemingly exact value (e.g. 12.90)
-  // still produces a final percentage slightly below the target.
   const finalFor = (val: number) => Math.round((currentScore + val * remainingWeight) * 100) / 100;
 
-  // If the rounded value doesn't reach the target, increment by 0.01 until it does (or exceeds 100).
   while (neededRounded <= 100) {
     if (finalFor(neededRounded) >= targetPercentage) return neededRounded;
     neededRounded = Math.round((neededRounded + 0.01) * 100) / 100;
@@ -111,7 +103,6 @@ export const predictForTarget = (subject: Subject, targetGrade: number): number 
   return gradeEntry ? predictNeededGrade(subject, gradeEntry.min) : null;
 };
 
-// Calculate what-if GWA with simulated remaining grades (average for all remaining)
 export const calculateWhatIfGWA = (subject: Subject, simulatedAverage: number): GradeResult | null => {
   const { prelim, midterm, preFinal, finals } = subject;
   const { filled, remaining } = getGradeProgress(subject);
@@ -120,7 +111,6 @@ export const calculateWhatIfGWA = (subject: Subject, simulatedAverage: number): 
 
   let percentage = 0;
 
-  // Add filled grades
   if (prelim !== '') percentage += (prelim as number) * WEIGHTS.prelim;
   else percentage += simulatedAverage * WEIGHTS.prelim;
 

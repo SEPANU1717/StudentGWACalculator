@@ -20,14 +20,14 @@ export const CompletionCard: React.FC<CompletionCardProps> = ({
   return (
     <Card darkMode={darkMode} padding="lg">
       <div className="text-center">
-        {/* Icon */}
+
         <div className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${
           isPassed ? 'bg-emerald-500/15' : 'bg-red-500/15'
         }`}>
           <Icon className={`w-6 h-6 ${isPassed ? 'text-emerald-400' : 'text-red-400'}`} />
         </div>
 
-        {/* Main Display */}
+
         <div className={`text-2xl font-bold mb-1 ${isPassed ? 'text-emerald-400' : 'text-red-400'}`}>
           {result.grade.toFixed(2)}
         </div>
@@ -35,9 +35,9 @@ export const CompletionCard: React.FC<CompletionCardProps> = ({
           {result.percentage.toFixed(2)}% final
         </p>
 
-        {/* Status */}
-        <Badge 
-          variant={isPassed ? 'success' : 'error'} 
+
+        <Badge
+          variant={isPassed ? 'success' : 'error'}
           size="md"
         >
           {isPassed ? 'Passed' : 'Failed'} • All Grades In

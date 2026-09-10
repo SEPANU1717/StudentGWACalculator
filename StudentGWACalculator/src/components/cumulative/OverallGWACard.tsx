@@ -39,23 +39,17 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   const cardBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
 
-  // Use computed GWA or selected history GWA for term display
   const termGWA = gwa ?? selectedHistoryGWA ?? null;
   const isFromHistory = gwa === null && selectedHistoryGWA !== null;
 
-  // Honors Eligibility Logic: Must check GWA AND ensure no grade is below threshold (> 2.00)
-  // Dean's List and Tuition Discount are term-based (STI policy)
   const deansEligible = termGWA && !hasTermViolation ? isDeansListEligible(termGWA) : false;
   const discount = termGWA && !hasTermViolation ? getTuitionDiscount(termGWA) : 0;
 
-  // President's List and Latin honors are residency-based
   const evalGWA = cumulativeGWA ?? termGWA;
   const presidentsEligible = (evalGWA && !hasGlobalViolation) ? isPresidentsListEligible(evalGWA) : false;
 
-  // Don't show honor class if any grade is below threshold (> 2.00) in entire residency
   const effectiveHonorClass = hasGlobalViolation ? null : honorClass;
 
-  // Helper function to get GWA status color
   const getGWAColor = (value: number) => {
     if (value <= 1.25) return darkMode ? 'text-emerald-400' : 'text-emerald-600';
     if (value <= 1.75) return darkMode ? 'text-green-400' : 'text-green-600';
@@ -66,7 +60,6 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
 
 
 
-  // Don't render if no GWA to display
   if (!termGWA && !cumulativeGWA) {
     return (
       <Card darkMode={darkMode} padding="md">
@@ -99,12 +92,12 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
   return (
     <Card darkMode={darkMode} padding="md" id="overall-gwa-card" className="relative group">
       <div className="space-y-3">
-        {/* Header with History Toggle and Badges */}
+
         <div className="flex items-center justify-between gap-2">
           <div className={`text-[10px] font-semibold ${textMuted} uppercase tracking-wider`}>GWA Summary</div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
 
-            {/* Export Button */}
+
             {(termGWA || cumulativeGWA) && onExport && (
               <button
                 onClick={onExport}
@@ -145,9 +138,9 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
           </div>
         </div>
 
-        {/* Compact GWA Display */}
+
         <div className={`grid ${mode === 'detailed' ? 'grid-cols-2' : 'grid-cols-1'} gap-2`}>
-          {/* Term GWA */}
+
           <div className={`${cardBg} border ${border} rounded-lg p-3`}>
             <div className="flex items-center gap-1.5 mb-1">
               <BookOpen className={`w-3 h-3 ${textMuted}`} />
@@ -159,7 +152,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
             <p className={`text-[9px] ${textMuted}`}>{completedSubjects} subj</p>
           </div>
 
-          {/* Cumulative GWA - Only show in detailed mode */}
+
           {mode === 'detailed' && (
             <div className={`${cardBg} border ${border} rounded-lg p-3`}>
               <div className="flex items-center gap-1.5 mb-1">
@@ -174,7 +167,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
           )}
         </div>
 
-        {/* Violation Warnings */}
+
         {hasGlobalViolation && (
           <p className={`text-[9px] text-center ${darkMode ? 'text-amber-400' : 'text-amber-600'}`}>
             ⚠ Grade &gt;2.00 detected (Graduation Honors Disqualified)
@@ -186,7 +179,7 @@ export const OverallGWACard: React.FC<OverallGWACardProps> = ({
           </p>
         )}
 
-        {/* Honors & Eligibility Section - New Clean Placement */}
+
         {(effectiveHonorClass || deansEligible || presidentsEligible || discount > 0) && (
           <div className={`p-3 rounded-lg border ${border} ${darkMode ? 'bg-[#111]' : 'bg-white'}`}>
             <div className={`text-[9px] font-semibold ${textMuted} uppercase tracking-wider mb-2`}>Honors & Eligibility</div>

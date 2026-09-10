@@ -34,15 +34,15 @@ export const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
         <p className={`text-[11px] font-semibold ${textMuted} uppercase tracking-wider mb-3`}>
           {singleResult ? 'Final Result' : 'Current Progress'}
         </p>
-        
-        {/* Main Value */}
+
+
         <div className={`text-3xl font-bold ${textColor} tabular-nums mb-2`}>
           {getDisplayValue()}
         </div>
-        
-        {/* Status Text */}
+
+
         <p className={`text-xs ${textLight} mb-4`}>
-          {singleResult 
+          {singleResult
             ? `Grade: ${singleResult.grade.toFixed(2)} — ${singleResult.status === 'passed' ? 'Passed' : 'Failed'}`
             : filledCount > 0
                 ? `${filledCount}/4 grades • ${remainingWeight.toFixed(2)}% remaining`
@@ -50,20 +50,20 @@ export const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
           }
         </p>
 
-        {/* Progress Bar */}
+
         {(filledCount > 0 || singleResult) && (
           <div className={`w-full h-1.5 rounded-full overflow-hidden ${progressBg}`}>
-            <div 
+            <div
               className={`h-full transition-all duration-500 ease-out rounded-full ${
-                singleResult 
+                singleResult
                   ? (singleResult.status === 'passed' ? 'bg-emerald-500' : 'bg-red-500')
                   : 'bg-amber-500'
               }`}
-              style={{ 
-                width: `${singleResult 
-                  ? Math.min(singleResult.percentage, 100) 
+              style={{
+                width: `${singleResult
+                  ? Math.min(singleResult.percentage, 100)
                   : (partialPercentage ? Math.min(partialPercentage, 100) : 0)
-                }%` 
+                }%`
               }}
             />
           </div>

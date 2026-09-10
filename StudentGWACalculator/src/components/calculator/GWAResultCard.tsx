@@ -25,11 +25,8 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
   selectedHistoryGWA,
   onClearSelectedHistory
 }) => {
-  // If showing selected history GWA
   const showingHistory = selectedHistoryGWA !== null && selectedHistoryGWA !== undefined;
 
-  // Always render the card. When there are no grades and no history selected,
-  // show a lightweight placeholder so the result area stays visible.
   const showingEmpty = filledCount === 0 && !showingHistory;
 
   const displayPercentage = percentage?.toFixed(2) ?? null;
@@ -41,7 +38,6 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
     return 'bg-amber-500';
   };
 
-  // Helper function to get grade color
   const getGradeColor = (grade: number) => {
     if (grade <= 1.25) return darkMode ? 'text-emerald-400' : 'text-emerald-600';
     if (grade <= 1.75) return darkMode ? 'text-green-400' : 'text-green-600';
@@ -57,7 +53,7 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
   return (
     <Card darkMode={darkMode} padding="lg" className="mt-4 relative group" id="gwa-result-card">
 
-      {/* Export Button (Absolute to top-right) */}
+
       {!showingEmpty && (
         <button
           onClick={handleExport}
@@ -69,7 +65,7 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
         </button>
       )}
 
-      {/* If showing history GWA */}
+
       {showingHistory ? (
         <div>
           <div className="flex items-center gap-2 mb-3">
@@ -97,7 +93,6 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
           </p>
         </div>
       ) : (
-        /* Normal computed GWA display */
         <div>
           <div className={`text-[10px] font-semibold ${darkMode ? 'text-[#444]' : 'text-gray-400'} uppercase tracking-wider mb-3`}>Grade Result</div>
 
@@ -120,7 +115,7 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
             )}
           </div>
 
-          {/* Progress bar */}
+
           {displayPercentage && (
             <div className={`w-full h-1.5 rounded-full overflow-hidden mt-4 ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-100'}`}>
               <div
@@ -130,7 +125,7 @@ export const GWAResultCard: React.FC<GWAResultCardProps> = ({
             </div>
           )}
 
-          {/* Progress bar placeholder for empty state */}
+
           {showingEmpty && (
             <div className={`w-full h-1.5 rounded-full overflow-hidden mt-4 ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-100'}`}>
               <div className="h-full w-0" />

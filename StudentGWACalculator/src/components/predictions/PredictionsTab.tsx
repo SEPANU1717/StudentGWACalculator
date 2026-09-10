@@ -27,7 +27,6 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
   singleSubject,
   targetGrade
 }) => {
-  // Calculations
   const singleResult = useMemo(() => calculateSubjectGWA(singleSubject), [singleSubject]);
   const partialPercentage = useMemo(() => calculatePartialPercentage(singleSubject), [singleSubject]);
   const progress = useMemo(() => getGradeProgress(singleSubject), [singleSubject]);
@@ -37,7 +36,6 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
   const hasAllGrades = progress.filled === 4;
   const canPredict = progress.filled >= 1 && progress.filled < 4;
 
-  // Grade scenarios
   const scenarios = useMemo(() => {
     if (!canPredict) return [];
     const scores = [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50];
@@ -47,7 +45,6 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
     }).filter(s => s.result !== null);
   }, [singleSubject, canPredict]);
 
-  // Progress info
   const progressInfo = useMemo(() => {
     if (progress.filled === 0) return null;
     const usedWeight = (1 - progress.remainingWeight) * 100;
@@ -59,13 +56,13 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
   }, [progress]);
 
   return (
-    <div 
+    <div
       className="space-y-6"
       role="tabpanel"
       id="predictions-panel"
       aria-labelledby="predictions-tab"
     >
-      {/* Current Status Card */}
+
       <CurrentStatusCard
         filledCount={progress.filled}
         singleResult={singleResult}
@@ -74,7 +71,7 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
         darkMode={darkMode}
       />
 
-      {/* Quick Stats Grid */}
+
       {canPredict && (
         <QuickStatsGrid
           toPass={toPass}
@@ -85,7 +82,7 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
         />
       )}
 
-      {/* Scenarios Table */}
+
       {canPredict && scenarios.length > 0 && (
         <ScenariosTable
           scenarios={scenarios}
@@ -93,7 +90,7 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
         />
       )}
 
-      {/* All Grades Complete */}
+
       {hasAllGrades && singleResult && (
         <CompletionCard
           result={singleResult}
@@ -101,7 +98,7 @@ export const PredictionsTab: React.FC<PredictionsTabProps> = ({
         />
       )}
 
-      {/* Empty State */}
+
       {progress.filled === 0 && (
         <EmptyState darkMode={darkMode} />
       )}

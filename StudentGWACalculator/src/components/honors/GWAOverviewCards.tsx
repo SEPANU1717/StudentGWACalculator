@@ -21,7 +21,7 @@ export const GWAOverviewCards: React.FC<GWAOverviewCardsProps> = ({
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      {/* Term GWA */}
+
       <Card darkMode={darkMode} padding="md">
         <div className="text-center">
           <p className={`text-xs font-semibold ${textLight} uppercase tracking-wide mb-1`}>
@@ -31,7 +31,7 @@ export const GWAOverviewCards: React.FC<GWAOverviewCardsProps> = ({
             {termGWA ? termGWA.toFixed(2) : '—'}
           </div>
           {termGWA !== null && (
-            <Badge 
+            <Badge
               variant={deansListEligible ? 'success' : 'neutral'}
               size="sm"
               darkMode={darkMode}
@@ -42,7 +42,7 @@ export const GWAOverviewCards: React.FC<GWAOverviewCardsProps> = ({
         </div>
       </Card>
 
-      {/* Cumulative GWA */}
+
       <Card darkMode={darkMode} padding="md">
         <div className="text-center">
           <p className={`text-xs font-semibold ${textLight} uppercase tracking-wide mb-1`}>
@@ -52,7 +52,7 @@ export const GWAOverviewCards: React.FC<GWAOverviewCardsProps> = ({
             {cumulativeGWA ? cumulativeGWA.toFixed(2) : '—'}
           </div>
           {cumulativeGWA !== null && (
-            <Badge 
+            <Badge
               variant={presidentsListEligible ? 'success' : 'neutral'}
               size="sm"
               darkMode={darkMode}

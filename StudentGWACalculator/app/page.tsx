@@ -20,7 +20,6 @@ export default function HomePage() {
         } catch (e) { }
         router.push('/app');
 
-        // Show update modal after 500ms
         setTimeout(() => {
             try {
                 const UPDATE_MODAL_SEEN_KEY = 'updateModalSeen_v2.0.0';

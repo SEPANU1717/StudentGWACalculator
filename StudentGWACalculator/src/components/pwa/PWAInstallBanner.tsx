@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Download, X, Smartphone, Share, PlusSquare } from 'lucide-react';
 
-// Types for the install prompt
 interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
     readonly userChoice: Promise<{
@@ -13,13 +12,6 @@ interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
 }
 
-/**
- * PWA Install Banner Component
- * 
- * Shows a banner prompting users to install the PWA.
- * Supports both native 'beforeinstallprompt' (Android/Desktop)
- * and manual instructions for iOS (Safari).
- */
 export function PWAInstallBanner() {
     const [isInstallable, setIsInstallable] = useState(false);
     const [isIOS, setIsIOS] = useState(false);
@@ -30,12 +22,10 @@ export function PWAInstallBanner() {
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
     useEffect(() => {
-        // Detect iOS
         const userAgent = window.navigator.userAgent.toLowerCase();
         const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
         setIsIOS(isIosDevice);
 
-        // Check if already installed
         const checkInstalled = () => {
             if (typeof window === 'undefined') return false;
             return (
@@ -49,14 +39,11 @@ export function PWAInstallBanner() {
             return;
         }
 
-        // Check if dismissed recently
         const dismissed = localStorage.getItem('pwa-banner-dismissed');
         const dismissedTime = dismissed ? parseInt(dismissed, 10) : 0;
         const daysSinceDismiss = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
 
-        // For iOS, show banner if not installed (since no event fires)
         if (isIosDevice && dismissed && daysSinceDismiss < 7) {
-            // Don't show if dismissed recently on iOS
         } else if (isIosDevice) {
             setTimeout(() => setIsVisible(true), 3000);
             return;
@@ -67,13 +54,11 @@ export function PWAInstallBanner() {
             return;
         }
 
-        // For Android/Desktop, listen for prompt event
         const handleBeforeInstallPrompt = (event: Event) => {
             event.preventDefault();
             setDeferredPrompt(event as BeforeInstallPromptEvent);
             setIsInstallable(true);
 
-            // Delay showing banner for better UX
             setTimeout(() => setIsVisible(true), 3000);
         };
 
@@ -87,9 +72,7 @@ export function PWAInstallBanner() {
     const handleInstall = useCallback(async () => {
         if (!deferredPrompt && !isIOS) return;
 
-        // Note: For iOS we can't programmatically install, we just show instructions
         if (isIOS) {
-            // iOS instructions are already visible in the banner body
             return;
         }
 
@@ -116,7 +99,6 @@ export function PWAInstallBanner() {
         localStorage.setItem('pwa-banner-dismissed', Date.now().toString());
     }, []);
 
-    // Render logic - show if installable OR on iOS (and not installed/dismissed)
     const shouldShow = !isDismissed && !isInstalled && isVisible && (isInstallable || isIOS);
 
     if (!shouldShow) {
@@ -127,12 +109,12 @@ export function PWAInstallBanner() {
         <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-sm z-50 animate-in slide-in-from-bottom-4 duration-300">
             <div className="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl p-4 shadow-2xl shadow-black/30 backdrop-blur-xl">
                 <div className="flex items-start gap-4">
-                    {/* Icon */}
+
                     <div className="flex-shrink-0 bg-gradient-to-br from-emerald-500 to-emerald-600 p-3 rounded-xl shadow-lg shadow-emerald-500/25">
                         <Smartphone className="w-6 h-6 text-white" />
                     </div>
 
-                    {/* Content */}
+
                     <div className="flex-1 min-w-0">
                         <h3 className="text-white font-semibold text-sm mb-1">
                             Install STI Grade Calculator
@@ -154,7 +136,7 @@ export function PWAInstallBanner() {
                             </p>
                         )}
 
-                        {/* Actions (Only for Android/Desktop) */}
+
                         {!isIOS && (
                             <div className="flex items-center gap-2 mt-3">
                                 <button
@@ -174,7 +156,7 @@ export function PWAInstallBanner() {
                             </div>
                         )}
 
-                        {/* iOS Dismiss Button */}
+
                         {isIOS && (
                             <button
                                 onClick={handleDismiss}
@@ -185,7 +167,7 @@ export function PWAInstallBanner() {
                         )}
                     </div>
 
-                    {/* Close Button (Top Right) */}
+
                     {!isIOS && (
                         <button
                             onClick={handleDismiss}

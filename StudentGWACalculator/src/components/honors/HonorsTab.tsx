@@ -33,11 +33,9 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
 }) => {
   const [showRequirements, setShowRequirements] = useState(false);
 
-  // Calculate current term GWA - use computed or selected history
   const computedGWA = useMemo(() => calculateOverallGWA(subjects), [subjects]);
   const currentGWA = computedGWA ?? selectedHistoryGWA ?? null;
 
-  // Calculate cumulative GWA including history
   const cumulativeGWA = useMemo(() => {
     const allRecords = [...gradeHistory];
     if (currentGWA) {
@@ -58,7 +56,6 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
     return totalSubjects > 0 ? totalWeightedGWA / totalSubjects : null;
   }, [gradeHistory, currentGWA, subjects]);
 
-  // Check for violations in the current term
   const hasTermViolation = useMemo(() => {
     return subjects.some(s => {
       const res = calculateSubjectGWA(s);
@@ -66,7 +63,6 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
     });
   }, [subjects]);
 
-  // Check for ANY grade violation in entire residency (history or current)
   const hasGlobalViolation = useMemo(() => {
     if (hasTermViolation) return true;
 
@@ -88,7 +84,6 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
     return false;
   }, [hasTermViolation, gradeHistory]);
 
-  // Eligibility checks
   const deansListEligible = (currentGWA && !hasTermViolation) ? isDeansListEligible(currentGWA) : false;
   const presidentsListEligible = (cumulativeGWA && !hasGlobalViolation) ? isPresidentsListEligible(cumulativeGWA) : false;
   const graduationHonor = (cumulativeGWA && !hasGlobalViolation) ? getHonorClass(cumulativeGWA, isBaccalaureate) : null;
@@ -102,19 +97,19 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
       id="honors-panel"
       aria-labelledby="honors-tab"
     >
-      {/* Section Header */}
+
       <HonorsHeader
         isBaccalaureate={isBaccalaureate}
         onSetIsBaccalaureate={onSetIsBaccalaureate}
         darkMode={darkMode}
       />
 
-      {/* Empty State */}
+
       {!hasData && (
         <EmptyState darkMode={darkMode} />
       )}
 
-      {/* GWA Overview Cards */}
+
       {hasData && (
         <>
           {hasGlobalViolation && (
@@ -139,14 +134,14 @@ export const HonorsTab: React.FC<HonorsTabProps> = ({
         </>
       )}
 
-      {/* Graduation Honors Table */}
+
       <GraduationHonorsTable
         isBaccalaureate={isBaccalaureate}
         graduationHonor={graduationHonor}
         darkMode={darkMode}
       />
 
-      {/* Eligibility Requirements */}
+
       <EligibilityRequirements
         isOpen={showRequirements}
         onToggle={() => setShowRequirements(!showRequirements)}

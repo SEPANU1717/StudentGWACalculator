@@ -21,7 +21,7 @@ const withPWA = withPWAInit({
                     cacheName: 'google-fonts-cache',
                     expiration: {
                         maxEntries: 10,
-                        maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                        maxAgeSeconds: 60 * 60 * 24 * 365,
                     },
                 },
             },
@@ -32,7 +32,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-font-assets',
                     expiration: {
                         maxEntries: 10,
-                        maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                        maxAgeSeconds: 60 * 60 * 24 * 7,
                     },
                 },
             },
@@ -43,7 +43,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-image-assets',
                     expiration: {
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 60 * 60 * 24 * 30,
                     },
                 },
             },
@@ -54,7 +54,7 @@ const withPWA = withPWAInit({
                     cacheName: 'next-image',
                     expiration: {
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 60 * 60 * 24 * 30,
                     },
                 },
             },
@@ -65,7 +65,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-audio-assets',
                     expiration: {
                         maxEntries: 32,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 60 * 60 * 24 * 30,
                     },
                 },
             },
@@ -76,7 +76,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-video-assets',
                     expiration: {
                         maxEntries: 32,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 60 * 60 * 24 * 30,
                     },
                 },
             },
@@ -87,7 +87,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-js-assets',
                     expiration: {
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                        maxAgeSeconds: 60 * 60 * 24 * 7,
                     },
                 },
             },
@@ -98,7 +98,7 @@ const withPWA = withPWAInit({
                     cacheName: 'static-style-assets',
                     expiration: {
                         maxEntries: 32,
-                        maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                        maxAgeSeconds: 60 * 60 * 24 * 7,
                     },
                 },
             },
@@ -109,7 +109,7 @@ const withPWA = withPWAInit({
                     cacheName: 'next-static-js-assets',
                     expiration: {
                         maxEntries: 64,
-                        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                        maxAgeSeconds: 60 * 60 * 24 * 30,
                     },
                 },
             },
@@ -121,7 +121,7 @@ const withPWA = withPWAInit({
                     networkTimeoutSeconds: 10,
                     expiration: {
                         maxEntries: 32,
-                        maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                        maxAgeSeconds: 60 * 60 * 24,
                     },
                 },
             },
@@ -133,7 +133,7 @@ const withPWA = withPWAInit({
                     networkTimeoutSeconds: 10,
                     expiration: {
                         maxEntries: 32,
-                        maxAgeSeconds: 60 * 60 * 24, // 24 hours
+                        maxAgeSeconds: 60 * 60 * 24,
                     },
                 },
             },
@@ -141,23 +141,14 @@ const withPWA = withPWAInit({
     },
 });
 
-/** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
     output: 'standalone',
-    // Enable compression
     compress: true,
-    // Optimize images
     images: {
         formats: ['image/avif', 'image/webp'],
-        minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+        minimumCacheTTL: 60 * 60 * 24 * 30,
     },
-    // Experimental features for better performance
-    // Note: optimizeCss is disabled due to compatibility issues with error pages
-    // experimental: {
-    //     optimizeCss: true,
-    // },
-    // Headers for SEO and security
     async headers() {
         return [
             {

@@ -34,7 +34,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
 
             <Card darkMode={darkMode} padding="md">
                 <div className="space-y-4">
-                    {/* Header */}
+
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Sliders className={`w-4 h-4 ${textMuted}`} />
@@ -47,7 +47,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
                         </span>
                     </div>
 
-                    {/* Slider */}
+
                     <div className="relative py-1">
                         <input
                             type="range"
@@ -61,7 +61,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
                         />
                     </div>
 
-                    {/* Result Display */}
+
                     {whatIfResult && (
                         <div className={`flex items-center justify-between pt-3 border-t ${border}`}>
                             <span className={`text-xs ${textMuted}`}>Projected</span>

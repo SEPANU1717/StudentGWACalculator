@@ -3,15 +3,26 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { WifiOff, Wifi } from 'lucide-react';
 
-// Lazy load the PWA hook for code splitting
 const usePWAModule = () => import('../../utils/usePWA');
 
-/**
- * Offline Indicator Component
- * 
- * Shows a subtle banner when offline and a brief "back online" message
- * when connection is restored.
- */
+async function isActuallyOffline(): Promise<boolean> {
+    if (navigator.onLine) return false;
+
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        await fetch('/favicon.ico', {
+            cache: 'no-store',
+            mode: 'same-origin',
+            signal: controller.signal,
+        });
+        clearTimeout(timeout);
+        return false;
+    } catch {
+        return true;
+    }
+}
+
 export function OfflineIndicator() {
     const [isOnline, setIsOnline] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
@@ -21,18 +32,15 @@ export function OfflineIndicator() {
     useEffect(() => {
         let mounted = true;
 
-        // Dynamically load PWA utilities
         const loadPWA = async () => {
             try {
-                const { usePWA } = await usePWAModule();
-                // Since we can't use hooks dynamically, we'll use the native API
-                if (mounted) {
-                    setIsOnline(navigator.onLine);
-                    setIsLoading(false);
-                }
+                await usePWAModule();
             } catch {
+                // usePWA utilities are optional here; connectivity is checked below regardless.
+            } finally {
+                const offline = await isActuallyOffline();
                 if (mounted) {
-                    setIsOnline(navigator.onLine);
+                    setIsOnline(!offline);
                     setIsLoading(false);
                 }
             }
@@ -40,7 +48,6 @@ export function OfflineIndicator() {
 
         loadPWA();
 
-        // Set up event listeners for online/offline
         const handleOnline = () => {
             if (mounted) {
                 setIsOnline(true);
@@ -48,9 +55,11 @@ export function OfflineIndicator() {
         };
 
         const handleOffline = () => {
-            if (mounted) {
-                setIsOnline(false);
-            }
+            isActuallyOffline().then((offline) => {
+                if (mounted && offline) {
+                    setIsOnline(false);
+                }
+            });
         };
 
         window.addEventListener('online', handleOnline);
@@ -63,7 +72,6 @@ export function OfflineIndicator() {
         };
     }, []);
 
-    // Track offline -> online transitions
     useEffect(() => {
         if (!isLoading) {
             if (!isOnline) {
@@ -83,7 +91,6 @@ export function OfflineIndicator() {
         return null;
     }
 
-    // Show offline indicator
     if (!isOnline) {
         return (
             <div className="fixed top-0 left-0 right-0 z-50 animate-in slide-in-from-top duration-200">
@@ -95,7 +102,6 @@ export function OfflineIndicator() {
         );
     }
 
-    // Show "back online" message
     if (showOnlineMessage) {
         return (
             <div className="fixed top-0 left-0 right-0 z-50 animate-in slide-in-from-top duration-200">

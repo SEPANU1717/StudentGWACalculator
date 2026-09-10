@@ -44,7 +44,7 @@ export const GraduationHonorsTable: React.FC<GraduationHonorsTableProps> = ({
           </Badge>
         )}
       </div>
-      
+
       <Card darkMode={darkMode} padding="none" className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -61,10 +61,10 @@ export const GraduationHonorsTable: React.FC<GraduationHonorsTableProps> = ({
             <tbody className={`divide-y ${divider}`}>
               {honorRequirements.map((req, i) => {
                 const isCurrentHonor = graduationHonor === (isBaccalaureate ? req.bacc : req.other);
-                
+
                 return (
-                  <tr 
-                    key={i} 
+                  <tr
+                    key={i}
                     className={`${hoverBg} transition-colors ${isCurrentHonor ? (darkMode ? 'bg-yellow-500/15' : 'bg-yellow-100') : ''}`}
                   >
                     <td className={`px-4 py-3 font-bold ${textLight} tabular-nums`}>

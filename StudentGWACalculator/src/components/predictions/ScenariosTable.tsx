@@ -33,7 +33,7 @@ export const ScenariosTable: React.FC<ScenariosTableProps> = ({
       </p>
 
       <Card darkMode={darkMode} padding="none" className="overflow-hidden">
-        {/* Table */}
+
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>

@@ -27,7 +27,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
   return (
     <div className="space-y-3">
-      {/* Toggle Button */}
+
       <Card
         darkMode={darkMode}
         padding="md"
@@ -45,11 +45,11 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
       </Card>
 
-      {/* Settings Content */}
+
       {isOpen && (
         <Card darkMode={darkMode} padding="md" className="animate-scale-in">
           <div className="space-y-4">
-            {/* Target GWA */}
+
             <div>
               <label
                 htmlFor="target-grade"
@@ -62,7 +62,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 value={targetGrade}
                 onChange={(e) => onSetTargetGrade(Number(e.target.value))}
                 className={`
-                  w-full ${inputBg} border ${border} rounded-lg 
+                  w-full ${inputBg} border ${border} rounded-lg
                   px-3 py-2.5 text-sm font-medium outline-none ${textColor}
                   transition-colors cursor-pointer
                   min-h-[44px]
@@ -76,7 +76,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </select>
             </div>
 
-            {/* Info */}
+
             <div className={`text-xs ${textMuted} space-y-1`}>
               <p>Passing: 59.5% (3.00)</p>
               <p>Weights: Prelim 20% • Midterm 20% • Pre-Final 20% • Finals 40%</p>

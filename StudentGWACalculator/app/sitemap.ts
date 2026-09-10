@@ -4,7 +4,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://gwa.markmnl.dev';
     const currentDate = new Date();
 
-    // Main routes for the site
     const routes: MetadataRoute.Sitemap = [
         {
             url: baseUrl,

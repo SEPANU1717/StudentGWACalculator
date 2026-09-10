@@ -33,7 +33,7 @@ export default function AppPage() {
             <div className="min-h-screen" suppressHydrationWarning>
                 <Header darkMode={app.darkMode} toggleDarkMode={() => { }} />
                 <main className="max-w-lg mx-auto px-4 py-6">
-                    {/* Skeleton for TabNavigation */}
+
                     <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#1a1a1a] mb-6 h-[62px]">
                         {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-full rounded-lg" />)}
                     </div>

@@ -29,7 +29,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
       </p>
 
       <div className="space-y-3">
-        {/* Subject Cards */}
+
         {subjects.map((subject, index) => (
           <SubjectCard
             key={subject.id}
@@ -43,11 +43,11 @@ export const SubjectList: React.FC<SubjectListProps> = ({
           />
         ))}
 
-        {/* Add Subject Button */}
+
         <button
           onClick={onAddSubject}
           className={`
-            w-full py-3 rounded-xl border border-dashed 
+            w-full py-3 rounded-xl border border-dashed
             ${darkMode ? 'border-[#1a1a1a] hover:border-[#333] hover:bg-[#0a0a0a]' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
             ${textMuted} hover:text-white
             transition-colors flex items-center justify-center gap-2 min-h-[48px]

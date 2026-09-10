@@ -60,9 +60,9 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
     { field: 'finals', label: 'Finals', weight: '40%' }
   ];
 
-  const displayPercentage = singleResult 
+  const displayPercentage = singleResult
     ? singleResult.percentage.toFixed(2)
-    : partialPercentage 
+    : partialPercentage
       ? partialPercentage.toFixed(2)
       : null;
 
@@ -75,10 +75,10 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+
       <div className="flex items-center justify-between">
         <span className={`text-xs tracking-wider font-medium ${textMuted}`}>Enter Grades</span>
-        <button 
+        <button
           onClick={onToggleGradeTable}
           className={`text-xs font-medium ${textMuted} hover:${textColor} transition-colors flex items-center gap-1`}
         >
@@ -86,7 +86,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         </button>
       </div>
 
-      {/* Grade Table - Minimal */}
+
       {showGradeTable && (
         <div className={`${cardBg} rounded-xl border ${border} overflow-hidden`}>
           <table className="w-full text-sm">
@@ -112,7 +112,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         </div>
       )}
 
-      {/* Grade Inputs - 2x2 */}
+
       <div className="grid grid-cols-2 gap-3">
         {gradeInputs.map(({ field, label, weight }) => (
           <div key={field} className={`${cardBg} rounded-xl p-4 border ${border}`}>
@@ -134,11 +134,11 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         ))}
       </div>
 
-      {/* GWA Result - Only show when there's input */}
+
       {progress.filled > 0 && (
         <div className={`${cardBg} rounded-xl p-5 border ${border}`}>
           <div className="flex items-start justify-between gap-4">
-            {/* Left: GWA Info */}
+
             <div className="flex-1 min-w-0">
               <span className={`text-xs font-medium ${textMuted} block mb-2`}>Your GWA</span>
               <div className="flex items-baseline gap-3 flex-wrap">
@@ -158,8 +158,8 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
                   </span>
                 )}
               </div>
-              
-              {/* Dean's & President's List Badges */}
+
+
               {singleResult && isDeansListEligible(singleResult.grade) && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   <div className={`flex items-center gap-1 px-2 py-1 rounded-md ${darkMode ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-100 text-yellow-700'}`}>
@@ -172,11 +172,11 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
                   </div>
                 </div>
               )}
-              
+
               {(singleResult || partialPercentage) && (
                 <div className="mt-4">
                   <div className={`w-full h-1.5 rounded-full overflow-hidden ${darkMode ? 'bg-[#1a1a1a]' : 'bg-gray-200'}`}>
-                    <div 
+                    <div
                       className={`h-full transition-all duration-500 rounded-full ${
                         singleResult ? (singleResult.status === 'passed' ? 'bg-emerald-500' : 'bg-red-500') : 'bg-amber-500'
                       }`}
@@ -185,16 +185,16 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
                   </div>
                 </div>
               )}
-              
+
               <div className={`text-xs mt-3 ${textMuted}`}>
-                {singleResult 
+                {singleResult
                   ? `Grade: ${singleResult.grade.toFixed(2)} - ${singleResult.status === 'passed' ? 'Passed' : 'Failed'}`
                   : `${progress.filled}/4 grades entered - ${progress.remaining.join(', ')} remaining`
                 }
               </div>
             </div>
-            
-            {/* Right: Tuition Discount (real-time) */}
+
+
             {singleResult && tuitionDiscount > 0 && (
               <div className={`flex-shrink-0 text-center px-4 py-3 rounded-xl ${darkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'} border ${darkMode ? 'border-emerald-500/20' : 'border-emerald-200'}`}>
                 <div className="flex items-center justify-center gap-1 mb-1">
@@ -211,7 +211,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         </div>
       )}
 
-      {/* What-If Simulator - Show when 3 grades filled */}
+
       {progress.filled === 3 && !hasAllGrades && (
         <div className={`${cardBg} rounded-xl p-4 border ${border}`}>
           <div className={`text-xs font-medium ${textMuted} mb-3`}>What-If Simulator</div>
@@ -228,7 +228,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
               onChange={(e) => setSimulatedFinals(Number(e.target.value))}
               className="w-full h-2.5 rounded-full appearance-none cursor-pointer"
               style={{
-                background: darkMode 
+                background: darkMode
                   ? `linear-gradient(to right, #10b981 0%, #10b981 ${simulatedFinals}%, #1a1a1a ${simulatedFinals}%, #1a1a1a 100%)`
                   : `linear-gradient(to right, #10b981 0%, #10b981 ${simulatedFinals}%, #e5e7eb ${simulatedFinals}%, #e5e7eb 100%)`
               }}
@@ -250,14 +250,14 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
         </div>
       )}
 
-      {/* Predictions - hidden when all grades are entered to avoid redundant info */}
+
       {!hasAllGrades && (
         <div className="grid grid-cols-2 gap-3">
         <div className={`${cardBg} rounded-xl p-4 border ${border}`}>
           <div className={`text-xs font-medium ${textMuted} mb-2`}>Need for Target</div>
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className={`text-2xl font-bold ${canPredict && toTarget !== null && toTarget > 100 ? 'text-red-400' : textColor}`}>
-              {hasAllGrades ? 'Complete' : canPredict && toTarget !== null 
+              {hasAllGrades ? 'Complete' : canPredict && toTarget !== null
                 ? toTarget <= 100 ? `${toTarget.toFixed(2)}` : 'Impossible' : 'N/A'}
             </span>
             {hasAllGrades ? (
@@ -269,9 +269,9 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
             ) : null}
           </div>
           <div className={`text-xs ${textMuted}`}>
-            {hasAllGrades ? 'All grades entered' 
+            {hasAllGrades ? 'All grades entered'
               : canPredict && toTarget !== null && toTarget > 100 ? `Would need ${toTarget.toFixed(2)}% avg`
-              : canPredict ? `Avg in ${progress.remaining.join(', ')}` 
+              : canPredict ? `Avg in ${progress.remaining.join(', ')}`
               : 'Enter grades first'}
           </div>
         </div>
@@ -280,7 +280,7 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
           <div className={`text-xs font-medium ${textMuted} mb-2`}>Need to Pass</div>
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className={`text-2xl font-bold ${canPredict && toPass !== null && toPass > 100 ? 'text-red-400' : textColor}`}>
-              {hasAllGrades ? 'Complete' : canPredict && toPass !== null 
+              {hasAllGrades ? 'Complete' : canPredict && toPass !== null
                 ? toPass <= 100 ? `${toPass.toFixed(2)}` : 'Impossible' : 'N/A'}
             </span>
             {hasAllGrades ? (
@@ -292,15 +292,15 @@ export const CalculatorTab: React.FC<CalculatorTabProps> = ({
             ) : null}
           </div>
           <div className={`text-xs ${textMuted}`}>
-            {hasAllGrades ? 'All grades entered' 
+            {hasAllGrades ? 'All grades entered'
               : canPredict && toPass !== null && toPass > 100 ? `Would need ${toPass.toFixed(2)}% avg`
-              : canPredict ? 'Avg for 59.5%' 
+              : canPredict ? 'Avg for 59.5%'
               : 'Enter grades first'}
           </div>
         </div>
       </div>
       )}
-      {/* Settings */}
+
       <button onClick={onToggleSettings} className={`w-full ${cardBg} rounded-xl p-4 border ${border} flex items-center justify-between`}>
         <div className="flex items-center gap-3">
           <Settings className={`w-4 h-4 ${textMuted}`} />

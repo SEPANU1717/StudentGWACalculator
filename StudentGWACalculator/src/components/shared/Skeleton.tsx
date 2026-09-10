@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-// Basic pulse animation for the skeleton
 const pulseTransition = {
     duration: 1.5,
     repeat: Infinity,
@@ -69,9 +68,9 @@ export const SkeletonText: React.FC<{ rows?: number; className?: string }> = ({ 
 
 export const SkeletonCard: React.FC<{
     className?: string;
-    hasImage?: boolean; // If true, adds a large rectangular block at top
-    hasTitle?: boolean; // If true, adds a title bar
-    lines?: number;     // Number of text lines
+    hasImage?: boolean;
+    hasTitle?: boolean;
+    lines?: number;
 }> = ({ className = '', hasImage = false, hasTitle = true, lines = 3 }) => {
     return (
         <div className={`p-4 border border-gray-200 dark:border-[#1a1a1a] rounded-xl bg-white dark:bg-[#0a0a0a] space-y-4 ${className}`}>

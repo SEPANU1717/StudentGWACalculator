@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ darkMode }) => {
     <footer className="border-t border-gray-200 dark:border-[#1a1a1a] py-8">
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Logo & Brand */}
+
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-500/10">
               <GraduationCap className="w-4 h-4 text-emerald-500" />
@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ darkMode }) => {
             </div>
           </div>
 
-          {/* Navigation Links (centered on larger screens, wrapped on small screens) */}
+
           <nav className="flex flex-wrap items-center gap-4 justify-center" aria-label="Footer navigation">
             <a
               href="#features"
@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ darkMode }) => {
               Feedback
             </a>
 
-            {/* GitHub link */}
+
             <a
               href="https://github.com/SEPANU1717"
               target="_blank"
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ darkMode }) => {
             </a>
           </nav>
 
-          {/* Copyright / small note */}
+
           <div className="text-sm text-gray-500 dark:text-[#555]" suppressHydrationWarning>
             <span>© {year} STI GWA</span>
           </div>

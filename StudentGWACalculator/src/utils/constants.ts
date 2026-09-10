@@ -22,12 +22,10 @@ export const GRADE_TABLE: GradeTableEntry[] = [
 
 export const PASSING_PERCENTAGE = 59.50;
 
-// Grade options for dropdown (common Philippine grading system)
 export const GRADE_OPTIONS = [
   1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 4.00, 5.00
 ] as const;
 
-// Grade options with descriptions for professional dropdown display
 export const GRADE_OPTIONS_WITH_DESC = [
   { value: 1.00, label: '1.00', description: 'Excellent' },
   { value: 1.25, label: '1.25', description: 'Excellent' },
@@ -42,10 +40,8 @@ export const GRADE_OPTIONS_WITH_DESC = [
   { value: 5.00, label: '5.00', description: 'Failed' }
 ] as const;
 
-// Unit options for dropdown (integer units only)
 export const UNIT_OPTIONS = [1, 2, 3, 4, 5, 6] as const;
 
-// Unit options with common course types
 export const UNIT_OPTIONS_WITH_DESC = [
   { value: 1, label: '1', description: 'PE/NSTP' },
   { value: 2, label: '2', description: 'Lab' },

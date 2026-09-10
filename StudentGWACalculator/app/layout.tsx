@@ -4,7 +4,6 @@ import { ThemeProvider } from '../src/providers/ThemeProvider';
 import { AppProvider } from '../src/context/AppContext';
 import { PWAProvider } from '../src/providers/PWAProvider';
 
-// Viewport configuration (separated for Next.js 14+)
 export const viewport: Viewport = {
     width: 'device-width',
     initialScale: 1,
@@ -124,7 +123,6 @@ export const metadata: Metadata = {
     },
 };
 
-// Structured data for SEO
 const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -216,14 +214,14 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
-                {/* Preconnect to important origins */}
+
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-                {/* DNS Prefetch for performance */}
+
                 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 
-                {/* Structured Data for SEO */}
+
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

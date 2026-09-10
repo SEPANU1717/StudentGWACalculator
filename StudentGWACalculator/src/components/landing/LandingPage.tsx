@@ -24,14 +24,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       className="min-h-screen bg-gray-50 dark:bg-black text-gray-800 dark:text-white"
       suppressHydrationWarning
     >
-      {/* Header - matches main app */}
+
       <Header
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
         onShowLanding={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       />
 
-      {/* Main Content */}
+
       <main>
         <HeroSection onGetStarted={onGetStarted} darkMode={darkMode} />
         <FeaturesGrid darkMode={darkMode} />
@@ -39,7 +39,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <CTASection onGetStarted={onGetStarted} darkMode={darkMode} />
       </main>
 
-      {/* Footer */}
+
       <Footer darkMode={darkMode} />
     </div>
   );

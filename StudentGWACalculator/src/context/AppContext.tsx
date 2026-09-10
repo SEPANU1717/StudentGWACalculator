@@ -5,15 +5,12 @@ import { useTheme } from 'next-themes';
 import { Subject, SemesterRecord, QuickEntrySubject } from '../types';
 
 interface AppContextType {
-    // Dark mode
     darkMode: boolean;
     toggleDarkMode: () => void;
 
-    // Single subject (calculator tab)
     singleSubject: Subject;
     updateSingleSubject: (field: keyof Subject, value: string) => void;
 
-    // Multiple subjects (cumulative tab)
     subjects: Subject[];
     addSubject: () => void;
     removeSubject: (id: string) => void;
@@ -21,7 +18,6 @@ interface AppContextType {
     clearAllSubjects: () => void;
     restoreSubjects: (subjects: Subject[]) => void;
 
-    // Grade history
     gradeHistory: SemesterRecord[];
     addToHistory: (
         name: string,
@@ -33,11 +29,9 @@ interface AppContextType {
     ) => void;
     removeFromHistory: (id: string) => void;
 
-    // Selected history GWA
     selectedHistoryGWA: number | null;
     setSelectedHistoryGWA: (gwa: number | null) => void;
 
-    // Settings
     showSettings: boolean;
     setShowSettings: (show: boolean) => void;
     showGradeTable: boolean;
@@ -47,12 +41,10 @@ interface AppContextType {
     isBaccalaureate: boolean;
     setIsBaccalaureate: (value: boolean) => void;
 
-    // Update modal
     showUpdateModal: boolean;
     setShowUpdateModal: (show: boolean) => void;
     markUpdateModalSeen: () => void;
 
-    // Loading state
     isLoaded: boolean;
 }
 
@@ -83,7 +75,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [selectedHistoryGWA, setSelectedHistoryGWA] = useState<number | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Load gradeHistory from localStorage on mount
     useEffect(() => {
         try {
             const saved = localStorage.getItem('gradeHistory');
@@ -99,14 +90,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setIsLoaded(true);
     }, []);
 
-    // Save gradeHistory to localStorage only after initial load
     useEffect(() => {
         if (isLoaded) {
             localStorage.setItem('gradeHistory', JSON.stringify(gradeHistory));
         }
     }, [gradeHistory, isLoaded]);
 
-    // Derive darkMode from next-themes
     const darkMode = theme === 'dark';
 
     const toggleDarkMode = () => setTheme(theme === 'dark' ? 'light' : 'dark');

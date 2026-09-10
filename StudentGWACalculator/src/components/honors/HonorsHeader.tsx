@@ -25,7 +25,7 @@ export const HonorsHeader: React.FC<HonorsHeaderProps> = ({
         value={isBaccalaureate ? 'bacc' : 'other'}
         onChange={(e) => onSetIsBaccalaureate(e.target.value === 'bacc')}
         className={`
-          ${inputBg} border ${border} rounded-lg 
+          ${inputBg} border ${border} rounded-lg
           px-2.5 py-1.5 text-xs font-medium outline-none ${textColor}
           transition-colors cursor-pointer
         `}

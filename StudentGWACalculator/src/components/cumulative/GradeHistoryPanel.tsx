@@ -28,7 +28,6 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
   const border = darkMode ? 'border-[#1a1a1a]' : 'border-gray-200';
   const inputBg = darkMode ? 'bg-[#0a0a0a]' : 'bg-gray-50';
 
-  // Hide if not open OR if there are no history records
   if (!isOpen || gradeHistory.length === 0) return null;
 
   return (
@@ -39,7 +38,7 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
       id="grade-history-panel"
     >
       <div className="space-y-2">
-        {/* Records List */}
+
         {gradeHistory.map((record) => {
           const hasViolation = record.mode === 'detailed'
             ? record.subjectsData?.some(s => {
@@ -110,11 +109,11 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
                 </div>
               </div>
 
-              {/* Expanded Details */}
+
               {isExpanded && (
                 <div className={`p-4 rounded-b-lg ${darkMode ? 'bg-[#0a0a0a] border-[#222]' : 'bg-gray-50 border-gray-200'} border-x border-b animate-scale-in`}>
                   <div className="space-y-3">
-                    {/* Stats Row */}
+
                     <div className={`flex items-center justify-between gap-4 pb-3 border-b ${border}`}>
                       <div className="flex flex-wrap gap-2">
                         {isEligible && (
@@ -138,7 +137,7 @@ export const GradeHistoryPanel: React.FC<GradeHistoryPanelProps> = ({
                       </div>
                     </div>
 
-                    {/* Actions */}
+
                     <div className="flex gap-2">
                       {onRestoreRecord && (record.subjectsData || record.finalGradesData) && (
                         <button

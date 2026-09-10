@@ -23,7 +23,6 @@ export default function OfflinePage() {
                 window.location.reload();
             }
         } catch {
-            // Still offline
         } finally {
             setIsRetrying(false);
         }
@@ -32,7 +31,7 @@ export default function OfflinePage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 flex items-center justify-center p-4">
             <div className="max-w-md w-full text-center">
-                {/* Animated Icon */}
+
                 <div className="relative mb-8">
                     <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-3xl animate-pulse"></div>
                     <div className="relative bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-full inline-block border border-slate-700/50 shadow-2xl">
@@ -40,7 +39,7 @@ export default function OfflinePage() {
                     </div>
                 </div>
 
-                {/* Content */}
+
                 <h1 className="text-3xl font-bold text-white mb-4">
                     You're Offline
                 </h1>
@@ -50,7 +49,7 @@ export default function OfflinePage() {
                     when you're back online.
                 </p>
 
-                {/* Actions */}
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
                         onClick={handleRetry}
@@ -69,7 +68,7 @@ export default function OfflinePage() {
                     </a>
                 </div>
 
-                {/* Status Indicator */}
+
                 <div className="mt-12 flex items-center justify-center gap-2 text-slate-500">
                     <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                     <span className="text-sm">Waiting for connection...</span>

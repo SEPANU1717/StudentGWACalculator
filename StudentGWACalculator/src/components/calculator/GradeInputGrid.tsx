@@ -57,10 +57,10 @@ export const GradeInputGrid: React.FC<GradeInputGridProps> = ({
               value={value}
               onChange={(e) => onUpdateSubject(field, e.target.value)}
               className={`
-                w-full bg-transparent text-2xl font-bold outline-none 
+                w-full bg-transparent text-2xl font-bold outline-none
                 placeholder-[#222] ${textColor}
-                [appearance:textfield] 
-                [&::-webkit-outer-spin-button]:appearance-none 
+                [appearance:textfield]
+                [&::-webkit-outer-spin-button]:appearance-none
                 [&::-webkit-inner-spin-button]:appearance-none
                 transition-colors duration-150
                 min-h-[44px]

@@ -23,7 +23,7 @@ export const GradeTable: React.FC<GradeTableProps> = ({
 
   return (
     <div className="space-y-3">
-      {/* Toggle Button */}
+
       <Card
         darkMode={darkMode}
         padding="md"
@@ -43,7 +43,7 @@ export const GradeTable: React.FC<GradeTableProps> = ({
         </div>
       </Card>
 
-      {/* Collapsible Table */}
+
       {isOpen && (
         <Card darkMode={darkMode} padding="none" className="overflow-hidden animate-scale-in">
           <div className="overflow-x-auto">

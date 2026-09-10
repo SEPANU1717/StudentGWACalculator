@@ -35,7 +35,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -100,7 +99,6 @@ body {
   animation: slideDown 0.3s ease-out forwards;
 }
 
-/* Stagger children */
 .animate-stagger>* {
   opacity: 0;
   animation: fadeIn 0.4s ease-out forwards;
@@ -130,7 +128,6 @@ body {
   animation-delay: 375ms;
 }
 
-/* Range slider styling */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -187,7 +184,6 @@ input[type="range"]::-moz-range-thumb:hover {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
-/* Focus styles */
 input[type="range"]:focus {
   outline: none;
 }
@@ -196,13 +192,11 @@ input[type="range"]:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
 }
 
-/* Custom selection color */
 ::selection {
   background: rgba(16, 185, 129, 0.3);
   color: inherit;
 }
 
-/* Touch action for mobile */
 @media (hover: none) {
   input[type="range"]::-webkit-slider-thumb {
     width: 28px;
@@ -216,7 +210,6 @@ input[type="range"]:focus::-webkit-slider-thumb {
   }
 }
 
-/* Light mode slider adjustments */
 @media (prefers-color-scheme: light) {
   input[type="range"]::-webkit-slider-thumb {
     border-color: #fff;

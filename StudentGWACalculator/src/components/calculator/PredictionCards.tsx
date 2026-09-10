@@ -45,7 +45,7 @@ export const PredictionCards: React.FC<PredictionCardsProps> = ({
         Requirements
       </p>
       <div className="grid grid-cols-2 gap-3">
-        {/* Need for Target */}
+
         <Card darkMode={darkMode} padding="md">
           <div className="flex items-center gap-2 mb-2">
             <Target className={`w-3.5 h-3.5 ${textMuted}`} />
@@ -63,7 +63,7 @@ export const PredictionCards: React.FC<PredictionCardsProps> = ({
           </div>
         </Card>
 
-        {/* Need to Pass */}
+
         <Card darkMode={darkMode} padding="md">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className={`w-3.5 h-3.5 ${textMuted}`} />

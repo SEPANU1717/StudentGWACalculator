@@ -1,14 +1,4 @@
-/**
- * PWA Utilities - Modular and Dynamically Loadable
- * 
- * This module provides PWA functionality with proper code splitting:
- * - Service Worker registration and management
- * - Install prompt handling
- * - Network status detection
- * - Push notification management
- */
 
-// Types
 export interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
     readonly userChoice: Promise<{
@@ -26,12 +16,8 @@ export interface PWAState {
     registration: ServiceWorkerRegistration | null;
 }
 
-// Event storage for deferred prompt
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
-/**
- * Check if the app is running in standalone mode (installed)
- */
 export function isPWAInstalled(): boolean {
     if (typeof window === 'undefined') return false;
 
@@ -42,17 +28,11 @@ export function isPWAInstalled(): boolean {
     );
 }
 
-/**
- * Check if device is online
- */
 export function isOnline(): boolean {
     if (typeof navigator === 'undefined') return true;
     return navigator.onLine;
 }
 
-/**
- * Register the service worker
- */
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
         return null;
@@ -66,10 +46,9 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
         console.log('✅ Service Worker registered:', registration.scope);
 
-        // Check for updates periodically
         setInterval(() => {
             registration.update();
-        }, 60 * 60 * 1000); // Every hour
+        }, 60 * 60 * 1000);
 
         return registration;
     } catch (error) {
@@ -78,9 +57,6 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     }
 }
 
-/**
- * Setup install prompt listener
- */
 export function setupInstallPrompt(onInstallable?: () => void): () => void {
     if (typeof window === 'undefined') return () => { };
 
@@ -98,9 +74,6 @@ export function setupInstallPrompt(onInstallable?: () => void): () => void {
     };
 }
 
-/**
- * Trigger the install prompt
- */
 export async function promptInstall(): Promise<'accepted' | 'dismissed' | 'unavailable'> {
     if (!deferredPrompt) {
         console.log('📱 Install prompt not available');
@@ -119,16 +92,10 @@ export async function promptInstall(): Promise<'accepted' | 'dismissed' | 'unava
     }
 }
 
-/**
- * Check if install prompt is available
- */
 export function isInstallPromptAvailable(): boolean {
     return deferredPrompt !== null;
 }
 
-/**
- * Setup network status listeners
- */
 export function setupNetworkListeners(
     onOnline?: () => void,
     onOffline?: () => void
@@ -154,9 +121,6 @@ export function setupNetworkListeners(
     };
 }
 
-/**
- * Request notification permission
- */
 export async function requestNotificationPermission(): Promise<NotificationPermission> {
     if (typeof window === 'undefined' || !('Notification' in window)) {
         return 'denied';
@@ -174,9 +138,6 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
     return 'denied';
 }
 
-/**
- * Subscribe to push notifications
- */
 export async function subscribeToPush(
     registration: ServiceWorkerRegistration,
     publicVapidKey?: string
@@ -200,9 +161,6 @@ export async function subscribeToPush(
     }
 }
 
-/**
- * Helper to convert VAPID key
- */
 function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -216,9 +174,6 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
     return outputArray as Uint8Array<ArrayBuffer>;
 }
 
-/**
- * Check for service worker updates
- */
 export async function checkForUpdates(
     registration: ServiceWorkerRegistration
 ): Promise<boolean> {
@@ -237,18 +192,12 @@ export async function checkForUpdates(
     }
 }
 
-/**
- * Skip waiting and activate new service worker
- */
 export function skipWaiting(registration: ServiceWorkerRegistration): void {
     if (registration.waiting) {
         registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     }
 }
 
-/**
- * Clear all caches
- */
 export async function clearAllCaches(): Promise<void> {
     if (typeof caches === 'undefined') return;
 
@@ -257,9 +206,6 @@ export async function clearAllCaches(): Promise<void> {
     console.log('🗑️ All caches cleared');
 }
 
-/**
- * Get cache storage usage
- */
 export async function getCacheStorageUsage(): Promise<{
     usage: number;
     quota: number;

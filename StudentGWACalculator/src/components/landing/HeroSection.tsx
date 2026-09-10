@@ -26,7 +26,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const textMuted = darkMode ? 'text-[#555]' : 'text-gray-500';
   const textLight = darkMode ? 'text-[#888]' : 'text-gray-600';
 
-  // Adapt imported animations to valid Variants
   const heroVariants = {
     initial: slideUp.initial,
     animate: { ...slideUp.animate, transition: slideUp.transition }
@@ -45,7 +44,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="min-h-screen flex items-center relative overflow-hidden py-20"
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 w-full text-center">
-        {/* Badge (small) */}
+
         <motion.div variants={heroVariants} className="flex justify-center">
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#1a1a1a] mb-6"
@@ -56,7 +55,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Title (reduced weight, no gradient) */}
+
         <motion.h1
           variants={heroVariants}
           className="text-4xl sm:text-5xl lg:text-7xl font-semibold mb-6 leading-tight text-gray-900 dark:text-white max-w-4xl mx-auto tracking-tight"
@@ -68,7 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </span>
         </motion.h1>
 
-        {/* Short description (provided) */}
+
         <motion.p
           variants={heroVariants}
           className="text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed text-gray-400 dark:text-[#555]"
@@ -77,7 +76,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           The smart GWA calculator built for STI students. Calculate grades, predict requirements, track multiple subjects, and check your honors eligibility.
         </motion.p>
 
-        {/* CTA Buttons (touch-friendly) */}
+
         <motion.div variants={heroVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
             onClick={onGetStarted}
@@ -92,7 +91,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </Button>
         </motion.div>
 
-        {/* Compact boxed stats (subtle, below CTA) */}
+
         <motion.div variants={heroVariants} className="mt-12">
           <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 px-4">
             {stats.map((s) => (
@@ -108,7 +107,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Scroll cue (clickable and visible on mobile) */}
+
         <motion.div variants={heroFadeIn} className="mt-12 opacity-50">
           <button
             onClick={() => {
@@ -122,7 +121,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </button>
         </motion.div>
 
-        {/* Affiliation disclaimer */}
+
         <motion.p variants={heroFadeIn} className={`text-xs ${textMuted} mt-8 opacity-60`}>
           <em>Not affiliated with or endorsed by STI</em>
         </motion.p>

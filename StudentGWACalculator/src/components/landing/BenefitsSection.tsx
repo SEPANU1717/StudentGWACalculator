@@ -17,7 +17,6 @@ const benefits = [
 ];
 
 export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) => {
-  // Adapt animations
   const slideUpVariant = {
     initial: slideUp.initial,
     animate: { ...slideUp.animate, transition: slideUp.transition }
@@ -38,7 +37,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
     >
       <div className="max-w-5xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left - Text Content */}
+
           <motion.div variants={staggerLocal}>
             <motion.span
               variants={fadeInVariant}
@@ -63,7 +62,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
               From detailed term calculations to cumulative GWA tracking, everything you need is here.
             </motion.p>
 
-            {/* Benefits List */}
+
             <motion.div variants={staggerLocal} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {benefits.map((benefit, i) => (
                 <motion.div variants={slideUpVariant} key={i} className="flex items-center gap-3">
@@ -74,14 +73,14 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
             </motion.div>
           </motion.div>
 
-          {/* Right - Sample Calculator Card */}
+
           <motion.div
             variants={slideUpVariant}
             className="relative"
           >
             <div className="bg-white dark:bg-[#0a0a0a] relative rounded-3xl p-8 border border-gray-200 dark:border-[#1a1a1a] shadow-xl rotate-[-1deg] hover:rotate-0 transition-transform duration-700 ease-out">
               <div className="space-y-6">
-                {/* Card Header */}
+
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-gray-100 dark:bg-[#1a1a1a]">
@@ -99,7 +98,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                   </div>
                 </div>
 
-                {/* Sample Calculation UI */}
+
                 <div className="rounded-2xl p-6 border border-gray-200 dark:border-[#1a1a1a] bg-gray-50/80 dark:bg-[#111]">
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-xs font-bold text-gray-400 dark:text-[#555] uppercase tracking-wide" suppressHydrationWarning>Sample GWA Computation</span>
@@ -108,7 +107,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                     </span>
                   </div>
 
-                  {/* Grades Grid */}
+
                   <div className="grid grid-cols-4 gap-4 mb-6">
                     {[
                       { value: 1.25, label: 'Prelim' },
@@ -125,7 +124,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                     ))}
                   </div>
 
-                  {/* Result */}
+
                   <div className="pt-5 border-t border-gray-200 dark:border-[#1a1a1a] flex items-center justify-between">
                     <span className="text-xs font-bold uppercase text-gray-400 dark:text-[#555]" suppressHydrationWarning>Final Grade</span>
                     <div className="text-right">
@@ -135,7 +134,7 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ darkMode }) =>
                   </div>
                 </div>
 
-                {/* Footer Note */}
+
                 <div className="flex items-center gap-2 text-[10px] font-medium text-gray-400 dark:text-[#555] uppercase tracking-wider justify-center opacity-60" suppressHydrationWarning>
                   <BookOpen className="w-3 h-3" />
                   <span>Based on DO 20-20-20-40 System</span>
